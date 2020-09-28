@@ -1,4 +1,4 @@
-package idv.lingerkptor.util.DBOperator;
+package idv.lingerkptor.GoodsManager.installation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,19 +6,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class DBConfig implements DatabaseConfig {
+import idv.lingerkptor.util.DBOperator.DatabaseConfig;
+
+public class DatabaseConfigImp implements DatabaseConfig {
 	private Properties dbprops;
 	private String driver;
+	private String webAddr;
 	private String driverUrl;
 	private String url;
 	private String account;
 	private String password;
 	private int maxConnection;
 
-	public DBConfig() {
-		File propsfile = new File("./src/test/resources/config/db.properties");
+	@SuppressWarnings("unused")
+	private DatabaseConfigImp() {
+	}
+
+	public DatabaseConfigImp(String webAddr) {
+		this.webAddr = webAddr;
+		File propsfile = new File(webAddr + "/config/db.properties");
 		if (!propsfile.exists())
-			propsfile = new File("./src/test/resources/config/db.default.properties");
+			propsfile = new File(webAddr + "/config/db.default.properties");
 		dbprops = new Properties();
 		try {
 			this.dbprops.load(new FileInputStream(propsfile));
@@ -37,33 +45,33 @@ public class DBConfig implements DatabaseConfig {
 	}
 
 	@Override
+	public String getAccount() {
+		return this.account;
+	}
+
+	@Override
 	public String getDriver() {
-		return driver;
+		return this.driver;
 	}
 
 	@Override
 	public String getDriverUrl() {
-		return driverUrl;
-	}
-
-	@Override
-	public String getUrl() {
-		return url;
-	}
-
-	@Override
-	public String getAccount() {
-		return account;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
+		return this.webAddr + this.driverUrl;
 	}
 
 	@Override
 	public int getMaxConnection() {
-		return maxConnection;
+		return this.maxConnection;
+	}
+
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
+
+	@Override
+	public String getUrl() {
+		return this.url;
 	}
 
 }
