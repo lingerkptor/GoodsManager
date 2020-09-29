@@ -1,0 +1,9 @@
+# eclipse 專案相關檔案
+.settings
+module/*/target/*
+.settings/*
+.classpath
+.project
+
+# maven 相關檔案
+target/*
