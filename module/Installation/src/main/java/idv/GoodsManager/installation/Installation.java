@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import idv.lingerkptor.GoodsManager.installation.DatabaseConfigImp;
+import idv.lingerkptor.GoodsManager.core.DatabaseConfigImp;
 import idv.lingerkptor.util.DBOperator.ConnectPool;
 import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
 import idv.lingerkptor.util.DBOperator.Database;
+import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 @WebServlet("/install")
 public class Installation extends HttpServlet {
@@ -36,7 +37,7 @@ public class Installation extends HttpServlet {
 				"<h1>" + "sqlite-jdbc.jar URL is " + this.getServletContext().getRealPath("WEB-INF") + "</h1>");
 		out.println("</body>");
 		out.println("</html>");
-		DatabaseConfigImp dbconfig = new DatabaseConfigImp(this.getServletContext().getRealPath("WEB-INF"));
+		DatabaseConfig dbconfig = new DatabaseConfigImp(this.getServletContext().getRealPath("WEB-INF"));
 		Database.setDatabaseConfig(dbconfig);
 		try {
 			ConnectPool.setDatabase(Database.getDatabase());

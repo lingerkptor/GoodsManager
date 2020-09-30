@@ -21,9 +21,9 @@
 		<dependency>
 			<groupId>idv.lingerkptor.util</groupId>
 			<artifactId>DBOperator</artifactId>
-			<version>0.0.1</version>
+			<version>0.1.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/DBOperator-0.0.1-Release.jar</systemPath>
+			<systemPath>${basedir}/lib/DBOperator-0.1.0-Release.jar</systemPath>
 		</dependency>
 	</dependencies>
 

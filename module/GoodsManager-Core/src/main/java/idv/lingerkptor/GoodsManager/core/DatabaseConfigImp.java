@@ -1,4 +1,4 @@
-package idv.lingerkptor.GoodsManager.installation;
+package idv.lingerkptor.GoodsManager.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,9 +9,9 @@ import java.util.Properties;
 import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 public class DatabaseConfigImp implements DatabaseConfig {
+	private String webAddr;
 	private Properties dbprops;
 	private String driver;
-	private String webAddr;
 	private String driverUrl;
 	private String url;
 	private String account;
@@ -37,7 +37,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 			this.url = this.dbprops.getProperty("url");
 			this.maxConnection = Integer.parseInt(this.dbprops.getProperty("maxConnection"));
 		} catch (FileNotFoundException e) {
-			System.err.println("沒找到檔案");
+			System.err.println("瘝�瑼��");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
