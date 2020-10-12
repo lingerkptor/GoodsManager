@@ -1,12 +1,13 @@
 package idv.GoodsManager.installation;
 
 /**
- * 
+ * 客製化設定資料庫
  * @author lingerkptor
- *	客製化設定資料庫
+ *	
  */
-public class ConfigDB {
+public class CustomizedDBConfig {
 
+	
 
 	
 }

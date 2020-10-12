@@ -8,71 +8,64 @@ import java.util.Properties;
 
 import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
-public class DatabaseConfigImp implements DatabaseConfig {
-	private String webAddr;
-	private Properties dbprops;
-	private String driver;
-	private String driverUrl;
-	private String url;
-	private String account;
-	private String password;
-	private int maxConnection;
+public class ConfigReader {
+	private static String webAddr;
+	private static Properties props = new Properties();
+	private static String dbName;
+	private static Properties dbprops = new Properties();
+	private static DatabaseConfigImp dbconfig;
 
-	@SuppressWarnings("unused")
-	private DatabaseConfigImp() {
+	private ConfigReader() {
 	}
 
-	public DatabaseConfigImp(String webAddr) {
-		this.webAddr = webAddr;
-		File propsfile = new File(webAddr + "/config/db.properties");
-		if (!propsfile.exists())
-			propsfile = new File(webAddr + "/config/db.default.properties");
-		dbprops = new Properties();
+	/**
+	 * 讀取設定
+	 * 
+	 * @param addr
+	 * @throws IOException
+	 */
+	public static void readConfig(String addr) throws IOException {
+		webAddr = addr;
+		// 全域設定
+		props.load(new FileInputStream(new File(webAddr + "/config/config.properties")));
+
+		ConfigReader.readDatabaseConfig();
+
+	}
+
+	/**
+	 * 讀取資料庫設定
+	 **/
+	private static void readDatabaseConfig() throws IOException {
+		// 資料庫設定
 		try {
-			this.dbprops.load(new FileInputStream(propsfile));
-			this.account = dbprops.getProperty("account");
-			this.driver = this.dbprops.getProperty("driver");
-			this.driverUrl = this.dbprops.getProperty("driverUrl");
-			this.password = this.dbprops.getProperty("password");
-			this.url = this.dbprops.getProperty("url");
-			this.maxConnection = Integer.parseInt(this.dbprops.getProperty("maxConnection"));
+			ConfigReader.dbName = props.getProperty("db");
+			dbprops.load(new FileInputStream(new File(webAddr + "/config/" + props.getProperty("dbconfig"))));
 		} catch (FileNotFoundException e) {
-			System.err.println("db.default.properties 遺失");
-			e.printStackTrace();
+			System.err.println("dbconfig 遺失");
+			throw e;
 		} catch (IOException e) {
 			System.err.println("資料庫可能還沒建立，請先確定資料庫的URL，");
-			e.printStackTrace();
+			throw e;
 		}
+		// 建立資料庫設定
+		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), dbprops.getProperty("driverUrl"),
+				dbprops.getProperty("url"), dbprops.getProperty("account"), dbprops.getProperty("password"),
+				Integer.parseInt(dbprops.getProperty("maxConnection")));
 	}
 
-	@Override
-	public String getAccount() {
-		return this.account;
+	/**
+	 * 取得資料庫設定
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public static DatabaseConfig getDBConfig() throws IOException {
+		return dbconfig;
 	}
 
-	@Override
-	public String getDriver() {
-		return this.driver;
-	}
+	public static void close() {
+		// 原本想要關閉Properties,結果好像不需要處理.
 
-	@Override
-	public String getDriverUrl() {
-		return this.webAddr + this.driverUrl;
 	}
-
-	@Override
-	public int getMaxConnection() {
-		return this.maxConnection;
-	}
-
-	@Override
-	public String getPassword() {
-		return this.password;
-	}
-
-	@Override
-	public String getUrl() {
-		return this.url;
-	}
-
 }
