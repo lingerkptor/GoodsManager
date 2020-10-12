@@ -1,4 +1,4 @@
-package idv.lingerkptor.GoodsManager.core;
+package idv.lingerkptor.GoodsManager.core.DataAccess;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +37,10 @@ public class DatabaseConfigImp implements DatabaseConfig {
 			this.url = this.dbprops.getProperty("url");
 			this.maxConnection = Integer.parseInt(this.dbprops.getProperty("maxConnection"));
 		} catch (FileNotFoundException e) {
-			System.err.println("瘝�瑼��");
+			System.err.println("db.default.properties 遺失");
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.err.println("資料庫可能還沒建立，請先確定資料庫的URL，");
 			e.printStackTrace();
 		}
 	}

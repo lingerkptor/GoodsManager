@@ -1,9 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>idv.lingerkptor.GoodsManager</groupId>
-  <artifactId>GoodsManager-Core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>idv.lingerkptor.GoodsManager</groupId>
+	<artifactId>GoodsManager-Core</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<DBOperatr-version>0.1.3-Release</DBOperatr-version>
+		 
+	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -19,11 +27,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>idv.lingerkptor.util</groupId>
 			<artifactId>DBOperator</artifactId>
-			<version>0.1.0</version>
+			<groupId>idv.lingerkptor.util</groupId>
+			<version>${DBOperatr-version}</version>
+			<!-- 
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/DBOperator-0.1.0-Release.jar</systemPath>
+			<systemPath>${maven-localrepo}\DBOperator\DBOperator\${DBOperatr-version}\DBOperator-${DBOperatr-version}.jar</systemPath>
+			 -->
 		</dependency>
 	</dependencies>
 
