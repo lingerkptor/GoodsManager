@@ -9,7 +9,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	private String url;
 	private String account;
 	private String password;
-	private int maxConnection;
+	private int maxConnection = 1;
 
 	@SuppressWarnings("unused")
 	private DatabaseConfigImp() {
@@ -23,6 +23,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		this.url = url;
 		this.account = account;
 		this.password = password;
+		this.maxConnection =maxConnection;
 	}
 
 	@Override

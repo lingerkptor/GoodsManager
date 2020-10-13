@@ -19,9 +19,10 @@ public class DatabaseInit implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		try {
+			System.out.println("取得資料庫設定");
 			// 取得資料庫設定
 			DatabaseConfig dbconfig = ConfigReader.getDBConfig();
-
+			System.out.println("設定資料庫");
 			DataAccessCore.setDatabase(dbconfig);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -38,6 +39,7 @@ public class DatabaseInit implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		try {
+			System.out.println("關閉資料庫");
 			DataAccessCore.close();
 		} catch (DBOperatorException e) {
 			e.printStackTrace();

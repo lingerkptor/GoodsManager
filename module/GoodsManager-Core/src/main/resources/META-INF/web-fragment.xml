@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment id="WebFragment_ID" version="4.0"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd">
+	<display-name>GoodManager-Core</display-name>
+	<name>GoodManagerCore</name>
+	<listener>
+		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.ConfigInit</listener-class>
+	</listener>
+	<listener>
+		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.DatabaseInit</listener-class>
+	</listener>
+
+</web-fragment>

@@ -34,6 +34,11 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>idv.lingerkptor.GoodsManager</groupId>
+			<artifactId>GoodsManager-Core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 

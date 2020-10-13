@@ -27,8 +27,10 @@ public class ConfigReader {
 	public static void readConfig(String addr) throws IOException {
 		webAddr = addr;
 		// 全域設定
+		System.out.println("讀取全域設定檔");
 		props.load(new FileInputStream(new File(webAddr + "/config/config.properties")));
-
+		// 讀取資料庫設定
+		System.out.println("讀取資料庫設定檔");
 		ConfigReader.readDatabaseConfig();
 
 	}
@@ -49,7 +51,7 @@ public class ConfigReader {
 			throw e;
 		}
 		// 建立資料庫設定
-		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), dbprops.getProperty("driverUrl"),
+		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), webAddr + dbprops.getProperty("driverUrl"),
 				dbprops.getProperty("url"), dbprops.getProperty("account"), dbprops.getProperty("password"),
 				Integer.parseInt(dbprops.getProperty("maxConnection")));
 	}
