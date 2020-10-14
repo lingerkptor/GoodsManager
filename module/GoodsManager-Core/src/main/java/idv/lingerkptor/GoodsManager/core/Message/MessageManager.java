@@ -1,9 +1,16 @@
 package idv.lingerkptor.GoodsManager.core.Message;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 /**
  * 訊息管理者
@@ -28,6 +35,40 @@ public class MessageManager {
 	 * 警告清單
 	 */
 	private LinkedList<Message> warn = new LinkedList<Message>();
+
+	private Map<String, URI> URIMap = new HashMap<String, URI>();
+	private URI location;
+
+	@SuppressWarnings("unused")
+	private MessageManager() {
+	}
+
+	public MessageManager(MessageConfig msgconfig) {
+		File rootMsgDir = new File(msgconfig.getLocation());
+		try {
+			if (!rootMsgDir.exists()) {
+				System.out.println("rootMsgDir MKDIR.");
+				rootMsgDir.mkdirs();
+			}
+			location = rootMsgDir.toURI();
+			System.out.println("LocationRawPath" + location.getRawPath());
+			File dir;
+			if (!(dir = new File(location.getRawPath() + "\\err")).exists())
+				dir.mkdir();
+			System.out.println("errRawPath" + dir.toURI().getRawPath());
+			URIMap.put("err", dir.toURI());
+			if (!(dir = new File(location.getRawPath() + "\\warn")).exists())
+				dir.mkdir();
+			System.out.println("warnRawPath" + dir.toURI().getRawPath());
+			URIMap.put("warn", dir.toURI());
+			if (!(dir = new File(location.getRawPath() + "\\info")).exists())
+				dir.mkdir();
+			System.out.println("infoRawPath" + dir.toURI().getRawPath());
+			URIMap.put("info", dir.toURI());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 取得還沒收到的訊息清單
@@ -68,7 +109,6 @@ public class MessageManager {
 				int index = list.indexOf(msg) + 1;
 				if (index == list.size())
 					return null;
-
 				return list.subList(index, list.size() - 1);
 			}
 		}
@@ -79,15 +119,31 @@ public class MessageManager {
 	 */
 	public void deliverMessage(Message message) {
 		List<Message> list = null;
+		URI uri = null;
 		switch (message.getCategory()) {
 		case err:
 			list = this.err;
+			uri = URIMap.get("err");
 		case warn:
 			list = this.warn;
+			uri = URIMap.get("warn");
 		case info:
 			list = this.info;
+			uri = URIMap.get("info");
 		default:
-			list.add(message);
+			File file = new File(uri.getRawPath() + "\\" + message.getMsgKey() + ".json");
+			try {
+				file.createNewFile();
+				new Gson().toJson(message, new FileWriter(file));
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+			synchronized (messageMap) {
+				messageMap.put(message.getMsgKey(), message);
+			}
+			synchronized (list) {
+				list.add(message);
+			}
 			break;
 		}
 	}

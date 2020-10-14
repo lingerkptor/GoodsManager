@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 @WebServlet("/JsonToObj")
 public class JsonToObj extends HttpServlet {
@@ -28,8 +29,14 @@ public class JsonToObj extends HttpServlet {
 			json.append(line);
 		}
 		Gson gson = new Gson();
-		Object obj = gson.fromJson(json.toString(), req.getAttribute("class").getClass());
-		req.setAttribute("obj", obj);
+		try {
+			System.out.println(json.toString());
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			Object obj = gson.fromJson(json.toString(), (Class) req.getAttribute("class"));
+			req.setAttribute("obj", obj);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

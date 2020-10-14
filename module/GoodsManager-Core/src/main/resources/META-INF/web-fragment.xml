@@ -9,7 +9,11 @@
 		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.ConfigInit</listener-class>
 	</listener>
 	<listener>
+		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.MessageInit</listener-class>
+	</listener>
+	<listener>
 		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.DatabaseInit</listener-class>
 	</listener>
+
 
 </web-fragment>

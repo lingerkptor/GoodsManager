@@ -24,6 +24,10 @@ public class Message {
 	 */
 	private Category category;
 	/**
+	 * 訊息碼
+	 */
+	private String msgKey;
+	/**
 	 * 訊息內容
 	 */
 	private String context;
@@ -36,7 +40,8 @@ public class Message {
 
 	}
 
-	public Message(Category category, String context) {
+	public Message(String key, Category category, String context) {
+		this.msgKey = key;
 		this.category = category;
 		this.context = context;
 	}
@@ -57,5 +62,9 @@ public class Message {
 	 */
 	public Category getCategory() {
 		return this.category;
+	}
+
+	public String getMsgKey() {
+		return msgKey;
 	}
 }
