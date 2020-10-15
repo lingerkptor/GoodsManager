@@ -7,3 +7,7 @@ module/*/target/*
 
 # maven 相關檔案
 target/*
+
+#測試用檔案
+module/GoodManager-Core/src/main/java/idv/lingerkptor/GoodsManager/core/api/test/*
+src/main/webapp/TestGson.html

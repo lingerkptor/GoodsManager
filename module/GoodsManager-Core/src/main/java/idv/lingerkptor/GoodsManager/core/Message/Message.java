@@ -20,13 +20,15 @@ public class Message {
 	}
 
 	/**
+	 * 訊息碼(hashcode)
+	 */
+	private String key;
+
+	/**
 	 * 訊息分類
 	 */
 	private Category category;
-	/**
-	 * 訊息碼
-	 */
-	private String msgKey;
+
 	/**
 	 * 訊息內容
 	 */
@@ -40,8 +42,8 @@ public class Message {
 
 	}
 
-	public Message(String key, Category category, String context) {
-		this.msgKey = key;
+	public Message(Category category, String context) {
+		this.key = String.valueOf(this.hashCode());
 		this.category = category;
 		this.context = context;
 	}
@@ -64,7 +66,12 @@ public class Message {
 		return this.category;
 	}
 
+	/**
+	 * 訊息碼 (唯一性)
+	 * 
+	 * @return
+	 */
 	public String getMsgKey() {
-		return msgKey;
+		return key;
 	}
 }

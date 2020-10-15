@@ -40,7 +40,7 @@ public class Installation extends HttpServlet {
 		 * 
 		 */
 		// 設定需要轉換的物件
-		// req.setAttribute("test", Boolean);
+		 req.setAttribute("class", Boolean.class);
 		req.getRequestDispatcher("/JsonToObj").include(req, resp);
 		// 選擇自定義資料庫或預設資料庫(SQLite) (還沒做)
 
@@ -52,6 +52,14 @@ public class Installation extends HttpServlet {
 		// 建立資料表 (還沒做)
 		// 測試相關SQL (還沒做)
 
+	}
+	protected interface reqContext {
+		
+	}
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		super.service(req, resp);
 	}
 
 }

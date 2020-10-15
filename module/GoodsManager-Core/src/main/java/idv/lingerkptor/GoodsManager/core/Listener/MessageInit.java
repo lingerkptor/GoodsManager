@@ -10,21 +10,24 @@ import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 public class MessageInit implements ServletContextListener {
 
-	private static MessageManager systemMsgManager; 
-	
+	private static MessageManager msgManager = null;
+
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		System.out.println("取得系統訊息設定");
 		// 取得系統訊息設定
 		MessageConfig msgconfig = ConfigReader.getMsgConfig();
-		System.out.println("location: "+msgconfig.getLocation());
-		systemMsgManager = new MessageManager(msgconfig);
+		System.out.println("location: " + msgconfig.getLocation());
+		msgManager = new MessageManager(msgconfig);
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		
+
 	}
-	
+
+	public static MessageManager getMsgManager() {
+		return msgManager;
+	}
 
 }

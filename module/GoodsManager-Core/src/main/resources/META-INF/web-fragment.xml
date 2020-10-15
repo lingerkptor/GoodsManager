@@ -14,6 +14,9 @@
 	<listener>
 		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.DatabaseInit</listener-class>
 	</listener>
+	<listener>
+		<listener-class>idv.lingerkptor.GoodsManager.core.Listener.UserListener</listener-class>
+	</listener>
 
 
 </web-fragment>

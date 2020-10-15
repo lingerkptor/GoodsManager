@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-@WebServlet("/JsonToObj")
+@WebServlet("/api/JsonToObj")
 public class JsonToObj extends HttpServlet {
 
 	/**
