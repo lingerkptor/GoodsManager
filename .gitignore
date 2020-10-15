@@ -1,3 +1,8 @@
+# intellij idea 專案相關檔案
+.idea
+GoodsManager.iml
+
+
 # eclipse 專案相關檔案
 .settings
 module/*/target/*
