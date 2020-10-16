@@ -1,5 +1,7 @@
 package idv.lingerkptor.GoodsManager.core.api;
 
+import java.util.List;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,13 +28,17 @@ public class GetMessages extends Service {
 	private static final long serialVersionUID = 233903312735923849L;
 
 	@Override
-	@Method(value ="POST") // 這一行一定要
+	@Method(value = "POST") // 這一行一定要
 	@ClassName(value = "idv.lingerkptor.GoodsManager.core.api.GetMessages$RequestContext") // 這一行一定要
 	public void process(HttpServletRequest req, HttpServletResponse resp) {
-		System.out.println(RequestContext.class.getName());
 		RequestContext reqContext = (RequestContext) req.getAttribute("obj");
-		System.out.println("reqContext:" + reqContext.getCategory());
-		super.sendObj = req.getSession().getAttribute(reqContext.getCategory());
+		@SuppressWarnings("unchecked")
+		List<Message> unSendMsgList = (List<Message>) req.getSession().getAttribute(reqContext.getCategory());
+		if (unSendMsgList.isEmpty()) {
+			//	unSendMsgList.wait();  這裡做一些需要非同步的事情
+			// 
+		}
+		super.sendObj = unSendMsgList;
 	}
 
 	protected class RequestContext {

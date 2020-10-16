@@ -138,7 +138,6 @@ public class MessageManager {
 			uri = URIMap.get("info");
 		default:
 			File file = new File(uri.getRawPath() + message.getMsgKey() + ".json");
-			System.out.println(uri.getRawPath()  + message.getMsgKey() + ".json");
 			try {
 				file.createNewFile();
 				Gson gson = new Gson();
@@ -163,7 +162,9 @@ public class MessageManager {
 						case info:
 							msglist = (List<Message>) user.getAttribute(Message.Category.info.toString());
 						default:
-							msglist.add(message);
+							synchronized (msglist) {
+								msglist.add(message);
+							}
 							break;
 						}
 					}

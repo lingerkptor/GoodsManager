@@ -22,7 +22,7 @@ public class MessageInit implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-
+		
 	}
 
 	public static MessageManager getMsgManager() {
