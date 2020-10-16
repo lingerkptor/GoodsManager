@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
-import idv.lingerkptor.GoodsManager.core.DataAccess.DataAccessCore;
 
 @WebServlet("/install")
 public class Installation extends HttpServlet {

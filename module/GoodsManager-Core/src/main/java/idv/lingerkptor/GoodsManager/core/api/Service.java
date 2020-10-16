@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import idv.lingerkptor.GoodsManager.core.JsonToObj;
 import idv.lingerkptor.GoodsManager.core.annotation.ClassName;
 import idv.lingerkptor.GoodsManager.core.annotation.Method;
 
@@ -57,7 +58,8 @@ public abstract class Service extends HttpServlet {
 		}
 		
 		try {
-			req.getRequestDispatcher("/api/JsonToObj").include(req, resp);
+			JsonToObj.formJson(req);
+//			req.getRequestDispatcher("/api/JsonToObj").include(req, resp);
 		} catch (ServletException | IOException e) {
 			e.printStackTrace();
 		}
