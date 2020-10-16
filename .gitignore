@@ -15,5 +15,6 @@ module/*/target/*
 target/*
 
 #測試用檔案
-module/GoodManager-Core/src/main/java/idv/lingerkptor/GoodsManager/core/api/test/*
+module/GoodsManager-Core/src/main/java/idv/lingerkptor/GoodsManager/core/test
+
 src/main/webapp/TestGson.html
