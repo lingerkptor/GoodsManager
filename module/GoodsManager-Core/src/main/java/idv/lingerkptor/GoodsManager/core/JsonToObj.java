@@ -21,7 +21,7 @@ public class JsonToObj  {
 		}
 		Gson gson = new Gson();
 		try {
-			System.out.println(json.toString());
+//			System.out.println(json.toString()); //從client傳來的內容
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			Object obj = gson.fromJson(json.toString(), (Class) req.getAttribute("class"));
 			req.setAttribute("obj", obj);

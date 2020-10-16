@@ -3,6 +3,7 @@ package idv.lingerkptor.GoodsManager.core.Message;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -55,19 +56,19 @@ public class MessageManager {
 				rootMsgDir.mkdirs();
 			}
 			location = rootMsgDir.toURI();
-			System.out.println("LocationRawPath" + location.getRawPath());
+//			System.out.println("LocationRawPath" + location.getRawPath());
 			File dir;
 			if (!(dir = new File(location.getRawPath() + "\\err")).exists())
 				dir.mkdir();
-			System.out.println("errRawPath" + dir.toURI().getRawPath());
+//			System.out.println("errRawPath" + dir.toURI().getRawPath());
 			URIMap.put("err", dir.toURI());
 			if (!(dir = new File(location.getRawPath() + "\\warn")).exists())
 				dir.mkdir();
-			System.out.println("warnRawPath" + dir.toURI().getRawPath());
+//			System.out.println("warnRawPath" + dir.toURI().getRawPath());
 			URIMap.put("warn", dir.toURI());
 			if (!(dir = new File(location.getRawPath() + "\\info")).exists())
 				dir.mkdir();
-			System.out.println("infoRawPath" + dir.toURI().getRawPath());
+//			System.out.println("infoRawPath" + dir.toURI().getRawPath());
 			URIMap.put("info", dir.toURI());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,10 +137,14 @@ public class MessageManager {
 //			list = this.info;
 			uri = URIMap.get("info");
 		default:
-			File file = new File(uri.getRawPath() + "\\" + message.getMsgKey() + ".json");
+			File file = new File(uri.getRawPath() + message.getMsgKey() + ".json");
+			System.out.println(uri.getRawPath()  + message.getMsgKey() + ".json");
 			try {
 				file.createNewFile();
-				new Gson().toJson(message, new FileWriter(file));
+				Gson gson = new Gson();
+				Writer fileWriter = new FileWriter(file);
+				gson.toJson(message, fileWriter);
+				fileWriter.close();
 			} catch (JsonIOException | IOException e) {
 				e.printStackTrace();
 			}
@@ -181,7 +186,7 @@ public class MessageManager {
 //			synchronized (list) {
 //				list.add(message);
 //			}
-//			break;
+			break;
 		}
 	}
 

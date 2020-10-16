@@ -6,7 +6,6 @@ import javax.servlet.ServletContextListener;
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
 import idv.lingerkptor.GoodsManager.core.Message.MessageConfig;
 import idv.lingerkptor.GoodsManager.core.Message.MessageManager;
-import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 public class MessageInit implements ServletContextListener {
 
@@ -14,10 +13,10 @@ public class MessageInit implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		System.out.println("取得系統訊息設定");
-		// 取得系統訊息設定
+		System.out.println("取得訊息設定");
+		// 取得訊息設定
 		MessageConfig msgconfig = ConfigReader.getMsgConfig();
-		System.out.println("location: " + msgconfig.getLocation());
+//		System.out.println("location: " + msgconfig.getLocation());// 查詢訊息存放位址
 		msgManager = new MessageManager(msgconfig);
 	}
 
