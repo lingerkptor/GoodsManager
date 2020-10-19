@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import idv.lingerkptor.GoodsManager.core.Message.MessageConfig;
-import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 public class ConfigReader {
 	private static String webAddr;
 	private static Properties props = new Properties();
-	private static String dbName;
 	private static Properties dbprops = new Properties();
 	private static DatabaseConfigImp dbconfig;
 	private static MessageConfig msgConfig;
@@ -24,7 +22,7 @@ public class ConfigReader {
 	 * 讀取設定
 	 * 
 	 * @param addr
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public static void readConfig(String addr) throws FileNotFoundException, IOException {
@@ -63,7 +61,6 @@ public class ConfigReader {
 	private static void readDatabaseConfig() throws IOException {
 		// 資料庫設定
 		try {
-			ConfigReader.dbName = props.getProperty("db");
 			dbprops.load(new FileInputStream(new File(webAddr + "/config/" + props.getProperty("dbconfig"))));
 		} catch (FileNotFoundException e) {
 			System.err.println("dbconfig 遺失");
@@ -73,13 +70,9 @@ public class ConfigReader {
 			throw e;
 		}
 		// 建立資料庫設定
-		File sqlUri =new File(webAddr + "/sql/"+dbName);
-		if(!sqlUri.exists())
-			sqlUri.mkdirs();
-		System.out.println("SQLUri: "+sqlUri.toURI().getRawPath());
-		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), webAddr + dbprops.getProperty("driverUrl"),
+		dbconfig = new DatabaseConfigImp(dbprops.getProperty("name"),dbprops.getProperty("driver"), webAddr + dbprops.getProperty("driverUrl"),
 				dbprops.getProperty("url"), dbprops.getProperty("account"), dbprops.getProperty("password"),
-				Integer.parseInt(dbprops.getProperty("maxConnection")),sqlUri.toURI());
+				Integer.parseInt(dbprops.getProperty("maxConnection")));
 	}
 
 	/**
@@ -106,12 +99,8 @@ public class ConfigReader {
 		return msgConfig;
 	}
 
-	/**
-	 * 取得資料庫名稱
-	 * 
-	 * @return String 資料庫名稱
-	 */
-	public static String getDbName() {
-		return dbName;
+	public static String getWebAddr() {
+		return webAddr;
 	}
+
 }
