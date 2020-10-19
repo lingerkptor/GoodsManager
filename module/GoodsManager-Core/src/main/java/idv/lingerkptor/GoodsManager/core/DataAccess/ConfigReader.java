@@ -74,6 +74,8 @@ public class ConfigReader {
 		}
 		// 建立資料庫設定
 		File sqlUri =new File(webAddr + "/sql/"+dbName);
+		if(!sqlUri.exists())
+			sqlUri.mkdirs();
 		System.out.println("SQLUri: "+sqlUri.toURI().getRawPath());
 		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), webAddr + dbprops.getProperty("driverUrl"),
 				dbprops.getProperty("url"), dbprops.getProperty("account"), dbprops.getProperty("password"),
