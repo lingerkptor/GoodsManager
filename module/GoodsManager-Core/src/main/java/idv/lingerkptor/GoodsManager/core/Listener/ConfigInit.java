@@ -28,7 +28,6 @@ public class ConfigInit implements ServletContextListener {
 			System.out.println("讀取設定檔");
 			// 讀取設定
 			ConfigReader.readConfig(sce.getServletContext().getRealPath("WEB-INF"));
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

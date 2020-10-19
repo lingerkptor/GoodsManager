@@ -39,32 +39,41 @@ public abstract class Service extends HttpServlet {
 		String method = null;
 		String className = null;
 		try {
+			// 讀取設定的 http method
 			method = getClass().getMethod("process", HttpServletRequest.class, HttpServletResponse.class)
 					.getAnnotation(Method.class).value();
+			// 設定要建立請求物件的類別名稱（包含完整的package）
+
 			className = getClass().getMethod("process", HttpServletRequest.class, HttpServletResponse.class)
 					.getAnnotation(ClassName.class).value();
-		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			// 有可能沒有設定請求參數，該方法的請求參數都要設定，不然match不到．
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
 		}
-		System.out.println("req.getMethod():" + req.getMethod());
-		System.out.println("metod:" + method);
-		System.out.println("className:" + className);
+		// 如果實際請求跟設定請求不同，就不處理
 		if (!req.getMethod().equals(method))
 			return;
 		try {
+			// 設定要建立請求類別
 			req.setAttribute("class", Class.forName(className));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
-			JsonToObj.formJson(req);
-//			req.getRequestDispatcher("/api/JsonToObj").include(req, resp);
+			JsonToObj.formJson(req);//
 		} catch (ServletException | IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * 建立要傳過去的json物件
+	 * @param req
+	 * @param resp
+	 */
 	protected void after(HttpServletRequest req, HttpServletResponse resp) {
 		resp.setContentType("application/json; charset=UTF-8");
 		Gson gson = new Gson();

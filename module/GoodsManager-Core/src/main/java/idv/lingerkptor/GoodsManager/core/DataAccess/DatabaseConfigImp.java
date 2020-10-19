@@ -1,5 +1,9 @@
 package idv.lingerkptor.GoodsManager.core.DataAccess;
 
+
+
+import java.net.URI;
+
 import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 public class DatabaseConfigImp implements DatabaseConfig {
@@ -10,6 +14,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	private String account;
 	private String password;
 	private int maxConnection = 1;
+	private URI sqlUri;
 
 	@SuppressWarnings("unused")
 	private DatabaseConfigImp() {
@@ -17,13 +22,14 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	}
 
 	public DatabaseConfigImp(String driver, String driverUrl, String url, String account, String password,
-			int maxConnection) {
+			int maxConnection,URI sqlUri) {
 		this.driver = driver;
 		this.driverUrl = driverUrl;
 		this.url = url;
 		this.account = account;
 		this.password = password;
 		this.maxConnection =maxConnection;
+		this.sqlUri=sqlUri;
 	}
 
 	@Override
@@ -54,6 +60,10 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	@Override
 	public int getMaxConnection() {
 		return maxConnection;
+	}
+
+	public URI getSqlUri() {
+		return sqlUri;
 	}
 
 }

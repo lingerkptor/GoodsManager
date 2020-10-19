@@ -24,10 +24,21 @@ public class ConfigReader {
 	 * 讀取設定
 	 * 
 	 * @param addr
+	 * @throws FileNotFoundException 
 	 * @throws IOException
 	 */
-	public static void readConfig(String addr) throws IOException {
+	public static void readConfig(String addr) throws FileNotFoundException, IOException {
 		webAddr = addr;
+		updateConfig();
+	}
+
+	/**
+	 * 重載設定 必須要先執行過一次readConfig(String addr)
+	 * 
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public static void updateConfig() throws FileNotFoundException, IOException {
 		// 全域設定
 		System.out.println("讀取全域設定檔");
 		props.load(new FileInputStream(new File(webAddr + "/config/config.properties")));
@@ -37,7 +48,6 @@ public class ConfigReader {
 		// 讀取資料庫設定
 		System.out.println("讀取資料庫設定檔");
 		ConfigReader.readDatabaseConfig();
-		
 	}
 
 	/**
@@ -63,9 +73,11 @@ public class ConfigReader {
 			throw e;
 		}
 		// 建立資料庫設定
+		File sqlUri =new File(webAddr + "/sql/"+dbName);
+		System.out.println("SQLUri: "+sqlUri.toURI().getRawPath());
 		dbconfig = new DatabaseConfigImp(dbprops.getProperty("driver"), webAddr + dbprops.getProperty("driverUrl"),
 				dbprops.getProperty("url"), dbprops.getProperty("account"), dbprops.getProperty("password"),
-				Integer.parseInt(dbprops.getProperty("maxConnection")));
+				Integer.parseInt(dbprops.getProperty("maxConnection")),sqlUri.toURI());
 	}
 
 	/**
@@ -74,7 +86,7 @@ public class ConfigReader {
 	 * @return
 	 * @throws IOException
 	 */
-	public static DatabaseConfig getDBConfig() throws IOException {
+	public static DatabaseConfigImp getDBConfig() throws IOException {
 		return dbconfig;
 	}
 
@@ -83,7 +95,21 @@ public class ConfigReader {
 
 	}
 
+	/**
+	 * 取得訊息設定
+	 * 
+	 * @return 訊息設定
+	 */
 	public static MessageConfig getMsgConfig() {
 		return msgConfig;
+	}
+
+	/**
+	 * 取得資料庫名稱
+	 * 
+	 * @return String 資料庫名稱
+	 */
+	public static String getDbName() {
+		return dbName;
 	}
 }

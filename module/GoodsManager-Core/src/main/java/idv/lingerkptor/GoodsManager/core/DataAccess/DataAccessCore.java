@@ -1,7 +1,11 @@
 package idv.lingerkptor.GoodsManager.core.DataAccess;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import idv.lingerkptor.util.DBOperator.ConnectPool;
 import idv.lingerkptor.util.DBOperator.ConnectPool.STATE;
+import idv.lingerkptor.util.DBOperator.DBOperatorException;
 import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
 import idv.lingerkptor.util.DBOperator.Database;
 import idv.lingerkptor.util.DBOperator.DatabaseConfig;
@@ -16,12 +20,13 @@ public class DataAccessCore {
 	public static STATE getState() {
 		return pool.getState();
 	}
+
 	/**
 	 * 取得資料處理樣板
 	 * 
 	 * @return 資料處理樣板
 	 */
-	public static  DataAccessTemplate getSQLTemplate() {
+	public static DataAccessTemplate getSQLTemplate() {
 		System.out.println("取得資料存取樣板");
 		return template;
 	}
@@ -36,6 +41,25 @@ public class DataAccessCore {
 		pool.setDatabase(Database.getDatabase(dbconfig));
 		System.out.println("建立資料存取樣板");
 		template = new DataAccessTemplate(pool);
+	}
+
+	/**
+	 * 測試連線
+	 */
+	public static boolean testConnection(DatabaseConfig config) {
+		try {
+			Connection conn=pool.getConnection() ;
+			if (conn!= null) {
+				conn.close();
+				return true;
+			}
+		} catch (DBOperatorException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
 	}
 
 	/**
