@@ -25,31 +25,41 @@ public @interface ContentType {
         // 在這裡註冊
         Json("application/json", AnalyzeJson.class);
 
-
-
-        private String value = null;
+        /**
+         * 請求的關鍵字
+         */
+        private String key = null;
+        /**
+         * 對應的分析法
+         */
         private Class<? extends Analyzable> analyzeObj = null;
 
-        RequestType(String value, Class<? extends Analyzable> analyzable) {
-            this.value = value;
+        RequestType(String key, Class<? extends Analyzable> analyzable) {
+            this.key = key;
             this.analyzeObj = analyzable;
         }
 
-        public String getValue() {
-            return value;
+        public String getKey() {
+            return key;
         }
 
-        /**
-         * 因為java泛型是Type Erasure，
-         * 在編譯後都會變成Object．所以沒辦法在這裡使用
-         * 未來有機會看有沒有機會修正，讓他能夠更有彈性
-         *　<a href="https://docs.oracle.com/javase/tutorial/java/generics/erasure.html">Type Erasure</a>
-         * @return
-         */
-        public Analyzable factory() {
-            try {
+//        /**
+//         * 因為java泛型是Type Erasure，
+//         * 在編譯後都會變成Object．所以沒辦法在這裡使用
+//         * 未來有機會看有沒有機會修正，讓他能夠更有彈性
+//         *　<a href="https://docs.oracle.com/javase/tutorial/java/generics/erasure.html">Type Erasure</a>
+//         * @return
+//         */
 
-                return analyzeObj.getConstructor().newInstance();
+        /**
+         * 建立請求的分析方法
+         *
+         * @param <T> 請求的主體類別
+         * @return 請求內容的分析法
+         */
+        public <T> Analyzable<T> factory() {
+            try {
+                return analyzeObj.<T>getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
@@ -63,22 +73,22 @@ public @interface ContentType {
     public enum ResponceType {
         Json("application/json", SendJson.class);
 
-        private String value = null;
+        private String key = null;
 
         private Class<? extends Sendable> sendObj = null;
 
-        ResponceType(String value, Class<? extends Sendable> sendObj) {
-            this.value = value;
+        ResponceType(String key, Class<? extends Sendable> sendObj) {
+            this.key = key;
             this.sendObj = sendObj;
         }
 
-        public String getValue() {
-            return value;
+        public String getKey() {
+            return key;
         }
 
-        public Sendable factory() {
+        public <T> Sendable<T> factory() {
             try {
-                return sendObj.getConstructor().newInstance();
+                return sendObj.<T>getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
