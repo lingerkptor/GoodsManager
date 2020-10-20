@@ -2,7 +2,7 @@ package idv.lingerkptor.GoodsManager.core;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface Analyzable {
-	public Object analyze(HttpServletRequest req);
+public interface Analyzable<T> {
+	public T analyze(HttpServletRequest req);
 
 }
