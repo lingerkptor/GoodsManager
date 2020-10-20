@@ -64,7 +64,7 @@ public @interface ContentType {
 			return value;
 		}
 
-		public Sendable getObject() {
+		public Sendable factory() {
 			try {
 				return sendObj.getConstructor().newInstance();
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException

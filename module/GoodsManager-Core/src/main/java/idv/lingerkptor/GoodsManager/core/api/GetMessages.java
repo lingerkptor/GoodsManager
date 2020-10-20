@@ -40,7 +40,7 @@ public class GetMessages extends Service {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.doService(req, resp);
+		this.operater(req, resp);
 	}
 
 	// json封包
