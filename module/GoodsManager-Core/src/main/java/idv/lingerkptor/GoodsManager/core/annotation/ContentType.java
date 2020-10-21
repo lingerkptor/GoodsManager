@@ -14,70 +14,92 @@ import java.lang.annotation.Retention;
 
 /**
  * 請求型態 ex: application/json; http/text
- * 
- * @author lingerkptor
  *
+ * @author lingerkptor
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ElementType.METHOD})
 public @interface ContentType {
-	public enum RequestType {
-		Json("application/json", AnalyzeJson.class);
+    public enum RequestType {
+        // 在這裡註冊
+        Json("application/json", AnalyzeJson.class);
 
-		private String value = null;
-		private Class<? extends Analyzable> analyzeObj = null;
+        /**
+         * 請求的關鍵字
+         */
+        private String key = null;
+        /**
+         * 對應的分析法
+         */
+        private Class<? extends Analyzable> analyzeObj = null;
 
-		RequestType(String value, Class<? extends Analyzable> analyzable) {
-			this.value = value;
-			this.analyzeObj = analyzable;
-		}
+        RequestType(String key, Class<? extends Analyzable> analyzable) {
+            this.key = key;
+            this.analyzeObj = analyzable;
+        }
 
-		public String getValue() {
-			return value;
-		}
+        public String getKey() {
+            return key;
+        }
 
-		public Analyzable factory() {
-			try {
-				return analyzeObj.getConstructor().newInstance();
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	};
+//        /**
+//         * 因為java泛型是Type Erasure，
+//         * 在編譯後都會變成Object．所以沒辦法在這裡使用
+//         * 未來有機會看有沒有機會修正，讓他能夠更有彈性
+//         *　<a href="https://docs.oracle.com/javase/tutorial/java/generics/erasure.html">Type Erasure</a>
+//         * @return
+//         */
 
-	public enum ResponceType {
-		Json("application/json", SendJson.class);
+        /**
+         * 建立請求的分析方法
+         *
+         * @param <T> 請求的主體類別
+         * @return 請求內容的分析法
+         */
+        public <T> Analyzable<T> factory() {
+            try {
+                return analyzeObj.<T>getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
-		private String value = null;
+    ;
 
-		private Class<? extends Sendable> sendObj = null;
+    public enum ResponceType {
+        Json("application/json", SendJson.class);
 
-		ResponceType(String value, Class<? extends Sendable> sendObj) {
-			this.value = value;
-			this.sendObj = sendObj;
-		}
+        private String key = null;
 
-		public String getValue() {
-			return value;
-		}
+        private Class<? extends Sendable> sendObj = null;
 
-		public Sendable getObject() {
-			try {
-				return sendObj.getConstructor().newInstance();
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				e.printStackTrace();
-			}
-			return null;
+        ResponceType(String key, Class<? extends Sendable> sendObj) {
+            this.key = key;
+            this.sendObj = sendObj;
+        }
 
-		}
-	}
+        public String getKey() {
+            return key;
+        }
 
-	public RequestType reqType();
+        public <T> Sendable<T> factory() {
+            try {
+                return sendObj.<T>getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                e.printStackTrace();
+            }
+            return null;
 
-	public ResponceType respType();
+        }
+    }
+
+    public RequestType reqType();
+
+    public ResponceType respType();
 
 }
