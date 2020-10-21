@@ -1,8 +1,5 @@
 package idv.lingerkptor.GoodsManager.core.api;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +24,7 @@ public abstract class Service<T1,T2> extends HttpServlet {
      */
     private Sendable<T2> sendobj = null;
     protected HttpSession session = null;
+    protected Class<T1> requestObj =null;
 
     /**
      * 工作流程(business model)
@@ -37,18 +35,27 @@ public abstract class Service<T1,T2> extends HttpServlet {
     public abstract T2 process(T1 requestObj);
 
     /**
+     * 設定請求內容的的類別
+     */
+    protected abstract void configRequestClass();
+    /**
      * 作業流程
      * @param req HttpRequest
      * @param resp HttpResponce
      */
     protected final void operater(HttpServletRequest req, HttpServletResponse resp) {
         session = req.getSession();
+        configRequestClass();
+        try {
         // 設定請求類別                  設定寄送方式物件
         if (analyzingRequest(req) && setSendObj(req, resp)) {
             //寄送(處理(分析請求))
-            sendobj.send(process(analyzobj.analyze(req)), resp);
+            sendobj.send(process(analyzobj.analyze(req, requestObj)), resp);
         } else
             return;
+        }catch (Exception e) {
+        	e.printStackTrace();
+        }
     }
 
     /**
@@ -58,9 +65,11 @@ public abstract class Service<T1,T2> extends HttpServlet {
      */
     private final boolean analyzingRequest(HttpServletRequest req) {
         try {
-            ContentType.RequestType contentType = getClass().getMethod("process", Object.class)
+        	// 泛型參數可使用Object.class
+            ContentType.RequestType contentType = this.getClass().getMethod("process", Object.class)
                     .getAnnotation(ContentType.class).reqType();
             if (req.getContentType().matches(contentType.getKey() + "*")) {
+
                 analyzobj = contentType.<T1>factory();
 //                try {
 //                    Class<?> reqClass = Class // 設定要建立請求物件的類別（包含完整的package）

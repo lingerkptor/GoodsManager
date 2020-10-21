@@ -32,9 +32,11 @@ public @interface ContentType {
         /**
          * 對應的分析法
          */
-        private Class<? extends Analyzable> analyzeObj = null;
+        @SuppressWarnings("rawtypes")
+		private Class<? extends Analyzable> analyzeObj = null;
 
-        RequestType(String key, Class<? extends Analyzable> analyzable) {
+        @SuppressWarnings("rawtypes")
+		RequestType(String key, Class<? extends Analyzable> analyzable) {
             this.key = key;
             this.analyzeObj = analyzable;
         }
