@@ -18,14 +18,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
-public class AnalyzeMultiPart<T> implements Analyzable<T> {
+public class AnalyzeMultiPart implements Analyzable {
 	public enum InputType {
 		file, text;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T analyze(HttpServletRequest req, Class<?> requestObjClass) {
+	public <T> T analyze(HttpServletRequest req, Class<T> requestObjClass) {
 		T requestObj = null;
 		try {
 			requestObj = (T) requestObjClass.getConstructor().newInstance();

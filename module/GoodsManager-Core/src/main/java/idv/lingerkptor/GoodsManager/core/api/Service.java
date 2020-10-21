@@ -9,7 +9,7 @@ import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 
-public abstract class Service<T1,T2> extends HttpServlet {
+public abstract class Service extends HttpServlet {
 
     /**
      *
@@ -18,13 +18,13 @@ public abstract class Service<T1,T2> extends HttpServlet {
     /**
      * 分析請求的物件
      */
-    private Analyzable<T1> analyzobj = null;
+    private Analyzable analyzobj = null;
     /**
      * 寄送的方法
      */
-    private Sendable<T2> sendobj = null;
+    private Sendable sendobj = null;
     protected HttpSession session = null;
-    protected Class<T1> requestObj =null;
+    protected Class<?> requestObj = null;
 
     /**
      * 工作流程(business model)
@@ -32,40 +32,43 @@ public abstract class Service<T1,T2> extends HttpServlet {
      * @param requestObj 請求物件，帶有工作流程(process)所要知道的條件或是一些要處理的資料
      * @return 要送出去的物件
      */
-    public abstract T2 process(T1 requestObj);
+    public  abstract <T1, T2> T2 process(T1 requestObj) throws CloneNotSupportedException;
 
     /**
      * 設定請求內容的的類別
      */
     protected abstract void configRequestClass();
+
     /**
      * 作業流程
-     * @param req HttpRequest
+     *
+     * @param req  HttpRequest
      * @param resp HttpResponce
      */
     protected final void operater(HttpServletRequest req, HttpServletResponse resp) {
         session = req.getSession();
         configRequestClass();
         try {
-        // 設定請求類別                  設定寄送方式物件
-        if (analyzingRequest(req) && setSendObj(req, resp)) {
-            //寄送(處理(分析請求))
-            sendobj.send(process(analyzobj.analyze(req, requestObj)), resp);
-        } else
-            return;
-        }catch (Exception e) {
-        	e.printStackTrace();
+            // 設定請求類別                  設定寄送方式物件
+            if (analyzingRequest(req) && setSendObj(req, resp)) {
+                //寄送(處理(分析請求))
+                sendobj.send(process(analyzobj.analyze(req, requestObj)), resp);
+            } else
+                return;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * 設定
+     *
      * @param req
      * @return 是否找到對應的分析法
      */
-    private final boolean analyzingRequest(HttpServletRequest req) {
+    private final<T1> boolean analyzingRequest(HttpServletRequest req) {
         try {
-        	// 泛型參數可使用Object.class
+            // 泛型參數可使用Object.class
             ContentType.RequestType contentType = this.getClass().getMethod("process", Object.class)
                     .getAnnotation(ContentType.class).reqType();
             if (req.getContentType().matches(contentType.getKey() + "*")) {
@@ -95,7 +98,7 @@ public abstract class Service<T1,T2> extends HttpServlet {
      * @param req
      * @param resp
      */
-    private final boolean setSendObj(HttpServletRequest req, HttpServletResponse resp) {
+    private final <T2> boolean setSendObj(HttpServletRequest req, HttpServletResponse resp) {
         try {
             ContentType.ResponceType contentType = getClass().getMethod("process", Object.class)
                     .getAnnotation(ContentType.class).respType();

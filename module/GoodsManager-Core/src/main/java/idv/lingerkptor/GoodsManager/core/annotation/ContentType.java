@@ -59,7 +59,7 @@ public @interface ContentType {
          * @param <T> 請求的主體類別
          * @return 請求內容的分析法
          */
-        public <T> Analyzable<T> factory() {
+        public <T> Analyzable factory() {
             try {
                 return analyzeObj.<T>getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -88,7 +88,7 @@ public @interface ContentType {
             return key;
         }
 
-        public <T> Sendable<T> factory() {
+        public <T> Sendable factory() {
             try {
                 return sendObj.<T>getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
