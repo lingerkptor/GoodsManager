@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.AnalyzeJson;
+import idv.lingerkptor.GoodsManager.core.AnalyzeMultiPart;
 import idv.lingerkptor.GoodsManager.core.SendJson;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 
@@ -23,7 +24,8 @@ import java.lang.annotation.Retention;
 public @interface ContentType {
     public enum RequestType {
         // 在這裡註冊
-        Json("application/json", AnalyzeJson.class);
+        Json("application/json", AnalyzeJson.class),
+    	MultiPart("multipart/form-data",AnalyzeMultiPart.class);
 
         /**
          * 請求的關鍵字
@@ -32,11 +34,9 @@ public @interface ContentType {
         /**
          * 對應的分析法
          */
-        @SuppressWarnings("rawtypes")
-		private Class<? extends Analyzable> analyzeObj = null;
+        private Class<? extends Analyzable> analyzeObj = null;
 
-        @SuppressWarnings("rawtypes")
-		RequestType(String key, Class<? extends Analyzable> analyzable) {
+        RequestType(String key, Class<? extends Analyzable> analyzable) {
             this.key = key;
             this.analyzeObj = analyzable;
         }
@@ -59,9 +59,9 @@ public @interface ContentType {
          * @param <T> 請求的主體類別
          * @return 請求內容的分析法
          */
-        public <T> Analyzable factory() {
+        public  Analyzable factory() {
             try {
-                return analyzeObj.<T>getConstructor().newInstance();
+                return analyzeObj.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
@@ -73,7 +73,9 @@ public @interface ContentType {
     ;
 
     public enum ResponceType {
+    	// 在這裡註冊
         Json("application/json", SendJson.class);
+
 
         private String key = null;
 
@@ -88,9 +90,9 @@ public @interface ContentType {
             return key;
         }
 
-        public <T> Sendable factory() {
+        public  Sendable factory() {
             try {
-                return sendObj.<T>getConstructor().newInstance();
+                return sendObj.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();

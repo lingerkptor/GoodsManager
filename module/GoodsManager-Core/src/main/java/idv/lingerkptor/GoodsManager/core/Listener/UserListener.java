@@ -17,7 +17,6 @@ public class UserListener implements HttpSessionListener {
 		System.out.println("註冊訊息服務");
 		MessageInit.getMsgManager().register(user);
 		MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.info, user.getId() + "已登入"));
-
 	}
 
 	@Override

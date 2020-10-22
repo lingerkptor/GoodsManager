@@ -1,5 +1,7 @@
 package idv.GoodsManager.installation.api.request;
 
+import idv.lingerkptor.GoodsManager.core.api.request.Request;
+
 /**
  * json 資料<br/>
  * { <br/>
@@ -12,7 +14,7 @@ package idv.GoodsManager.installation.api.request;
  * maxConnection:Int 最大連線數 <br/>
  * }
  */
-public class InstallationRequest {
+public class InstallationRequest implements Request {
 	private boolean customized = false;// 是否客製化資料庫
 	private String databaseName = null;// 資料庫名稱
 	private String JDBCName = null;// JDBC名稱

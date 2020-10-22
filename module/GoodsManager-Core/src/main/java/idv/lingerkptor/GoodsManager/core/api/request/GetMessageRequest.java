@@ -12,7 +12,7 @@ import idv.lingerkptor.GoodsManager.core.Message.Message;
 	 *
 	 * @author lingerkptor
 	 */
-	public class GetMessageRequest {
+	public class GetMessageRequest  implements Request{
 		private Message.Category category;
 
 		GetMessageRequest() {

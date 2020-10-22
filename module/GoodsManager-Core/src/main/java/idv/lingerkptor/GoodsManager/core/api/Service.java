@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
+import idv.lingerkptor.GoodsManager.core.api.request.Request;
+import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
 public abstract class Service extends HttpServlet {
 
@@ -24,7 +26,7 @@ public abstract class Service extends HttpServlet {
      */
     private Sendable sendobj = null;
     protected HttpSession session = null;
-    protected Class<?> requestObj = null;
+    protected Class<? extends Request> requestObj = null;
 
     /**
      * 工作流程(business model)
@@ -32,7 +34,7 @@ public abstract class Service extends HttpServlet {
      * @param requestObj 請求物件，帶有工作流程(process)所要知道的條件或是一些要處理的資料
      * @return 要送出去的物件
      */
-    public  abstract <T1, T2> T2 process(T1 requestObj) throws CloneNotSupportedException;
+    public  abstract Responce process(Request requestObj) throws CloneNotSupportedException;
 
     /**
      * 設定請求內容的的類別
@@ -66,14 +68,14 @@ public abstract class Service extends HttpServlet {
      * @param req
      * @return 是否找到對應的分析法
      */
-    private final<T1> boolean analyzingRequest(HttpServletRequest req) {
+    private final  boolean analyzingRequest(HttpServletRequest req) {
         try {
-            // 泛型參數可使用Object.class
-            ContentType.RequestType contentType = this.getClass().getMethod("process", Object.class)
+            
+            ContentType.RequestType contentType = this.getClass().getMethod("process", Request.class)
                     .getAnnotation(ContentType.class).reqType();
             if (req.getContentType().matches(contentType.getKey() + "*")) {
 
-                analyzobj = contentType.<T1>factory();
+                analyzobj = contentType.factory();
 //                try {
 //                    Class<?> reqClass = Class // 設定要建立請求物件的類別（包含完整的package）
 //                            .forName(getClass().getMethod("process", Object.class).getAnnotation(ClassName.class)
@@ -98,11 +100,11 @@ public abstract class Service extends HttpServlet {
      * @param req
      * @param resp
      */
-    private final <T2> boolean setSendObj(HttpServletRequest req, HttpServletResponse resp) {
+    private final  boolean setSendObj(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            ContentType.ResponceType contentType = getClass().getMethod("process", Object.class)
+            ContentType.ResponceType contentType = getClass().getMethod("process", Request.class)
                     .getAnnotation(ContentType.class).respType();
-            sendobj = contentType.<T2>factory();
+            sendobj = contentType.factory();
             return true;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();

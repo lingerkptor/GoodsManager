@@ -1,9 +1,9 @@
 package idv.GoodsManager.installation;
 
-import java.io.File;
 
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DatabaseConfigImp;
+import idv.lingerkptor.util.DBOperator.DatabaseConfig;
 
 /**
  * 客製化設定資料庫
@@ -17,7 +17,7 @@ public class CustomizedDBConfig {
 	 * 
 	 * @param reqContext
 	 */
-	public static void createDBcofig(idv.GoodsManager.installation.api.request.InstallationRequest reqContext) {
+	public static DatabaseConfigImp createDBcofig(idv.GoodsManager.installation.api.request.InstallationRequest reqContext) {
 
 		String dbName = reqContext.getDatabaseName();
 		String driver = reqContext.getJDBCName();
@@ -30,9 +30,9 @@ public class CustomizedDBConfig {
 		DatabaseConfigImp dbconfig = new DatabaseConfigImp(dbName, driver, driverUrl, url, account, password,
 				maxConnection);
 		if (dbconfig.saveConfig())
-			System.out.println("設定成功");
+			return dbconfig;// System.out.println("設定成功");
 		else
-			System.out.println("設定失敗");
+			return null; // System.out.println("設定失敗");
 	}
 
 }

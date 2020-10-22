@@ -1,7 +1,5 @@
 package idv.lingerkptor.GoodsManager.core.Listener;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -24,10 +22,6 @@ public class DatabaseInit implements ServletContextListener {
 			DatabaseConfig dbconfig = ConfigReader.getDBConfig();
 			System.out.println("設定資料庫");
 			DataAccessCore.setDatabase(dbconfig);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
 		} catch (DBOperatorException e) {
 			e.printStackTrace();
 		}
