@@ -2,13 +2,16 @@ package idv.lingerkptor.GoodsManager.core.api;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
+import idv.lingerkptor.GoodsManager.core.Message.MessageManager;
 import idv.lingerkptor.GoodsManager.core.api.request.GetMessageRequest;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.responce.GetMessageResponce;
@@ -36,21 +39,16 @@ public class GetMessages extends Service {
 	 * 
 	 * @param reqContext          請求的主體，包含訊息的內容種類
 	 * @param <GetMessageRequest> 請求內容的型態
-	 * @param <List>              清單型態
 	 * @return 回傳要傳送過去的訊息清單
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	@ContentType(reqType = RequestType.Json, respType = ResponceType.Json) // 輸入跟輸出都是Json
 	public Responce process(Request reqContext) {
+
+		MessageManager msgManager = MessageInit.getMsgManager();
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
-		/** Deep Clone */
-		LinkedList<Message> originMsgList = ((LinkedList<Message>) this.session.getAttribute(reqObj.getCategory()));
-		LinkedList<Message> messageList = new LinkedList<Message>();
-		for (Message msg : originMsgList) {
-			messageList.add(msg.clone());
-		}
-		originMsgList.clear();
+		List<Message> messageList = msgManager.getMessages(reqObj.getkey(), reqObj.getCategory());
+		System.out.println("getCategory: "+reqObj.getCategory());
 
 		return GetMessageResponce.getMessageList(messageList);
 	}

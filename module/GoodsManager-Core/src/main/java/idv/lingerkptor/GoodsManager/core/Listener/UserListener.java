@@ -6,8 +6,6 @@ import javax.servlet.http.HttpSessionListener;
 
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 
-
-
 public class UserListener implements HttpSessionListener {
 
 	@Override
@@ -28,4 +26,5 @@ public class UserListener implements HttpSessionListener {
 		MessageInit.getMsgManager().logout(user);
 
 	}
+
 }

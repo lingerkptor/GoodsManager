@@ -3,22 +3,27 @@ package idv.lingerkptor.GoodsManager.core.api.request;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 
 //json封包
-	// {
-	// category:err info warn
-	// }
+// {
+// category:err info warn
+// }
 
-	/**
-	 * 請求物件類別
-	 *
-	 * @author lingerkptor
-	 */
-	public class GetMessageRequest  implements Request{
-		private Message.Category category;
+/**
+ * 請求物件類別
+ *
+ * @author lingerkptor
+ */
+public class GetMessageRequest implements Request {
+	private Message.Category category;
+	private String key = null;
 
-		GetMessageRequest() {
-		}
-
-		public String getCategory() {
-			return category.toString();
-		}
+	GetMessageRequest() {
 	}
+
+	public Message.Category getCategory() {
+		return category;
+	}
+
+	public String getkey() {
+		return key;
+	}
+}

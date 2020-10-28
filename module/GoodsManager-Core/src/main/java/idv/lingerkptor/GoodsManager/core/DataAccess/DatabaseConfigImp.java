@@ -17,7 +17,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	private String account;
 	private String password;
 	private int maxConnection = 1;
-	private URI sqlUri;
+	private String sqlURL;
 	private String dbName;
 
 	@SuppressWarnings("unused")
@@ -34,10 +34,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		this.account = account;
 		this.password = password;
 		this.maxConnection = maxConnection;
-		File sqlUriDir = new File(ConfigReader.getWebAddr() + "/sql/" + dbName);
-		if (!sqlUriDir.exists())
-			sqlUriDir.mkdirs();
-		this.sqlUri = sqlUriDir.toURI();
+		this.sqlURL = ConfigReader.getWebAddr() + "/sql/" + dbName;
 	}
 
 	public boolean saveConfig() {
@@ -56,7 +53,8 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
-		};
+		}
+		;
 		prop.put("name", this.dbName);
 		prop.put("driver", this.driver);
 		prop.put("driverUrl", this.driverUrl);
@@ -97,8 +95,8 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		return maxConnection;
 	}
 
-	public URI getSqlUri() {
-		return sqlUri;
+	public String getSqlURL() {
+		return sqlURL;
 	}
 
 }

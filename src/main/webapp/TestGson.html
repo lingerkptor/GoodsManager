@@ -5,60 +5,10 @@
 <title>Test Gson</title>
 <script type="text/javascript">
 	window.onload = function() {
-		var obj = {
-			"testString" : "testString",
-			"testBoolean" : true,
-			"testInt" : 123456
-		};
-		var json = JSON.stringify(obj);
-
-		document.getElementById("test").text = json;
-		var request = new XMLHttpRequest(); // �إ߫D�P�B����
-		request.onreadystatechange = alertContents;
-		request.open('Post', "/GoodsManager/testGson");
-		request.setRequestHeader('Content-Type', 'application/json');
-		request.send(json);
-		function alertContents() {
-			if (request.readyState === XMLHttpRequest.DONE) {
-				if (request.status === 200) {
-					console.log(request.responseText);
-					
-					// alert(request.responseText);
-				} else {
-					alert('There was a problem with the request.');
-				}
-			}
-		}
-		var obj2 = {
-			"testString" : "testString",
-			"testBoolean" : true,
-			"testInt" : 123456,
-			"obj" : {
-				"testString" : "testString2",
-				"testBoolean" : false,
-				"testInt" : 654321
-			}
-		};
-		
-		var request2 = new XMLHttpRequest(); // �إ߫D�P�B����
-		request2.onreadystatechange = alertContents2;
-		request2.open('Post', "/GoodsManager/testGson2");
-		request2.setRequestHeader('Content-Type', 'application/json');
-		request2.send(JSON.stringify(obj2));
-		function alertContents2() {
-			if (request2.readyState === XMLHttpRequest.DONE) {
-				if (request2.status === 200) {
-					console.log(request2.responseText);
-					// alert(request2.responseText);
-				} else {
-					alert('There was a problem with the request.');
-				}
-			}
-		}
 		var obj3 = {
-			"category":"info"
+			"category" : "info"
 		};
-		var request3 = new XMLHttpRequest(); 
+		var request3 = new XMLHttpRequest();
 		request3.onreadystatechange = alertContents3;
 		request3.open('Post', "/GoodsManager/api/getMessages");
 		request3.setRequestHeader('Content-Type', 'application/json');
@@ -67,12 +17,33 @@
 			if (request3.readyState === XMLHttpRequest.DONE) {
 				if (request3.status === 200) {
 					console.log(request3.responseText);
-					 alert(request3.responseText);
+					alert(request3.responseText);
 				} else {
 					alert('There was a problem with the request.');
 				}
 			}
 		}
+		
+		var InstallJson = {
+			"customized" : false
+		};
+		var request = new XMLHttpRequest();
+		request.open('Post',"/GoodsManager/api/install");
+		request.setRequestHeader('Content-Type', 'application/json');
+		request.send(JSON.stringify(InstallJson));
+		function alertContents(){
+			if(request.readyState === XMLHttpRequest.DONE){
+				if(request.status === 200){
+					console.log('install sucess');
+					console.log(request.responceText);
+				}else{
+					console.log('install failure');
+					console.log(request.responceText);
+				}
+					
+			}
+		}
+		
 	};
 </script>
 </head>

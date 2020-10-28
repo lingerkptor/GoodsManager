@@ -47,10 +47,11 @@ public class DataAccessCore {
 	 * 測試連線
 	 */
 	public static boolean testConnection(DatabaseConfig config) {
+		Connection conn = null;
 		try {
-			Connection conn=pool.getConnection() ;
+			conn=pool.getConnection() ;
 			if (conn!= null) {
-				conn.close();
+				pool.returnConnection(conn);
 				return true;
 			}
 		} catch (DBOperatorException e) {

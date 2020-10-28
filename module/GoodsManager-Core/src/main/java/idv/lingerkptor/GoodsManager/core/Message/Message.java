@@ -1,12 +1,19 @@
 package idv.lingerkptor.GoodsManager.core.Message;
 
+import java.io.Serializable;
+
 /**
  * 訊息
  *
  * @author lingerkptor
  */
-public class Message implements Cloneable {
+public class Message implements Cloneable ,Serializable{
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3817151034106478631L;
+
+	/**
      * 分類的種類 <br/>
      * err 錯誤 <br/>
      * warn 警告 <br/>
@@ -49,7 +56,7 @@ public class Message implements Cloneable {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-        cloneObj.key = this.key;
+        cloneObj.key = String.valueOf(cloneObj.hashCode());
         cloneObj.category = this.category;
         cloneObj.context = this.context;
         return cloneObj;
