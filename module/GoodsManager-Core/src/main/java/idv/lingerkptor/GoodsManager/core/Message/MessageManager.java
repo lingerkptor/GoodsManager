@@ -10,8 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
@@ -25,50 +23,49 @@ public class MessageManager {
 	/**
 	 * 訊息對照碼
 	 */
-	private Map<String, Message> messageMap = new HashMap<String, Message>();
+	private transient Map<String, Message> messageMap = new HashMap<String, Message>();
 	/*
 	 * 錯誤清單
 	 */
-	private LinkedList<Message> err = new LinkedList<Message>();
+	private transient LinkedList<Message> err = new LinkedList<Message>();
 	/*
 	 * 資訊清單
 	 */
-	private LinkedList<Message> info = new LinkedList<Message>();
+	private transient LinkedList<Message> info = new LinkedList<Message>();
 	/*
 	 * 警告清單
 	 */
-	private LinkedList<Message> warn = new LinkedList<Message>();
+	private transient LinkedList<Message> warn = new LinkedList<Message>();
 
-	private List<HttpSession> recipientList = new LinkedList<HttpSession>();
+	private List<String> recipientList = new LinkedList<String>();
 
-	private Map<String, URI> URIMap = new HashMap<String, URI>();
-	private URI location;
+	private transient Map<String, URI> URIMap = new HashMap<String, URI>();
 
 	@SuppressWarnings("unused")
 	private MessageManager() {
 	}
 
 	public MessageManager(MessageConfig msgconfig) {
+		this.setConfig(msgconfig);
+	}
+
+	public void setConfig(MessageConfig msgconfig) {
 		File rootMsgDir = new File(msgconfig.getLocation());
 		try {
 			if (!rootMsgDir.exists()) {
 				System.out.println("rootMsgDir MKDIR.");
 				rootMsgDir.mkdirs();
 			}
-			location = rootMsgDir.toURI();
-//			System.out.println("LocationRawPath" + location.getRawPath());
+			URI location = rootMsgDir.toURI();
 			File dir;
 			if (!(dir = new File(location.getRawPath() + "\\err")).exists())
 				dir.mkdir();
-//			System.out.println("errRawPath" + dir.toURI().getRawPath());
 			URIMap.put("err", dir.toURI());
 			if (!(dir = new File(location.getRawPath() + "\\warn")).exists())
 				dir.mkdir();
-//			System.out.println("warnRawPath" + dir.toURI().getRawPath());
 			URIMap.put("warn", dir.toURI());
 			if (!(dir = new File(location.getRawPath() + "\\info")).exists())
 				dir.mkdir();
-//			System.out.println("infoRawPath" + dir.toURI().getRawPath());
 			URIMap.put("info", dir.toURI());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +112,14 @@ public class MessageManager {
 			int index = list.indexOf(msg) + 1;
 			if (index == list.size())
 				return null;
-			return list.subList(index, list.size() - 1);
+			List<Message> newList = new LinkedList<Message>();
+			while (index < list.size()) {
+				newList.add(list.get(index++));
+			}
+			return newList;
+			/** return list.subList(index, list.size() - 1);
+			 * 不能用這個，它不是建立一個list，而是做一個reference.．會有修改原來的集合的風險．
+			*/
 		}
 	}
 
@@ -149,33 +153,7 @@ public class MessageManager {
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();
 		}
-//		/**
-//		 * 將訊息派發給user
-//		 */
-//		if (!recipientList.isEmpty()) {
-//			synchronized (recipientList) {
-//				for (HttpSession user : recipientList) {
-//					List<Message> msglist = null;
-//					switch (message.getCategory()) {
-//					case err:
-//						msglist = (List<Message>) user.getAttribute(Message.Category.err.toString());
-//					case warn:
-//						msglist = (List<Message>) user.getAttribute(Message.Category.warn.toString());
-//					case info:
-//						msglist = (List<Message>) user.getAttribute(Message.Category.info.toString());
-//					default:
-//						synchronized (msglist) {
-//							msglist.add(message);
-//						}
-//						break;
-//					}
-//				}
-//			}
-//		}
 
-		/**
-		 * 如果都沒有接收者就直接離開，
-		 */
 		synchronized (recipientList) {
 			/**
 			 * 如果都沒有接收者就直接離開，
@@ -193,32 +171,35 @@ public class MessageManager {
 	}
 
 	/**
+	 * 查詢接收者
+	 */
+	public boolean searchRecipient(String token) {
+		synchronized (recipientList) {
+			return this.recipientList.contains(token);
+		}
+	}
+
+	/**
 	 * 註冊接收者
 	 */
-	public void register(HttpSession user) {
+	public void register(String token) {
 		synchronized (recipientList) {
-			this.recipientList.add(user);
-//			user.setAttribute(Message.Category.err.toString(), new LinkedList<Message>());
-//			user.setAttribute(Message.Category.warn.toString(), new LinkedList<Message>());
-//			user.setAttribute(Message.Category.info.toString(), new LinkedList<Message>());
+			this.recipientList.add(token);
 		}
 	}
 
 	/**
 	 * 註銷接收者
 	 */
-	public void logout(HttpSession user) {
+	public void logout(String token) {
 		synchronized (recipientList) {
-			this.recipientList.remove(user);
+			this.recipientList.remove(token);
 			if (recipientList.isEmpty()) {
 				messageMap.clear();
 				err.clear();
 				info.clear();
 				warn.clear();
 			}
-//			user.removeAttribute(Message.Category.err.toString());
-//			user.removeAttribute(Message.Category.warn.toString());
-//			user.removeAttribute(Message.Category.info.toString());
 		}
 	}
 

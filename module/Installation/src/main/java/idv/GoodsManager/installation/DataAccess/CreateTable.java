@@ -2,6 +2,7 @@ package idv.GoodsManager.installation.DataAccess;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -17,26 +18,62 @@ public class CreateTable implements PreparedStatementCreator {
 
 	@Override
 	public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-		String SQL = sqlProp.getProperty("GOODS");
-		System.out.println("Goods SQL = " + SQL);
-		PreparedStatement prep = conn.prepareStatement(SQL);
-		prep.addBatch();
-		prep.execute();
-		SQL = sqlProp.getProperty("CLASSES");
+		PreparedStatement prep;
+		//
+		String SQL = sqlProp.getProperty("CHECKGOODSTABLE");
+		System.out.println("CHECKGOODSTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
-		prep.execute();
-		SQL = sqlProp.getProperty("PICTURE");
+		ResultSet rs = prep.executeQuery();
+		if (!rs.next()) {// 如果存在
+			SQL = sqlProp.getProperty("GOODS");
+			System.out.println("Goods SQL = " + SQL);
+			prep.addBatch();
+			prep.execute();
+		}
+		SQL = sqlProp.getProperty("CHECKCLASSESTABLE");
+		System.out.println("CHECKCLASSESTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
-		prep.execute();
-		SQL = sqlProp.getProperty("TAGS");
+		rs = prep.executeQuery();
+		if (!rs.next()) {// 如果存在
+			SQL = sqlProp.getProperty("CLASSES");
+			prep = conn.prepareStatement(SQL);
+			prep.addBatch();
+			prep.execute();
+		}
+		SQL = sqlProp.getProperty("CHECKPICTURETABLE");
+		System.out.println("CHECKPICTURETABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
-		prep.execute();
-		SQL = sqlProp.getProperty("GOODSTAGS");
+		rs = prep.executeQuery();
+		if (!rs.next()) {// 如果存在
+			SQL = sqlProp.getProperty("PICTURE");
+			prep = conn.prepareStatement(SQL);
+			prep.addBatch();
+			prep.execute();
+		}
+		SQL = sqlProp.getProperty("CHECKTAGSTABLE");
+		System.out.println("CHECKTAGSTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
+		rs = prep.executeQuery();
+		if (!rs.next()) {// 如果存在
+			SQL = sqlProp.getProperty("TAGS");
+			prep = conn.prepareStatement(SQL);
+			prep.addBatch();
+			prep.execute();
+		}
+		SQL = sqlProp.getProperty("CHECKGOODSTAGSTABLE");
+		System.out.println("CHECKGOODSTAGSTABLE SQL = " + SQL);
+		prep = conn.prepareStatement(SQL);
+		prep.addBatch();
+		rs = prep.executeQuery();
+		if (!rs.next()) {// 如果存在
+			SQL = sqlProp.getProperty("GOODSTAGS");
+			prep = conn.prepareStatement(SQL);
+			prep.addBatch();
+		}
 		return prep;
 	}
 

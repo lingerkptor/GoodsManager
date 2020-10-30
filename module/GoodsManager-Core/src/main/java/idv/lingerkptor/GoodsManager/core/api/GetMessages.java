@@ -1,7 +1,6 @@
 package idv.lingerkptor.GoodsManager.core.api;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -26,7 +25,6 @@ import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponceType;
  * @author lingerkptor
  */
 
-@SuppressWarnings("hiding")
 @WebServlet("/api/getMessages")
 public class GetMessages extends Service {
 	/**
@@ -47,6 +45,8 @@ public class GetMessages extends Service {
 
 		MessageManager msgManager = MessageInit.getMsgManager();
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
+		if(!msgManager.searchRecipient(reqObj.getToken()))
+			return GetMessageResponce.getMessageList(null);
 		List<Message> messageList = msgManager.getMessages(reqObj.getkey(), reqObj.getCategory());
 		System.out.println("getCategory: "+reqObj.getCategory());
 
@@ -58,7 +58,7 @@ public class GetMessages extends Service {
 	 */
 	@Override
 	protected void configRequestClass() {
-		this.requestObj = GetMessageRequest.class;
+		this.requestClass = GetMessageRequest.class;
 	}
 
 	/**

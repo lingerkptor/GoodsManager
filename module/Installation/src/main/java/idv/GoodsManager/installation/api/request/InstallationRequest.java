@@ -1,5 +1,7 @@
 package idv.GoodsManager.installation.api.request;
 
+import javax.servlet.http.HttpSession;
+
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 
 /**
@@ -49,6 +51,10 @@ public class InstallationRequest implements Request {
 
 	public int getMaxConnection() {
 		return maxConnection;
+	}
+
+	@Override
+	public void setAttribute(HttpSession session) {
 	}
 
 }

@@ -1,5 +1,7 @@
 package idv.lingerkptor.GoodsManager.core.test;
 
+import javax.servlet.http.HttpSession;
+
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 
 public class TestObj implements Request{
@@ -14,6 +16,12 @@ public class TestObj implements Request{
 	@Override
 	public String toString() {
 		return "String:" + testString + "   Boolean:" + testBoolean + "   Int:" + testInt;
+	}
+
+	@Override
+	public void setAttribute(HttpSession session) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

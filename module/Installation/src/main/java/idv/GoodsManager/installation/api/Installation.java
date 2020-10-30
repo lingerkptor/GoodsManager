@@ -104,7 +104,7 @@ public class Installation extends Service {
 
 	@Override
 	protected void configRequestClass() {
-		this.requestObj = InstallationRequest.class;
+		this.requestClass = InstallationRequest.class;
 	}
 
 	@Override
