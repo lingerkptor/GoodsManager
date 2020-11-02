@@ -62,22 +62,26 @@ public class Installation extends Service {
 		} else {
 			System.out.println("連線失敗"); // 連線失敗
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線失敗
-					new Message(Message.Category.info, "連線測試失敗，請檢查自定義資料庫設定．"));
+					new Message(Message.Category.warn, "連線測試失敗，請檢查自定義資料庫設定．"));
 			// 回傳連線失敗
 			return InstallResponce.testConnectFault();
 		} // 測試連線 end
 
-		
-		
 		// 取得CreateTable所需要的SQL(放在properties裡面)
 		Properties createTableSqlMap = new Properties();
 		try {
-			createTableSqlMap.load(
-					new FileInputStream(new File(ConfigReader.getDBConfig().getSqlURL() + "/CreateTable.properties")));
+			createTableSqlMap.load(new FileInputStream(
+					new File(ConfigReader.getDBConfig().getSqlURL() + "/CreateTable.properties")));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
+					new Message(Message.Category.warn, // 訊息種類
+							"沒有找到CreateTable.properties．Message:  " + e.getMessage()));
+			return InstallResponce.createTableFault();
 		} catch (IOException e) {
-			e.printStackTrace();
+			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
+					new Message(Message.Category.warn, // 訊息種類
+							"讀寫檔案出錯，請確認檔案狀態，如：檔案權限．Message:  " + e.getMessage()));
+			return InstallResponce.createTableFault();
 		}
 
 		// 建立資料表
@@ -85,19 +89,19 @@ public class Installation extends Service {
 
 		DataAccessTemplate template = DataAccessCore.getSQLTemplate();
 		try {
-			System.out.println("建立資料表");
+			System.out.println("開始建立資料表");
 			template.update(createTable);
 			System.out.println("建立資料表成功");
 		} catch (SQLException e) {
 			System.out.println("建立資料表失敗");
-			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線失敗
-					new Message(Message.Category.info, "SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
+			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
+					new Message(Message.Category.info,
+							"SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
 			// 回傳建立資料表失敗
 			return InstallResponce.createTableFault();
 		}
 		// 建立資料表END
-
-		MessageInit.getMsgManager().deliverMessage( // 廣播通知連線失敗
+		MessageInit.getMsgManager().deliverMessage( // 廣播通知安裝成功
 				new Message(Message.Category.info, "安裝成功."));
 		return InstallResponce.createTableSucess();
 	}
@@ -108,7 +112,8 @@ public class Installation extends Service {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		this.operater(req, resp);
 	}
 

@@ -21,18 +21,18 @@ public class CreateTable implements PreparedStatementCreator {
 		PreparedStatement prep;
 		//
 		String SQL = sqlProp.getProperty("CHECKGOODSTABLE");
-		System.out.println("CHECKGOODSTABLE SQL = " + SQL);
+//		System.out.println("CHECKGOODSTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
 		ResultSet rs = prep.executeQuery();
 		if (!rs.next()) {// 如果存在
 			SQL = sqlProp.getProperty("GOODS");
-			System.out.println("Goods SQL = " + SQL);
+//			System.out.println("Goods SQL = " + SQL);
 			prep.addBatch();
 			prep.execute();
 		}
 		SQL = sqlProp.getProperty("CHECKCLASSESTABLE");
-		System.out.println("CHECKCLASSESTABLE SQL = " + SQL);
+//		System.out.println("CHECKCLASSESTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
 		rs = prep.executeQuery();
@@ -43,7 +43,7 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.execute();
 		}
 		SQL = sqlProp.getProperty("CHECKPICTURETABLE");
-		System.out.println("CHECKPICTURETABLE SQL = " + SQL);
+//		System.out.println("CHECKPICTURETABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
 		rs = prep.executeQuery();
@@ -54,7 +54,7 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.execute();
 		}
 		SQL = sqlProp.getProperty("CHECKTAGSTABLE");
-		System.out.println("CHECKTAGSTABLE SQL = " + SQL);
+//		System.out.println("CHECKTAGSTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
 		rs = prep.executeQuery();
@@ -65,7 +65,7 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.execute();
 		}
 		SQL = sqlProp.getProperty("CHECKGOODSTAGSTABLE");
-		System.out.println("CHECKGOODSTAGSTABLE SQL = " + SQL);
+//		System.out.println("CHECKGOODSTAGSTABLE SQL = " + SQL);
 		prep = conn.prepareStatement(SQL);
 		prep.addBatch();
 		rs = prep.executeQuery();

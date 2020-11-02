@@ -34,7 +34,7 @@ public abstract class Service extends HttpServlet {
 	 * @param requestObj 請求物件，帶有工作流程(process)所要知道的條件或是一些要處理的資料
 	 * @return 要送出去的物件
 	 */
-	public abstract Responce process(Request requestObj) throws CloneNotSupportedException;
+	public abstract Responce process(Request requestObj);
 
 	/**
 	 * 設定請求內容的的類別
@@ -54,12 +54,12 @@ public abstract class Service extends HttpServlet {
 			// 設定請求類別 設定寄送方式物件
 			if (analyzingRequest(req) && setSendObj(req, resp)) {
 				// 取得請求物件
-				Request request =analyzobj.analyze(req, requestClass);
+				Request request = analyzobj.analyze(req, requestClass);
 				// 設定伺服器端資料
 				request.setAttribute(req.getSession());
 				// 處理請求，取得回應物件
 				Responce responceObj = process(request);
-				//設定伺服器端資料
+				// 設定伺服器端資料
 				responceObj.setAttribute(req.getSession());
 				// 寄送回應物件
 				sendobj.send(responceObj, resp);
@@ -78,9 +78,10 @@ public abstract class Service extends HttpServlet {
 	 */
 	private final boolean analyzingRequest(HttpServletRequest req) {
 		try {
-			ContentType.RequestType RequestContent = this.getClass().getMethod("process", Request.class)
-					.getAnnotation(ContentType.class).reqType();
-			if (req.getContentType().matches(RequestContent.getKey() + "*")) {
+			ContentType.RequestType RequestContent = this.getClass()
+					.getMethod("process", Request.class).getAnnotation(ContentType.class).reqType();
+
+			if (req.getContentType().indexOf(RequestContent.getKey()) >= 0) {
 				analyzobj = RequestContent.factory();
 				return true;
 			}

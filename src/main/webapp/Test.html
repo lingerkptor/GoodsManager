@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="BIG5">
+<title>Test</title>
+<script type="text/javascript">
+ function uploadtest(){
+	var formobj = document.getElementById('testMultipartForm');
+	
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = logContents;
+	request.open('Post', "/GoodsManager/api/testMultiPart");
+	//request.setRequestHeader('Content-Type', 'multipart/form-data');
+	request.send(new FormData(formobj));
+	
+	function logContents(){
+		if (request.readyState === XMLHttpRequest.DONE) {
+			if (request.status === 200) {
+				console.log(request.responseText);
+			} else {
+				alert('There was a problem with the request.');
+			}
+		}
+	}
+}
+/**
+	window.onload = function() {
+		var obj3 = {
+			"category" : "info"
+		};
+		var request3 = new XMLHttpRequest();
+		request3.onreadystatechange = alertContents3;
+		request3.open('Post', "/GoodsManager/api/getMessages");
+		request3.setRequestHeader('Content-Type', 'application/json');
+		request3.send(JSON.stringify(obj3));
+		function alertContents3() {
+			if (request3.readyState === XMLHttpRequest.DONE) {
+				if (request3.status === 200) {
+					console.log(request3.responseText);
+					alert(request3.responseText);
+				} else {
+					alert('There was a problem with the request.');
+				}
+			}
+		}
+		
+		var InstallJson = {
+			"customized" : false
+		};
+		var request = new XMLHttpRequest();
+		request.open('Post',"/GoodsManager/api/install");
+		request.setRequestHeader('Content-Type', 'application/json');
+		request.send(JSON.stringify(InstallJson));
+		function alertContents(){
+			if(request.readyState === XMLHttpRequest.DONE){
+				if(request.status === 200){
+					console.log('install sucess');
+					console.log(request.responceText);
+				}else{
+					console.log('install failure');
+					console.log(request.responceText);
+				}
+					
+			}
+		}
+		
+	};
+	**/
+</script>
+</head>
+<body>
+	<a id="test"></a>
+	<a id="test2"></a>
+	<form id="testMultipartForm">
+	<label>description:</label>
+		<input type='text' name='description' /><br/>
+		<label>file:</label>
+		<input type='file' name='TestFile' /><br/>
+		<label>checkbox:</label>
+		<input type='checkbox' name='testboolean' /><br/>
+	</form>
+	<button onclick="uploadtest()"> sendForm</button>
+</body>
+</html>
