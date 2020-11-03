@@ -57,4 +57,8 @@ public class InstallationRequest implements Request {
 	public void setAttribute(HttpSession session) {
 	}
 
+	@Override
+	public void setAttribute(String attrName, Object obj) {
+	}
+
 }

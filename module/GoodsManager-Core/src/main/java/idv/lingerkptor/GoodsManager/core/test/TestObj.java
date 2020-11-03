@@ -20,7 +20,11 @@ public class TestObj implements Request{
 
 	@Override
 	public void setAttribute(HttpSession session) {
-		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setAttribute(String attrName, Object obj) {
 		
 	}
 

@@ -44,4 +44,8 @@ public class GetMessageRequest implements Request {
 		return token;
 	}
 
+	@Override
+	public void setAttribute(String attrName, Object obj) {
+	}
+
 }

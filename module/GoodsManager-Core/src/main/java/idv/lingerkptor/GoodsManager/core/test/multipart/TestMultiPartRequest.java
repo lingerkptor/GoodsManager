@@ -36,19 +36,20 @@ public class TestMultiPartRequest implements Request {
 
 	}
 
-	public void setAttribute(String attributeName, Object value) {
+	@Override
+	public void setAttribute(String attributeName, Object obj) {
 		switch (attributeName) {
 		case "description":
-			this.description = (String) value;
+			this.description = (String) obj;
 			break;
 		case "TestFile":
-			Part part = (Part) value;
+			Part part = (Part) obj;
 			try {
 				System.out.println("save file start.");
 				// 取得檔案名稱
 				String fileName = part.getSubmittedFileName();
+				
 				// 取得檔案的路徑
-
 				String filePath = this.getTestFilePath();
 				// 存檔start
 				BufferedInputStream fileInput;
@@ -75,7 +76,7 @@ public class TestMultiPartRequest implements Request {
 			System.out.println("save file end.");
 			break;
 		case "testboolean":
-			this.testboolean = Boolean.valueOf((String) value);
+			this.testboolean = Boolean.valueOf((String) obj);
 			break;
 		default:
 
