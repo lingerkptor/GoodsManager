@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,7 @@ import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+
 @WebServlet("/api/ActiveDB")
 @SuppressWarnings("serial")
 public class ActiveDB extends Service {
@@ -96,7 +98,12 @@ public class ActiveDB extends Service {
 					new Message(Message.Category.err, SQLZIP.getName() + " File Not Found."));
 			e.printStackTrace();
 			return ActiveDBResponce.activeFailure(SQLZIP.getName());
-		} catch (IOException e) {
+		}catch(ZipException e) {
+			MessageInit.getMsgManager().deliverMessage(
+					new Message(Message.Category.err, SQLZIP.getName() + "ZIP file error."));
+			e.printStackTrace();
+			return ActiveDBResponce.activeFailure(SQLZIP.getName());
+		}catch (IOException e) {
 			MessageInit.getMsgManager().deliverMessage(
 					new Message(Message.Category.err, SQLZIP.getName() + " IO error."));
 			e.printStackTrace();
