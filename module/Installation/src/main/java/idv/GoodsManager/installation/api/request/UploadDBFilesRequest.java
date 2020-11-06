@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
@@ -69,18 +71,31 @@ public class UploadDBFilesRequest implements Request {
 					file.delete();
 				}
 			}
+			ZipFile zipFile = null;
 			try {
 				File file = this.saveFile(SQLZIPName, part.getInputStream());
 				if (file.exists())
 					this.SQLZIP = file;
+				zipFile = new ZipFile(this.SQLZIP);
+			} catch (ZipException e) {
+				MessageInit.getMsgManager().deliverMessage(
+						new Message(Message.Category.err, this.SQLZIP + "不是壓縮檔，請重新上傳"));
+				e.printStackTrace();
+				try {
+					zipFile.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				zipFile = null;
 			} catch (IOException e) {
 				MessageInit.getMsgManager()
-						.deliverMessage(new Message(Message.Category.err, "連線出錯"));
+						.deliverMessage(new Message(Message.Category.err, "SQLZIP 上傳失敗"));
 				e.printStackTrace();
 				return;
 			}
 			break;
 		}
+
 	}
 
 	private File saveFile(String name, InputStream input) {
