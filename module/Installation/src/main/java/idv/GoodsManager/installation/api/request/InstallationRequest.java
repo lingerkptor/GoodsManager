@@ -25,6 +25,10 @@ public class InstallationRequest implements Request {
 	private String password = "";// 資料庫密碼
 	private int maxConnection = 1;// 最大連線數
 
+	public InstallationRequest() {
+
+	}
+
 	public boolean isCustomized() {
 		return customized;
 	}
@@ -57,8 +61,5 @@ public class InstallationRequest implements Request {
 	public void setAttribute(HttpSession session) {
 	}
 
-	@Override
-	public void setAttribute(String attrName, Object obj) {
-	}
 
 }

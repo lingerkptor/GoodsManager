@@ -23,104 +23,10 @@ public class UploadDBFilesRequest implements Request {
 	private File JDBC = null;
 	private File SQLZIP = null;
 	private String DBName = "";
-	/**
-	 * 暫存位址
-	 */
-	private final String tempDirPath = ConfigReader.getWebAddr() + "//temp";
 
 	@Override
 	public void setAttribute(HttpSession session) {
 
-	}
-
-	@Override
-	public void setAttribute(String attrName, Object obj) {
-		File tempDir = new File(tempDirPath);
-		if (!tempDir.exists())
-			tempDir.mkdirs();
-		List<File> tempFiles = Arrays.<File>asList(tempDir.listFiles());
-		Part part;
-		switch (attrName) {
-		case "DBName":
-			this.DBName = (String) obj;
-			break;
-		case "JDBC":
-			part = (Part) obj;
-			String JDBCName = part.getName();
-			// 刪除之前存的檔案
-			for (File file : tempFiles) {
-				if (file.getName().equals(JDBCName)) {
-					file.delete();
-				}
-			}
-			try {
-				this.JDBC = this.saveFile(JDBCName, part.getInputStream());
-			} catch (IOException e) {
-				MessageInit.getMsgManager()
-						.deliverMessage(new Message(Message.Category.err, "連線出錯"));
-				e.printStackTrace();
-				return;
-			}
-			break;
-		case "SQLZIP":
-			part = (Part) obj;
-			String SQLZIPName = part.getName();
-			// 刪除之前存的檔案
-			for (File file : tempFiles) {
-				if (file.getName().equals(SQLZIPName)) {
-					file.delete();
-				}
-			}
-			ZipFile zipFile = null;
-			try {
-				File file = this.saveFile(SQLZIPName, part.getInputStream());
-				if (file.exists())
-					this.SQLZIP = file;
-				zipFile = new ZipFile(this.SQLZIP);
-			} catch (ZipException e) {
-				MessageInit.getMsgManager().deliverMessage(
-						new Message(Message.Category.err, this.SQLZIP + "不是壓縮檔，請重新上傳"));
-				e.printStackTrace();
-				try {
-					zipFile.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				zipFile = null;
-			} catch (IOException e) {
-				MessageInit.getMsgManager()
-						.deliverMessage(new Message(Message.Category.err, "SQLZIP 上傳失敗"));
-				e.printStackTrace();
-				return;
-			}
-			break;
-		}
-
-	}
-
-	private File saveFile(String name, InputStream input) {
-		String filePath = this.tempDirPath + name;
-		File file = new File(filePath);
-		try {
-			// 輸入流
-			BufferedInputStream in = new BufferedInputStream(input, 1024);
-			// 輸出流
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file), 1024);
-			// 存檔
-			int buffContent = -1;
-			while ((buffContent = in.read()) != -1) {
-				out.write(buffContent);
-			}
-			out.flush();
-			out.close();
-			// 存檔結束
-		} catch (IOException e) {
-			MessageInit.getMsgManager().deliverMessage(
-					new Message(Message.Category.err, "存檔失敗  Message =>  " + e.getMessage()));
-			e.printStackTrace();
-			return null;
-		}
-		return file;
 	}
 
 	public String getDBName() {

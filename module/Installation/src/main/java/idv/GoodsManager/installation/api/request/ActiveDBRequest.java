@@ -37,10 +37,6 @@ public class ActiveDBRequest implements Request {
 		this.SQLZIP = new File(tempDirPath + this.SQLName);
 	}
 
-	@Override
-	public void setAttribute(String attrName, Object obj) {
-
-	}
 
 	public String getDBName() {
 		return DBName;

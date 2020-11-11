@@ -20,7 +20,7 @@ public class GetMessageRequest implements Request {
 	 * 最後傳出的訊息碼
 	 */
 	private String key = null;
-	
+
 	private String token = null;
 
 	GetMessageRequest() {
@@ -43,9 +43,4 @@ public class GetMessageRequest implements Request {
 	public String getToken() {
 		return token;
 	}
-
-	@Override
-	public void setAttribute(String attrName, Object obj) {
-	}
-
 }

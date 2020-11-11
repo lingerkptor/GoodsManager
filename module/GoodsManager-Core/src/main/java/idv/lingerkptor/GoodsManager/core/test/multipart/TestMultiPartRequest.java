@@ -36,54 +36,6 @@ public class TestMultiPartRequest implements Request {
 
 	}
 
-	@Override
-	public void setAttribute(String attributeName, Object obj) {
-		switch (attributeName) {
-		case "description":
-			this.description = (String) obj;
-			break;
-		case "TestFile":
-			Part part = (Part) obj;
-			try {
-				System.out.println("save file start.");
-				// 取得檔案名稱
-				String fileName = part.getSubmittedFileName();
-				
-				// 取得檔案的路徑
-				String filePath = this.getTestFilePath();
-				// 存檔start
-				BufferedInputStream fileInput;
-				fileInput = new BufferedInputStream(part.getInputStream(), 1024);
-
-				String fileAddr = filePath + fileName;
-				this.TestFile = new File(fileAddr);
-				BufferedOutputStream fileOutput = new BufferedOutputStream(
-						new FileOutputStream(TestFile), 1024);
-				int buffContent = -1;
-				while ((buffContent = fileInput.read()) != -1) {
-					fileOutput.write(buffContent);
-				}
-				fileOutput.flush();
-				fileOutput.close();
-				// 存檔end
-			} catch (SecurityException e) {// 安全性例外
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {// 參數錯誤
-				e.printStackTrace();
-			} catch (IOException e) {// IO存取錯誤
-				e.printStackTrace();
-			}
-			System.out.println("save file end.");
-			break;
-		case "testboolean":
-			this.testboolean = Boolean.valueOf((String) obj);
-			break;
-		default:
-
-			break;
-		}
-	}
-
 	public String getDescription() {
 		return description;
 	}

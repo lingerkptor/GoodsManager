@@ -23,9 +23,9 @@ public class TestObj implements Request{
 		
 	}
 
-	@Override
-	public void setAttribute(String attrName, Object obj) {
-		
-	}
+//	@Override
+//	public void setAttribute(String attrName, Object obj) {
+//		
+//	}
 
 }

@@ -14,6 +14,7 @@ public class ConfigReader {
 	private static Properties dbprops = new Properties();
 	private static DatabaseConfigImp dbconfig;
 	private static MessageConfig msgConfig;
+	private static String tempDir;
 
 	private ConfigReader() {
 	}
@@ -42,12 +43,15 @@ public class ConfigReader {
 		} catch (FileNotFoundException e) {
 			System.err.println("全域設定檔遺失");
 			// 設定檔遺失
-		}catch (IOException e) {
+		} catch (IOException e) {
 			System.err.println("全域設定的IOException");
 		}
 		// 讀取系統訊息設定
 		System.out.println("讀取系統訊息設定檔");
 		ConfigReader.readMessageConfig();
+		// 讀取暫存資料夾設定
+		System.out.println("讀取暫存資料夾設定");
+		ConfigReader.readTempDirConfig();
 		// 讀取資料庫設定
 		System.out.println("讀取資料庫設定檔");
 		ConfigReader.readDatabaseConfig();
@@ -62,12 +66,20 @@ public class ConfigReader {
 	}
 
 	/**
+	 * 讀取暫存資料夾設定
+	 */
+	private static void readTempDirConfig() {
+		tempDir = props.getProperty("tempDir");
+	}
+
+	/**
 	 * 讀取資料庫設定
 	 **/
-	private static void readDatabaseConfig()  {
+	private static void readDatabaseConfig() {
 		// 資料庫設定
 		try {
-			dbprops.load(new FileInputStream(new File(webAddr + "/config/" + props.getProperty("dbconfig"))));
+			dbprops.load(new FileInputStream(
+					new File(webAddr + "/config/" + props.getProperty("dbconfig"))));
 		} catch (FileNotFoundException e) {
 			System.err.println("dbconfig 遺失");
 		} catch (IOException e) {
@@ -75,8 +87,9 @@ public class ConfigReader {
 		}
 		// 建立資料庫設定
 		dbconfig = new DatabaseConfigImp(dbprops.getProperty("name"), dbprops.getProperty("driver"),
-				webAddr + dbprops.getProperty("driverUrl"), dbprops.getProperty("url"), dbprops.getProperty("account"),
-				dbprops.getProperty("password"), Integer.parseInt(dbprops.getProperty("maxConnection")));
+				webAddr + dbprops.getProperty("driverUrl"), dbprops.getProperty("url"),
+				dbprops.getProperty("account"), dbprops.getProperty("password"),
+				Integer.parseInt(dbprops.getProperty("maxConnection")));
 	}
 
 	/**
@@ -84,7 +97,7 @@ public class ConfigReader {
 	 * 
 	 * @return
 	 */
-	public static DatabaseConfigImp getDBConfig()  {
+	public static DatabaseConfigImp getDBConfig() {
 		return dbconfig;
 	}
 
@@ -104,6 +117,10 @@ public class ConfigReader {
 
 	public static String getWebAddr() {
 		return webAddr;
+	}
+
+	public static String getTempDir() {
+		return tempDir;
 	}
 
 }
