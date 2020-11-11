@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.AnalyzeJson;
 import idv.lingerkptor.GoodsManager.core.AnalyzeMultiPart;
+import idv.lingerkptor.GoodsManager.core.AnalyzeTextPlain;
 import idv.lingerkptor.GoodsManager.core.SendJson;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 
@@ -26,7 +27,8 @@ public @interface ContentType {
 	public enum RequestType {
 		// 在這裡註冊
 		Json("application/json", AnalyzeJson.class),
-		MultiPart("multipart/form-data", AnalyzeMultiPart.class);
+		MultiPart("multipart/form-data", AnalyzeMultiPart.class),
+		Text_Plain("text/plain",AnalyzeTextPlain.class);
 
 		/**
 		 * 請求的關鍵字
