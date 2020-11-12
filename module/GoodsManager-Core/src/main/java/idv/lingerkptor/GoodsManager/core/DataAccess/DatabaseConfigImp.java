@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Properties;
 
 import idv.lingerkptor.util.DBOperator.DatabaseConfig;
@@ -94,9 +93,20 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	public int getMaxConnection() {
 		return maxConnection;
 	}
-
+	/**
+	 * 取得SQL路徑
+	 * @return the sqlURL
+	 */
 	public String getSqlURL() {
 		return sqlURL;
+	}
+
+	/**
+	 * 取得資料庫名稱
+	 * @return the dbName
+	 */
+	public String getDbName() {
+		return dbName;
 	}
 
 }

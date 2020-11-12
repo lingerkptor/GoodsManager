@@ -85,8 +85,9 @@ public class ActiveDB extends Service {
 	 * STEP3. 解壓縮SQLZIP
 	 */
 	private void decompress() {
+		ZipInputStream input = null;
 		try {
-			ZipInputStream input = new ZipInputStream(new FileInputStream(SQLZIP));
+			input = new ZipInputStream(new FileInputStream(SQLZIP));
 			File sqlDir = new File(ConfigReader.getWebAddr() + "//sql");
 			ZipEntry entry;
 			while ((entry = input.getNextEntry()) != null) {
@@ -115,6 +116,12 @@ public class ActiveDB extends Service {
 					new Message(Message.Category.err, SQLZIP.getName() + " IO error."));
 			System.err.println(e.getMessage());
 			resp = ActiveDBResponce.activeFailure(SQLZIP.getName());
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -126,9 +133,10 @@ public class ActiveDB extends Service {
 	 * @throws IOException
 	 */
 	private void unzip(File outputfile, ZipInputStream input) throws IOException {
+		BufferedOutputStream out = null;
 		try {
 			BufferedInputStream in = new BufferedInputStream(input, 1024);
-			BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputfile));
+			out = new BufferedOutputStream(new FileOutputStream(outputfile));
 			int content = -1;
 			while ((content = in.read()) != -1) {
 				out.write(content);
