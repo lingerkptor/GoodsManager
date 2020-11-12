@@ -34,14 +34,13 @@ public class Installation extends Service {
 
 	private static final long serialVersionUID = 47239711249208659L;
 
-	/**
-	 * STEP1 建立自訂資料庫設定(如果有需要) STEP2 測試連線
-	 */
 	@Override
 	@ContentType(reqType = RequestType.Json, respType = ResponceType.Json) // 請求跟回應的標頭型態
 	public Responce process(Request reqObj) {
 		InstallationRequest reqContext = (InstallationRequest) reqObj;
-
+		/**
+		 * STEP1 建立自訂資料庫設定(如果有需要)
+		 */
 		DatabaseConfigImp dbconfig = ConfigReader.getDBConfig();
 		// 如果要自訂資料庫，需要預先上傳資料
 		if (reqContext.isCustomized())
@@ -54,7 +53,9 @@ public class Installation extends Service {
 				DataAccessCore.setDatabase(dbconfig);
 			}
 
-		// 測試連線 start
+		/**
+		 * STEP2 測試連線 start
+		 */
 		if (DataAccessCore.testConnection(ConfigReader.getDBConfig())) {
 			System.out.println("連線成功");// 連線OK
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線成功
@@ -67,7 +68,9 @@ public class Installation extends Service {
 			return InstallResponce.testConnectFault();
 		} // 測試連線 end
 
-		// 取得CreateTable所需要的SQL(放在properties裡面)
+		/**
+		 * STEP3 取得CreateTable所需要的SQL(放在properties裡面)
+		 */
 		Properties createTableSqlMap = new Properties();
 		try {
 			createTableSqlMap.load(new FileInputStream(
@@ -84,7 +87,10 @@ public class Installation extends Service {
 			return InstallResponce.createTableFault();
 		}
 
-		// 建立資料表
+		/**
+		 * STEP4 建立資料表
+		 * 
+		 */
 		CreateTable createTable = new CreateTable(createTableSqlMap);
 
 		DataAccessTemplate template = DataAccessCore.getSQLTemplate();
@@ -99,8 +105,11 @@ public class Installation extends Service {
 							"SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
 			// 回傳建立資料表失敗
 			return InstallResponce.createTableFault();
-		}
-		// 建立資料表END
+		}// 建立資料表END
+		
+		/**
+		 * 完成
+		 */
 		MessageInit.getMsgManager().deliverMessage( // 廣播通知安裝成功
 				new Message(Message.Category.info, "安裝成功."));
 		return InstallResponce.createTableSucess();
