@@ -21,27 +21,7 @@ public class AnalyzeMultiPart implements Analyzable {
 
 	@Override
 	public Request analyze(HttpServletRequest req, Class<? extends Request> requestObjClass) {
-		Request requestObj = null;
-		System.out.println("requestObj new Instance start");
-		try {
-			Constructor<? extends Request> constructor = (Constructor<? extends Request>) requestObjClass
-					.getConstructor();
-			requestObj = constructor.newInstance();
-		} catch (NoSuchMethodException e) {// 找不到該Constructor
-			e.printStackTrace();
-		} catch (SecurityException e) {// 安全性例外
-			e.printStackTrace();
-		} catch (InstantiationException e) {// 如果宣告時，底層的class是抽象類別，就會拋出
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {// 存取權限錯誤
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {// 參數錯誤
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// 如果Constructor內拋出異常沒有被捕捉到就跳到這裡(通常會發生在Method或Constructor
-			e.printStackTrace();
-		}
-		System.out.println("requestObj new Instance end");
+		Request requestObj = this.createRequestInstance(requestObjClass);
 
 		try {
 			for (Part part : req.getParts()) {
@@ -51,7 +31,7 @@ public class AnalyzeMultiPart implements Analyzable {
 					Field field = requestObj.getClass().getDeclaredField(partName);
 					field.setAccessible(true);
 					if (part.getContentType() != null) {// 檔案處理
-						field.set(requestObj, this.saveFile(part));//存檔
+						field.set(requestObj, this.saveFile(part));// 存檔
 					} else {
 						try {
 							Class<?> fieldType = field.getType();
@@ -88,7 +68,7 @@ public class AnalyzeMultiPart implements Analyzable {
 							case "long":
 								field.setLong(requestObj, Long.valueOf(req.getParameter(partName)));
 								break;
-							default:
+							default:// 非原形型態，也就是物件型態．如String、Integer、Double．．．等等
 								/**
 								 * 因為req.getParameter(partName)出來的都是String，而我們沒辦法確定Field的類別，
 								 * 如果直接指定會有錯誤(ex:Field是Integer傳入String物件會出錯)
@@ -110,7 +90,7 @@ public class AnalyzeMultiPart implements Analyzable {
 										e.printStackTrace();
 									}
 									break;
-								} else {// String.valueOf(Object obj)所以不能使用reflection
+								} else {// String.valueOf(Object obj)所以不能使用上面的方法，但是可以直接指定物件．
 									fieldObj = req.getParameter(partName);
 									field.set(requestObj, fieldObj);
 								}
@@ -174,5 +154,34 @@ public class AnalyzeMultiPart implements Analyzable {
 		}
 		System.out.println("save file end.");
 		return target;
+	}
+
+	private Request createRequestInstance(Class<? extends Request> requestClass) {
+		Request requestObj = null;
+		try {
+			Constructor<? extends Request> constructor = (Constructor<? extends Request>) requestClass
+					.getConstructor();
+			requestObj = constructor.newInstance();
+		} catch (NoSuchMethodException e) {// 找不到該Constructor
+			e.printStackTrace();
+			return requestObj;
+		} catch (SecurityException e) {// 安全性例外
+			e.printStackTrace();
+			return requestObj;
+		} catch (InstantiationException e) {// 如果宣告時，底層的class是抽象類別或是沒有相對應的建構式，就會拋出
+			e.printStackTrace();
+			return requestObj;
+		} catch (IllegalAccessException e) {// 存取權限錯誤
+			e.printStackTrace();
+			return requestObj;
+		} catch (IllegalArgumentException e) {// 參數錯誤
+			e.printStackTrace();
+			return requestObj;
+		} catch (InvocationTargetException e) {
+			// 如果Constructor內拋出異常沒有被捕捉到就跳到這裡(通常會發生在Method或Constructor
+			e.printStackTrace();
+			return requestObj;
+		}
+		return requestObj;
 	}
 }

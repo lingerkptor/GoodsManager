@@ -15,35 +15,12 @@ public class AnalyzeTextPlain implements Analyzable {
 
 	@Override
 	public Request analyze(HttpServletRequest req, Class<? extends Request> requestClass) {
-		Request requestObj = null;
-		try {
-			Constructor<? extends Request> constructor = (Constructor<? extends Request>) requestClass
-					.getConstructor();
-			requestObj = constructor.newInstance();
-		} catch (NoSuchMethodException e) {// 找不到該Constructor
-			e.printStackTrace();
-			return requestObj;
-		} catch (SecurityException e) {// 安全性例外
-			e.printStackTrace();
-			return requestObj;
-		} catch (InstantiationException e) {// 如果宣告時，底層的class是抽象類別或是沒有相對應的建構式，就會拋出
-			e.printStackTrace();
-			return requestObj;
-		} catch (IllegalAccessException e) {// 存取權限錯誤
-			e.printStackTrace();
-			return requestObj;
-		} catch (IllegalArgumentException e) {// 參數錯誤
-			e.printStackTrace();
-			return requestObj;
-		} catch (InvocationTargetException e) {
-			// 如果Constructor內拋出異常沒有被捕捉到就跳到這裡(通常會發生在Method或Constructor
-			e.printStackTrace();
-			return requestObj;
-		}
+		Request requestObj = this.createRequestInstance(requestClass);
+
 		Enumeration<String> paraNames = req.getParameterNames();
-		String name = null;
 		try {
-			while ((name = paraNames.nextElement()) != null) {
+			while (paraNames.hasMoreElements()) {
+				String name = paraNames.nextElement();
 				Field field = requestObj.getClass().getDeclaredField(name);
 				String value = req.getParameter(name);
 				try {
@@ -106,7 +83,6 @@ public class AnalyzeTextPlain implements Analyzable {
 					e.printStackTrace();
 				}
 			}
-		} catch (NoSuchElementException e) {
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
@@ -116,4 +92,32 @@ public class AnalyzeTextPlain implements Analyzable {
 
 	}
 
+	private Request createRequestInstance(Class<? extends Request> requestClass) {
+		Request requestObj = null;
+		try {
+			Constructor<? extends Request> constructor = (Constructor<? extends Request>) requestClass
+					.getConstructor();
+			requestObj = constructor.newInstance();
+		} catch (NoSuchMethodException e) {// 找不到該Constructor
+			e.printStackTrace();
+			return requestObj;
+		} catch (SecurityException e) {// 安全性例外
+			e.printStackTrace();
+			return requestObj;
+		} catch (InstantiationException e) {// 如果宣告時，底層的class是抽象類別或是沒有相對應的建構式，就會拋出
+			e.printStackTrace();
+			return requestObj;
+		} catch (IllegalAccessException e) {// 存取權限錯誤
+			e.printStackTrace();
+			return requestObj;
+		} catch (IllegalArgumentException e) {// 參數錯誤
+			e.printStackTrace();
+			return requestObj;
+		} catch (InvocationTargetException e) {
+			// 如果Constructor內拋出異常沒有被捕捉到就跳到這裡(通常會發生在Method或Constructor
+			e.printStackTrace();
+			return requestObj;
+		}
+		return requestObj;
+	}
 }
