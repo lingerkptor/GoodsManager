@@ -17,14 +17,10 @@ public class GetMessageResponce implements Responce {
 
 	@Override
 	public void setAttribute(HttpSession session) {
-		try {
-		Message msg = messageList.get(messageList.size()-1);
-		session.setAttribute("lastMessageKey", msg.getMsgKey());
-		}catch(NullPointerException e) {
-			return ;
-			// 沒有新的內容就會發生這個例外
+		if (messageList != null && !messageList.isEmpty()) {
+			Message msg = messageList.get(messageList.size() - 1);
+			session.setAttribute("lastMessageKey", msg.getMsgKey());
 		}
 	}
-
 
 }

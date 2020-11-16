@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -43,7 +44,7 @@ public class GetActiveDB extends Service {
 		Type type = new TypeToken<List<DB>>() {
 		}.getType();
 		List<DB> activedDBList = null;
-		;
+
 		FileReader reader = null;
 		try {
 			reader = new FileReader(new File(ConfigReader.getWebAddr() + "//sql//activeDB.json"));
@@ -54,7 +55,7 @@ public class GetActiveDB extends Service {
 					new Message(Message.Category.info, "除了預設的SQLite資料庫外，沒有其他的資料庫．"));
 		} catch (JsonIOException | JsonSyntaxException e) {
 			MessageInit.getMsgManager().deliverMessage(
-					new Message(Message.Category.warn, "取得資料失敗．Message: "+e.getMessage()));
+					new Message(Message.Category.warn, "取得資料失敗．Message: " +e.getMessage()));
 			e.printStackTrace();
 			return GetActiveDBResponce.readActivedDBListFail();
 		}finally {
@@ -64,8 +65,15 @@ public class GetActiveDB extends Service {
 				e.printStackTrace();
 			}
 		}
+		return GetActiveDBResponce.sendActivedDBList(this.getActivedDBNameList(activedDBList));
+	}
 
-		return GetActiveDBResponce.sendActivedDBList(activedDBList);
+	private List<String> getActivedDBNameList(List<DB> activedDBList) {
+		List<String> nameList = new LinkedList<String>();
+		activedDBList.stream().forEach(db -> {
+			nameList.add(db.getDBName());
+		});
+		return nameList;
 	}
 
 	@Override

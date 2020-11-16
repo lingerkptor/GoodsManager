@@ -1,5 +1,7 @@
 package idv.lingerkptor.GoodsManager.core.api;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +58,7 @@ public abstract class Service extends HttpServlet {
 				// 取得請求物件
 				Request request = analyzobj.analyze(req, requestClass);
 				// 設定伺服器端資料
-				request.setAttribute(req.getSession());
+				request.setAttribute(session);
 				// 處理請求，取得回應物件
 				Responce responceObj = process(request);
 				// 設定伺服器端資料
@@ -76,7 +78,7 @@ public abstract class Service extends HttpServlet {
 	 * @param req
 	 * @return 是否找到對應的分析法
 	 */
-	private final boolean analyzingRequest(HttpServletRequest req) {
+	private final boolean analyzingRequest(ServletRequest req) {
 		try {
 			ContentType.RequestType RequestContent = this.getClass()
 					.getMethod("process", Request.class).getAnnotation(ContentType.class).reqType();
@@ -99,7 +101,7 @@ public abstract class Service extends HttpServlet {
 	 * @param req
 	 * @param resp
 	 */
-	private final boolean setSendObj(HttpServletRequest req, HttpServletResponse resp) {
+	private final boolean setSendObj(ServletRequest req, ServletResponse resp) {
 		try {
 			ContentType.ResponceType contentType = getClass().getMethod("process", Request.class)
 					.getAnnotation(ContentType.class).respType();

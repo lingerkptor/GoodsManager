@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
+
+import idv.lingerkptor.GoodsManager.core.Message.Message.Category;
 
 /**
  * 訊息管理者
@@ -24,20 +27,14 @@ public class MessageManager {
 	 * 訊息對照碼
 	 */
 	private transient Map<String, Message> messageMap = new HashMap<String, Message>();
-	/*
-	 * 錯誤清單
+	/**
+	 * 訊息清單
 	 */
-	private transient LinkedList<Message> err = new LinkedList<Message>();
-	/*
-	 * 資訊清單
+	private transient LinkedList<Message> messageList = new LinkedList<Message>();
+	/**
+	 * 觀察者清單(尚未完成實作)
 	 */
-	private transient LinkedList<Message> info = new LinkedList<Message>();
-	/*
-	 * 警告清單
-	 */
-	private transient LinkedList<Message> warn = new LinkedList<Message>();
-
-	private List<String> recipientList = new LinkedList<String>();
+	private transient List<MessageObserver> recipientList = new LinkedList<MessageObserver>();
 
 	private transient Map<String, URI> URIMap = new HashMap<String, URI>();
 
@@ -80,66 +77,40 @@ public class MessageManager {
 	 * @return 訊息清單
 	 * @throws Exception
 	 */
-	public List<Message> getMessages(String key, Message.Category cate) {
-		LinkedList<Message> list = null;
-		switch (cate) {
-		case err:
-			list = this.err;
-			break;
-		case info:
-			list = this.info;
-			break;
-		case warn:
-			list = this.warn;
-			break;
-		}
+	public List<Message> getMessages(String key, Message.Category[] cate) {
+		LinkedList<Message> list = new LinkedList<Message>();
 		// 避免多人存取list，先將鎖住．
-		synchronized (list) {
+		synchronized (messageList) {
 			// 如果沒有訊息，就不傳訊息
-			if (list.isEmpty())
+			if (messageList.isEmpty())
 				return null;
 
-			// 如果從沒傳過訊息，將訊息都傳過去
-			// 為了避免list被修改，所以用clone的方式重新複製一份清單交付
-			Message msg = messageMap.get(key);
-			if (msg == null) {
-				@SuppressWarnings("unchecked") // 淺clone
-				List<Message> newList = (List<Message>) list.clone();
-				return newList;
+			List<Category> cateList = Arrays.asList(cate);
+			for (int i = messageList.indexOf(messageMap.get(key)) + 1; i < messageList
+					.size(); i++) {
+				Message msg = messageList.get(i);
+				if (cateList.contains(msg.getCategory())) {
+					list.add(msg);
+				}
 			}
-			System.out.println(msg.getContext());
-			// 如果沒有新的訊息，就不傳訊息
-			int index = list.indexOf(msg) + 1;
-			if (index == list.size())
-				return null;
-			List<Message> newList = new LinkedList<Message>();
-			while (index < list.size()) {
-				newList.add(list.get(index++));
-			}
-			return newList;
-			/** return list.subList(index, list.size() - 1);
-			 * 不能用這個，它不是建立一個list，而是做一個reference.．會有修改原來的集合的風險．
-			*/
+
 		}
+		return list;
 	}
 
 	/**
 	 * 交付訊息，給予管理．
 	 */
 	public void deliverMessage(Message message) {
-		List<Message> list = null;
 		URI uri = null;
 		switch (message.getCategory()) {
 		case err:
-			list = this.err;
 			uri = URIMap.get("err");
 			break;
 		case warn:
-			list = this.warn;
 			uri = URIMap.get("warn");
 			break;
 		case info:
-			list = this.info;
 			uri = URIMap.get("info");
 			break;
 		}
@@ -153,53 +124,38 @@ public class MessageManager {
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();
 		}
-
 		synchronized (recipientList) {
-			/**
-			 * 如果都沒有接收者就直接離開，
-			 */
-			if (!recipientList.isEmpty()) {
-				synchronized (messageMap) {
-					messageMap.put(message.getMsgKey(), message);
-				}
-				synchronized (list) {
-					list.add(message);
-				}
+			synchronized (messageMap) {
+				messageMap.put(message.getMsgKey(), message);
 			}
-		}
-
-	}
-
-	/**
-	 * 查詢接收者
-	 */
-	public boolean searchRecipient(String token) {
-		synchronized (recipientList) {
-			return this.recipientList.contains(token);
+			synchronized (messageList) {
+				this.messageList.add(message);
+			}
+			/**
+			 * 通知觀察者可以來更新了
+			 */
+			recipientList.stream().forEach(observer -> {
+				observer.update();
+			});
+			recipientList.clear();
 		}
 	}
 
 	/**
 	 * 註冊接收者
 	 */
-	public void register(String token) {
+	public void register(MessageObserver observer) {
 		synchronized (recipientList) {
-			this.recipientList.add(token);
+			this.recipientList.add(observer);
 		}
 	}
 
 	/**
 	 * 註銷接收者
 	 */
-	public void logout(String token) {
+	public void logout(MessageObserver observer) {
 		synchronized (recipientList) {
-			this.recipientList.remove(token);
-			if (recipientList.isEmpty()) {
-				messageMap.clear();
-				err.clear();
-				info.clear();
-				warn.clear();
-			}
+			this.recipientList.remove(observer);
 		}
 	}
 

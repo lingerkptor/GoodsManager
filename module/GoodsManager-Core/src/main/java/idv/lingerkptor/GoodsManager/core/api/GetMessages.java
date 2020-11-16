@@ -45,10 +45,7 @@ public class GetMessages extends Service {
 
 		MessageManager msgManager = MessageInit.getMsgManager();
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
-		if(!msgManager.searchRecipient(reqObj.getToken()))
-			return GetMessageResponce.getMessageList(null);
 		List<Message> messageList = msgManager.getMessages(reqObj.getkey(), reqObj.getCategory());
-		System.out.println("getCategory: "+reqObj.getCategory());
 
 		return GetMessageResponce.getMessageList(messageList);
 	}

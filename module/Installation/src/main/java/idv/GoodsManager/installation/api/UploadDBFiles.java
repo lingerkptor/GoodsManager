@@ -1,6 +1,8 @@
 package idv.GoodsManager.installation.api;
 
 import java.io.IOException;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,9 +16,13 @@ import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
-@SuppressWarnings("serial")
 @WebServlet("/api/UploadDBFiles")
 public class UploadDBFiles extends Service {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 607009177805954705L;
 
 	@Override
 	@ContentType(reqType = ContentType.RequestType.MultiPart, respType = ContentType.ResponceType.Json)
@@ -24,6 +30,17 @@ public class UploadDBFiles extends Service {
 		UploadDBFilesRequest request = (UploadDBFilesRequest) requestObj;
 		if (request.getDBName() == null || request.getJDBC() == null || request.getSQLZIP() == null)
 			return UploadDBFilesResponce.uploadFailure();
+
+		try {
+			@SuppressWarnings("unused")
+			ZipFile zip = new ZipFile(request.getJDBC());
+		} catch (ZipException e) {
+			e.printStackTrace();
+			return UploadDBFilesResponce.uploadFailure();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return UploadDBFilesResponce.uploadFailure();
+		}
 
 		return UploadDBFilesResponce.uploadSusscess(request.getDBName(),
 				request.getJDBC().getName(), request.getSQLZIP().getName());

@@ -6,7 +6,7 @@ import idv.lingerkptor.GoodsManager.core.Message.Message;
 
 //json封包
 // {
-// category:err info warn
+// category : [err, info, warn]
 // }
 
 /**
@@ -15,18 +15,16 @@ import idv.lingerkptor.GoodsManager.core.Message.Message;
  * @author lingerkptor
  */
 public class GetMessageRequest implements Request {
-	private Message.Category category;
+	private Message.Category[] category;
 	/**
 	 * 最後傳出的訊息碼
 	 */
 	private String key = null;
 
-	private String token = null;
-
 	GetMessageRequest() {
 	}
 
-	public Message.Category getCategory() {
+	public Message.Category[] getCategory() {
 		return category;
 	}
 
@@ -36,11 +34,7 @@ public class GetMessageRequest implements Request {
 
 	@Override
 	public void setAttribute(HttpSession session) {
-		this.token = (String) session.getAttribute("token");
 		this.key = (String) session.getAttribute("lastMessageKey");
 	}
 
-	public String getToken() {
-		return token;
-	}
 }

@@ -101,12 +101,14 @@ public class Installation extends Service {
 		} catch (SQLException e) {
 			System.out.println("建立資料表失敗");
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
-					new Message(Message.Category.info,
+					new Message(Message.Category.info, "SQL發生錯誤，請詳閱訊息，並確認SQL內容． "));
+			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
+					new Message(Message.Category.warn,
 							"SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
 			// 回傳建立資料表失敗
 			return InstallResponce.createTableFault();
-		}// 建立資料表END
-		
+		} // 建立資料表END
+
 		/**
 		 * 完成
 		 */

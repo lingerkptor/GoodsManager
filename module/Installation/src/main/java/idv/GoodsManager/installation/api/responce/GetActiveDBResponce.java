@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import idv.GoodsManager.installation.api.DB;
 import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
 public class GetActiveDBResponce implements Responce {
-	private List<DB> activedDBList = null;
+	@SuppressWarnings("unused")
+	private List<String> activedDBList = null;
 
 	@Override
 	public void setAttribute(HttpSession session) {
@@ -19,7 +19,7 @@ public class GetActiveDBResponce implements Responce {
 		return new GetActiveDBResponce();
 	}
 
-	public static Responce sendActivedDBList(List<DB> list) {
+	public static Responce sendActivedDBList(List<String> list) {
 		GetActiveDBResponce responce = new GetActiveDBResponce();
 		responce.activedDBList = list;
 		return responce;

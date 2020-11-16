@@ -11,21 +11,19 @@ public class UserListener implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
 		HttpSession user = se.getSession();
-		user.setAttribute("token", user.getId());
-
-		// 註冊訊息服務
-		System.out.println(user.getId() + "註冊訊息服務");
-		MessageInit.getMsgManager().register((String) user.getAttribute("token"));
-		MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.info, user.getId() + "已登入"));
+		System.out.println(user.getId() + "已登入");
+		// 通知已登入
+		MessageInit.getMsgManager()
+				.deliverMessage(new Message(Message.Category.info, user.getId() + "已登入"));
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession user = se.getSession();
-		// 登出訊息服務
-		System.out.println(user.getId() + "登出訊息服務");
-		MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.info, user.getId() + "已登出"));
-		MessageInit.getMsgManager().logout((String) user.getAttribute("token"));
+		System.out.println(user.getId() + "已登出");
+		// 通知已登出
+		MessageInit.getMsgManager()
+				.deliverMessage(new Message(Message.Category.info, user.getId() + "已登出"));
 
 	}
 
