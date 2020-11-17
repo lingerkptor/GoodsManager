@@ -5,26 +5,28 @@
 <title>Test Gson</title>
 <script type="text/javascript">
 	window.onload = function() {
-		
-		var obj3 = {
-			"category" : ["info","warn","err"]
-		};
-		var request3 = new XMLHttpRequest();
-		request3.onreadystatechange = alertContents3;
-		request3.open('Post', "/GoodsManager/api/getMessages");
-		request3.setRequestHeader('Content-Type', 'application/json');
-		request3.send(JSON.stringify(obj3));
-		function alertContents3() {
-			if (request3.readyState === XMLHttpRequest.DONE) {
-				if (request3.status === 200) {
-					console.log(request3.responseText);
-					alert(request3.responseText);
-				} else {
-					alert('There was a problem with the request.');
-				}
-			}
-		}
-		
+		getMessage();
+		/*
+		 var obj3 = {
+		 "category" : [ "info", "warn", "err" ]
+		 };
+		 var request3 = new XMLHttpRequest();
+		 request3.onreadystatechange = alertContents3;
+		 request3.open('Post', "/GoodsManager/api/getMessages");
+		 request3.setRequestHeader('Content-Type', 'application/json');
+		 request3.send(JSON.stringify(obj3));
+		 function alertContents3() {
+		 if (request3.readyState === XMLHttpRequest.DONE) {
+		 if (request3.status === 200) {
+		 console.log(request3.responseText);
+		 alert(request3.responseText);
+
+		 } else {
+		 alert('There was a problem with the request.');
+		 }
+		 }
+		 }
+		 */
 		/*
 		var InstallJson = {
 			"customized" : false
@@ -45,9 +47,30 @@
 					
 			}
 		}
-		*/
-		
+		 */
+
 	};
+	function getMessage() {
+		var obj3 = {
+			"category" : [ "info", "warn", "err" ]
+		};
+		var request3 = new XMLHttpRequest();
+		request3.onreadystatechange = function() {
+			if (request3.readyState === XMLHttpRequest.DONE) {
+				if (request3.status === 200) {
+					console.log(request3.responseText);
+					//alert(request3.responseText);
+					getMessage();
+				} else {
+					alert('There was a problem with the request.');
+				}
+			}
+		};
+		request3.open('Post', "/GoodsManager/api/getMessages");
+		request3.setRequestHeader('Content-Type', 'application/json');
+		request3.send(JSON.stringify(obj3));
+
+	}
 </script>
 </head>
 <body>

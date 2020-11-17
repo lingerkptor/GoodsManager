@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import idv.lingerkptor.GoodsManager.core.Observer;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.Message.MessageManager;
@@ -42,12 +43,20 @@ public class GetMessages extends Service {
 	@Override
 	@ContentType(reqType = RequestType.Json, respType = ResponceType.Json) // 輸入跟輸出都是Json
 	public Responce process(Request reqContext) {
-
 		MessageManager msgManager = MessageInit.getMsgManager();
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
-		List<Message> messageList = msgManager.getMessages(reqObj.getkey(), reqObj.getCategory());
-
-		return GetMessageResponce.getMessageList(messageList);
+		MessageObserver observer = new MessageObserver();
+		observer.reqObj = reqObj;
+		msgManager.register(observer);
+		for (int i = 0; i < 300 && observer.msgList == null; i++) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		msgManager.logout(observer);
+		return GetMessageResponce.getMessageList(observer.msgList);
 	}
 
 	/**
@@ -67,8 +76,20 @@ public class GetMessages extends Service {
 	 * @throws IOException
 	 */
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		this.operater(req, resp);
 	}
 
+	class MessageObserver implements Observer {
+		List<Message> msgList = null;
+		GetMessageRequest reqObj;
+
+		@Override
+		public void update() {
+			msgList = MessageInit.getMsgManager().getMessages(reqObj.getkey(),
+					reqObj.getCategory());
+		}
+
+	}
 }

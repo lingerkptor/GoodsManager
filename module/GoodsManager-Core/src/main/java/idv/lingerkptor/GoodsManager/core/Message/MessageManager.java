@@ -14,6 +14,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
+import idv.lingerkptor.GoodsManager.core.Observer;
 import idv.lingerkptor.GoodsManager.core.Message.Message.Category;
 
 /**
@@ -26,15 +27,15 @@ public class MessageManager {
 	/**
 	 * 訊息對照碼
 	 */
-	private transient Map<String, Message> messageMap = new HashMap<String, Message>();
+	private Map<String, Message> messageMap = new HashMap<String, Message>();
 	/**
 	 * 訊息清單
 	 */
-	private transient LinkedList<Message> messageList = new LinkedList<Message>();
+	private LinkedList<Message> messageList = new LinkedList<Message>();
 	/**
 	 * 觀察者清單(尚未完成實作)
 	 */
-	private transient List<MessageObserver> recipientList = new LinkedList<MessageObserver>();
+	private List<Observer> recipientList = new LinkedList<Observer>();
 
 	private transient Map<String, URI> URIMap = new HashMap<String, URI>();
 
@@ -125,6 +126,14 @@ public class MessageManager {
 			e.printStackTrace();
 		}
 		synchronized (recipientList) {
+			/**
+			 * 如果沒有接收者就清空資料
+			 */
+			if (recipientList.isEmpty()) {
+				messageMap.clear();
+				messageList.clear();
+				return;
+			}
 			synchronized (messageMap) {
 				messageMap.put(message.getMsgKey(), message);
 			}
@@ -137,14 +146,13 @@ public class MessageManager {
 			recipientList.stream().forEach(observer -> {
 				observer.update();
 			});
-			recipientList.clear();
 		}
 	}
 
 	/**
 	 * 註冊接收者
 	 */
-	public void register(MessageObserver observer) {
+	public void register(Observer observer) {
 		synchronized (recipientList) {
 			this.recipientList.add(observer);
 		}
@@ -153,7 +161,7 @@ public class MessageManager {
 	/**
 	 * 註銷接收者
 	 */
-	public void logout(MessageObserver observer) {
+	public void logout(Observer observer) {
 		synchronized (recipientList) {
 			this.recipientList.remove(observer);
 		}

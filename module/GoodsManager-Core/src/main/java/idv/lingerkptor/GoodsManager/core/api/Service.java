@@ -15,19 +15,19 @@ import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
 public abstract class Service extends HttpServlet {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 4228208520383490591L;
 	/**
 	 * 分析請求的物件
 	 */
 	private Analyzable analyzobj = null;
+	
 	/**
 	 * 寄送的方法
 	 */
 	private Sendable sendobj = null;
-	protected HttpSession session = null;
+	/**
+	 * 請求物件的類別
+	 */
 	protected Class<? extends Request> requestClass = null;
 
 	/**
@@ -50,7 +50,7 @@ public abstract class Service extends HttpServlet {
 	 * @param resp HttpResponce
 	 */
 	protected final void operater(HttpServletRequest req, HttpServletResponse resp) {
-		session = req.getSession();
+		HttpSession session = req.getSession();
 		configRequestClass();
 		try {
 			// 設定請求類別 設定寄送方式物件
