@@ -6,74 +6,41 @@
 <script type="text/javascript">
 	window.onload = function() {
 		getMessage();
-		/*
-		 var obj3 = {
-		 "category" : [ "info", "warn", "err" ]
-		 };
-		 var request3 = new XMLHttpRequest();
-		 request3.onreadystatechange = alertContents3;
-		 request3.open('Post', "/GoodsManager/api/getMessages");
-		 request3.setRequestHeader('Content-Type', 'application/json');
-		 request3.send(JSON.stringify(obj3));
-		 function alertContents3() {
-		 if (request3.readyState === XMLHttpRequest.DONE) {
-		 if (request3.status === 200) {
-		 console.log(request3.responseText);
-		 alert(request3.responseText);
-
-		 } else {
-		 alert('There was a problem with the request.');
-		 }
-		 }
-		 }
-		 */
-		/*
-		var InstallJson = {
-			"customized" : false
-		};
-		var request = new XMLHttpRequest();
-		request.open('Post',"/GoodsManager/api/install");
-		request.setRequestHeader('Content-Type', 'application/json');
-		request.send(JSON.stringify(InstallJson));
-		function alertContents(){
-			if(request.readyState === XMLHttpRequest.DONE){
-				if(request.status === 200){
-					console.log('install sucess');
-					console.log(request.responceText);
-				}else{
-					console.log('install failure');
-					console.log(request.responceText);
-				}
-					
-			}
-		}
-		 */
+	
 
 	};
 	function getMessage() {
 		var obj3 = {
 			"category" : [ "info", "warn", "err" ]
 		};
-		var request3 = new XMLHttpRequest();
-		request3.onreadystatechange = function() {
-			if (request3.readyState === XMLHttpRequest.DONE) {
-				if (request3.status === 200) {
-					console.log(request3.responseText);
+		var request = new XMLHttpRequest();
+		request.onreadystatechange = function() {
+			if (request.readyState === XMLHttpRequest.DONE) {
+				if (request.status === 200) {
+					console.log(request.responseText);
 					//alert(request3.responseText);
+					let responce = JSON.parse(request.responseText);
+					if (typeof (responce.messageList) != 'undefined') {
+						responce.messageList.forEach(function(item) {
+							let msgEle = document.getElementById('message');
+							msgEle.value += item.dateTime +'  ' + item.context + '\n'
+						});
+					}
 					getMessage();
 				} else {
 					alert('There was a problem with the request.');
 				}
 			}
 		};
-		request3.open('Post', "/GoodsManager/api/getMessages");
-		request3.setRequestHeader('Content-Type', 'application/json');
-		request3.send(JSON.stringify(obj3));
+		request.open('Post', "/GoodsManager/api/getMessages");
+		request.setRequestHeader('Content-Type', 'application/json');
+		request.send(JSON.stringify(obj3));
 
 	}
 </script>
 </head>
 <body>
+	<textarea id="message"></textarea>
 	<a id="test"></a>
 	<a id="test2"></a>
 </body>

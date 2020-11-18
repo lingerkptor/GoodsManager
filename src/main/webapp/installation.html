@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>安裝</title>
+<script>
+	const isCustomize = document.getElementById('customized');
+
+
+	window.onload = function() {
+		
+	};
+
+	function defaultConfig() {
+		const InstallJson = {
+			"customized" : false
+		};
+		let request = new XMLHttpRequest();
+		request.onreadystatechange = function() {
+			if (request.readyState === XMLHttpRequest.DONE) {
+				if (request.status === 200) {
+					console.log('install sucess');
+					console.log(request.responceText);
+				} else {
+					console.log('install failure');
+					console.log(request.responceText);
+				}
+
+			}
+		};
+		request.open('Post', "/GoodsManager/api/install");
+		request.setRequestHeader('Content-Type', 'application/json');
+		request.send(JSON.stringify(InstallJson));
+		function alertContents() {
+			if (request.readyState === XMLHttpRequest.DONE) {
+				if (request.status === 200) {
+					console.log('install sucess');
+					console.log(request.responceText);
+				} else {
+					console.log('install failure');
+					console.log(request.responceText);
+				}
+
+			}
+		}
+	}
+	function uploadDBFile(JDBC, SQLZip) {
+		let formData = new FormData();
+		formData.append('JDBC', JDBC);
+		formData.append('SQLZip', SQLZip);
+
+		let request = new XMLHttpRequest();
+		request.onreadystatechange = function() {
+			if (request.readyState === XMLHttpRequest.DONE) {
+				if (request.status === 200) {
+					console.log('upload sucess');
+					console.log(request.responceText);
+				} else {
+					console.log('upload failure');
+					console.log(request.responceText);
+				}
+			}
+		};
+		request.open('Post', "/GoodsManager/api/UploadDBFiles");
+		request.setRequestHeader('Content-Type', 'multipart/form-data');
+		request.send(formData);
+
+	}
+	/**
+	document.getElementById('install').onclick = function() {
+		if (isCustomize.value != null) {
+			defaultConfig();
+		} else {
+
+		}
+
+	};
+	 **/
+</script>
+</head>
+<body>
+	<div id="messageArea">
+		<p id="prototype" style="display: none">
+			<a name="time"></a><a name='context'></a>
+		</p>
+	</div>
+	<div>
+		<!-- 是否自訂資料庫? -->
+		<input id='customized' type="checkbox" value='true' /> <a>是否自訂資料庫?</a><br />
+	</div>
+	<div>
+		<!-- 上傳自訂資料庫資料 -->
+	</div>
+	<div>
+		<!-- 確定自訂資料庫 -->
+	</div>
+	<div>
+		<input id='install' type='button' />
+	</div>
+</body>
+</html>
