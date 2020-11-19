@@ -35,12 +35,14 @@ public class MessageManager {
 	/**
 	 * 觀察者清單
 	 */
-	private List<Observer> recipientList = new LinkedList<Observer>();
+	private transient List<Observer> recipientList = new LinkedList<Observer>();
 
-	private transient Map<String, URI> URIMap = new HashMap<String, URI>();
+	private  Map<String, URI> URIMap = new HashMap<String, URI>();
 
 	@SuppressWarnings("unused")
 	private MessageManager() {
+		messageMap = new HashMap<String, Message>();
+		messageList = new LinkedList<Message>();
 	}
 
 	public MessageManager(MessageConfig msgconfig) {
@@ -82,10 +84,6 @@ public class MessageManager {
 		LinkedList<Message> list = new LinkedList<Message>();
 		// 避免多人存取list，先將鎖住．
 		synchronized (messageList) {
-			// 如果沒有訊息，就不傳訊息
-			if (messageList.isEmpty())
-				return null;
-
 			int startIndex = (key != null) ? messageList.indexOf(messageMap.get(key)) + 1 : 0;
 
 			List<Category> cateList = Arrays.asList(cate);

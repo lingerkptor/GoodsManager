@@ -14,10 +14,7 @@ import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
  *
  */
 public class ConfigInit implements ServletContextListener {
-	/**
-	 * 資料庫初始化
-	 */
-	private ServletContextListener dbInit = new DatabaseInit();
+
 
 	/**
 	 * 應用程式啟動時，讀取相關設定

@@ -47,15 +47,18 @@ public class GetMessages extends Service {
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
 		MessageObserver observer = new MessageObserver();
 		observer.reqObj = reqObj;
-		msgManager.register(observer);
-		for (int i = 0; i < 300 && observer.msgList == null; i++) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		observer.update();
+		if (observer.msgList.isEmpty()) {
+			msgManager.register(observer);
+			for (int i = 0; i < 300 && observer.msgList.isEmpty(); i++) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					System.out.println("MessageObserver 中斷");
+				}
 			}
+			msgManager.logout(observer);
 		}
-		msgManager.logout(observer);
 		return GetMessageResponce.getMessageList(observer.msgList);
 	}
 

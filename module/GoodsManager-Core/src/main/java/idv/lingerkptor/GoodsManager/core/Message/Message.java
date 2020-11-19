@@ -30,7 +30,7 @@ public class Message implements Cloneable, Serializable {
 	/**
 	 * 訊息碼(hashcode)
 	 */
-	private String key;
+	private transient String key;
 
 	/**
 	 * 訊息分類

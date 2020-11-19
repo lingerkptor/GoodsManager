@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -30,20 +29,24 @@ public class MessageInit implements ServletContextListener {
 		MessageConfig msgconfig = ConfigReader.getMsgConfig();
 		// 反序列化
 		File msgManagerEntity = new File(ConfigReader.getWebAddr() + "/Entity/MessageManager.json");
-		if (msgManagerEntity.exists()) {
-			try {
-				Gson gson = new Gson();
-				msgManager = gson.fromJson(new FileReader(msgManagerEntity), MessageManager.class);
-				msgManager.setConfig(msgconfig);
-			} catch (JsonSyntaxException e) {
-				e.printStackTrace();
-			} catch (JsonIOException e) {
-				System.err.println("MessageManager 反序列化失敗");
-				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+
+		try {
+			Gson gson = new Gson();
+			msgManager = gson.fromJson(new FileReader(msgManagerEntity), MessageManager.class);
+			if (msgManager == null) {
+				msgManagerEntity.delete();
+				throw new FileNotFoundException("內容錯誤，重新建立MessageManager");
 			}
-		} else {
+			msgManager.setConfig(msgconfig);
+		} catch (JsonSyntaxException e) {
+			System.err.println("MessageManager 反序列化失敗，請重新啟動");
+			msgManagerEntity.delete();
+			e.printStackTrace();
+		} catch (JsonIOException e) {
+			System.err.println("MessageManager 反序列化失敗，請重新啟動");
+			msgManagerEntity.delete();
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			new File(ConfigReader.getWebAddr() + "/Entity/").mkdirs();
 			msgManager = new MessageManager(msgconfig);
 		}
