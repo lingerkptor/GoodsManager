@@ -47,7 +47,8 @@ var installPage = {
 					} else {
 						console.log('上傳失敗');
 					}
-					updateObj.update(responce.uploadSuccess);
+					if (typeof updateObj != 'undefined')
+						updateObj.update(responce.uploadSuccess);
 				} else {
 					alert('There was a problem with the request(uploadDBFile).');
 				}
@@ -75,7 +76,7 @@ var installPage = {
 		request.send();
 
 	},
-	installDB: function (installJsonObj) {
+	installDB: function (installJsonObj, updateObj) {
 		/**
 			installJsonObj = {
 				"customized": boolean,
@@ -91,13 +92,10 @@ var installPage = {
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
-					console.log('install sucess');
 					console.log(request.responceText);
-				} else {
-					console.log('install failure');
-					console.log(request.responceText);
-				}
-
+					updateObj.update(JSON.parse(request.responceText));
+				} else
+					alert('There was a problem with the request(getActiveDB).');
 			}
 		};
 		request.open('Post', "/GoodsManager/api/install");
