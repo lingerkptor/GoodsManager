@@ -5,13 +5,10 @@ var installPage = {
 			getCategory: { "category": ["info", "warn", "err"] },
 			appendMessage: function (msg) {
 				messageList.push(msg);
-				console.log(msg.dateTime);
-				console.log(msg.category);
-				console.log(msg.context);
 				msgNode = element.getElementsByClassName('prototype')[0].cloneNode(true);
 				element.appendChild(msgNode);
-				msgNode.getElementsByClassName('time')[0].innerText += msg.dateTime;
-				msgNode.getElementsByClassName('context')[0].innerText += msg.context;
+				msgNode.getElementsByClassName('time')[0].innerText = msg.dateTime;
+				msgNode.getElementsByClassName('context')[0].innerText = msg.context;
 				msgNode.style.display = '';
 				msgNode.classList.remove('prototype');
 				msgNode.classList.add(msg.category);
@@ -27,16 +24,17 @@ var installPage = {
 			}
 		}
 	},
-	uploadDBFile: function (formObj) {
-		/**
-			part{
-				DBName : String
-			}
-			part{
-				JDBC: file
-			}
-			part{
-				SQLZip : file
+	uploadDBFile: function (formObj, updateObj) {
+		/** formObj{
+				part{
+					DBName : String
+				}
+				part{
+					JDBC: file
+				}
+				part{
+					SQLZip : file
+				}
 			}
 		 */
 		request = new XMLHttpRequest();
@@ -49,9 +47,9 @@ var installPage = {
 					} else {
 						console.log('上傳失敗');
 					}
-					console.log(request.responseText);
+					updateObj.update(responce.uploadSuccess);
 				} else {
-					alert('There was a problem with the request.');
+					alert('There was a problem with the request(uploadDBFile).');
 				}
 			}
 		};
@@ -66,9 +64,9 @@ var installPage = {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
 					let responce = JSON.parse(request.responseText);
-					if (typeof responce.activedDBList != 'undefined') {
-						updateObj.update(responce.activedDBList);
-					}
+					updateObj.update(responce.activedDBList);
+				} else {
+					alert('There was a problem with the request(getActiveDB).');
 				}
 			}
 		};

@@ -13,6 +13,7 @@ var getMessage = function (messagePool) {
 				});
 				getMessage(messagePool);
 			} else {
+				console.log('There was a problem with the request(getMessage).');
 				console.log('http state: ' + request.readyState);
 			}
 		}
