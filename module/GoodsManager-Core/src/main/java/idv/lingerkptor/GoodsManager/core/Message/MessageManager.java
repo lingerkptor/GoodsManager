@@ -33,7 +33,7 @@ public class MessageManager {
 	 */
 	private LinkedList<Message> messageList = new LinkedList<Message>();
 	/**
-	 * 觀察者清單(尚未完成實作)
+	 * 觀察者清單
 	 */
 	private List<Observer> recipientList = new LinkedList<Observer>();
 
@@ -86,9 +86,10 @@ public class MessageManager {
 			if (messageList.isEmpty())
 				return null;
 
+			int startIndex = (key != null) ? messageList.indexOf(messageMap.get(key)) + 1 : 0;
+
 			List<Category> cateList = Arrays.asList(cate);
-			for (int i = messageList.indexOf(messageMap.get(key)) + 1; i < messageList
-					.size(); i++) {
+			for (int i = startIndex; i < messageList.size(); i++) {
 				Message msg = messageList.get(i);
 				if (cateList.contains(msg.getCategory())) {
 					list.add(msg);

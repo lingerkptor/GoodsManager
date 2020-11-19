@@ -1,21 +1,33 @@
 var installPage = {
-	messagePool = {
-		element: document.getElementById('messageArea'),
-		appendMessage: function(msg) {
-			msgNode = element.getElementById('prototype').cloneNode(true);
-			msgNode.getElementsByName('time')[0].innerHtml = msg.dateTime;
-			msgNode.getElementsByName('context')[0].innerHtml = msg.context;
-			msgNode.style.display = '';
-			this.element.appendChild(msgNode);
-		},
-		beforeMsgRead: function() {
-
-		},
-		listener: function() {
-			getMessage(this);
+	getMessagePool: function (element) {
+		messageList = [];
+		return {
+			getCategory: { "category": ["info", "warn", "err"] },
+			appendMessage: function (msg) {
+				messageList.push(msg);
+				console.log(msg.dateTime);
+				console.log(msg.category);
+				console.log(msg.context);
+				msgNode = element.getElementsByClassName('prototype')[0].cloneNode(true);
+				element.appendChild(msgNode);
+				msgNode.getElementsByClassName('time')[0].innerText += msg.dateTime;
+				msgNode.getElementsByClassName('context')[0].innerText += msg.context;
+				msgNode.style.display = '';
+				msgNode.classList.remove('prototype');
+				msgNode.classList.add(msg.category);
+			},
+			beforeMsgRead: function () {
+				messageList = JSON.parse(localStorage.getItem('messageList'));
+			},
+			afterMsgWriting: function () {
+				localStorage.setItem('messageList', JSON.stringify(messageList));
+			},
+			listening: function () {
+				getMessage(this);
+			}
 		}
 	},
-	uploadDBFile: function(formObj) {
+	uploadDBFile: function (formObj) {
 		/**
 			part{
 				DBName : String
@@ -28,7 +40,7 @@ var installPage = {
 			}
 		 */
 		request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
+		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
 					let responce = JSON.parse(request.responceText);
@@ -48,9 +60,9 @@ var installPage = {
 
 
 	},
-	getActiveDB: function(updateObj) {
+	getActiveDB: function (updateObj) {
 		let request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
+		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
 					let responce = JSON.parse(request.responseText);
@@ -65,7 +77,7 @@ var installPage = {
 		request.send();
 
 	},
-	installDB: function(installJsonObj) {
+	installDB: function (installJsonObj) {
 		/**
 			installJsonObj = {
 				"customized": boolean,
@@ -78,7 +90,7 @@ var installPage = {
 			};
 		 */
 		let request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
+		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
 					console.log('install sucess');

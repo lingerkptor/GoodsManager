@@ -1,87 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>安裝</title>
-<script>
-	const isCustomize = document.getElementById('customized');
+	<meta charset="UTF-8">
+	<title>安裝</title>
+	<script src='./js/message.js'></script>
+	<script src='./js/installation.js'></script>
+	<script>
 
 
-	window.onload = function() {
-		
-	};
+		window.onload = function () {
+			let messageArea = document.getElementById('messageArea');
+			messagePool = installPage.getMessagePool(messageArea);
+			messagePool.listening();
 
-	function defaultConfig() {
-		const InstallJson = {
-			"customized" : false
 		};
-		let request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
-			if (request.readyState === XMLHttpRequest.DONE) {
-				if (request.status === 200) {
-					console.log('install sucess');
-					console.log(request.responceText);
-				} else {
-					console.log('install failure');
-					console.log(request.responceText);
-				}
 
-			}
-		};
-		request.open('Post', "/GoodsManager/api/install");
-		request.setRequestHeader('Content-Type', 'application/json');
-		request.send(JSON.stringify(InstallJson));
-		function alertContents() {
-			if (request.readyState === XMLHttpRequest.DONE) {
-				if (request.status === 200) {
-					console.log('install sucess');
-					console.log(request.responceText);
-				} else {
-					console.log('install failure');
-					console.log(request.responceText);
-				}
-
-			}
-		}
-	}
-	function uploadDBFile(JDBC, SQLZip) {
-		let formData = new FormData();
-		formData.append('JDBC', JDBC);
-		formData.append('SQLZip', SQLZip);
-
-		let request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
-			if (request.readyState === XMLHttpRequest.DONE) {
-				if (request.status === 200) {
-					console.log('upload sucess');
-					console.log(request.responceText);
-				} else {
-					console.log('upload failure');
-					console.log(request.responceText);
-				}
-			}
-		};
-		request.open('Post', "/GoodsManager/api/UploadDBFiles");
-		request.setRequestHeader('Content-Type', 'multipart/form-data');
-		request.send(formData);
-
-	}
-	/**
-	document.getElementById('install').onclick = function() {
-		if (isCustomize.value != null) {
-			defaultConfig();
-		} else {
-
-		}
-
-	};
-	 **/
-</script>
+	</script>
 </head>
+
 <body>
-	<div id="messageArea">
-		<p id="prototype" style="display: none">
-			<a name="time"></a><a name='context'></a>
+	<div id="messageArea" style="border:2px ;height: 200px;background-color: rgb(190, 201, 211);overflow-y: scroll;">
+		<p class="prototype" style="display: none">
+			<a class="time"></a><a class='context'></a>
 		</p>
 	</div>
 	<div>
@@ -98,4 +39,5 @@
 		<input id='install' type='button' />
 	</div>
 </body>
+
 </html>
