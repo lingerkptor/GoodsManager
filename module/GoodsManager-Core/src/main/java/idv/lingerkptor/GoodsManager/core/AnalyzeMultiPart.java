@@ -124,7 +124,7 @@ public class AnalyzeMultiPart implements Analyzable {
 			String fileName = source.getSubmittedFileName();
 
 			// 取得暫存資料夾路徑
-			String filePath = ConfigReader.getTempDir();
+			String filePath = ConfigReader.getConfigReader().getTempDir();
 
 			// 存檔start
 			BufferedInputStream fileInput = // Source Stream

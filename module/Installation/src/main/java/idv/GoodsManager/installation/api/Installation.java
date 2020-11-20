@@ -41,10 +41,10 @@ public class Installation extends Service {
 		/**
 		 * STEP1 建立自訂資料庫設定(如果有需要)
 		 */
-		DatabaseConfigImp dbconfig = ConfigReader.getDBConfig();
+		DatabaseConfigImp dbconfig = ConfigReader.getConfigReader().getDBConfig();
 		// 如果要自訂資料庫，需要預先上傳資料
 		if (reqContext.isCustomized())
-			if ((dbconfig = CustomizedDBConfig.createDBcofig(reqContext)) == null) {// 建立自訂資料庫設定
+			if ((dbconfig = CustomizedDBConfig.createDBconfig(reqContext)) == null) {// 建立自訂資料庫設定
 				MessageInit.getMsgManager().deliverMessage( //
 						new Message(Message.Category.warn, "建立自訂資料庫設定失敗．"));
 				// 回傳安裝失敗
@@ -56,7 +56,7 @@ public class Installation extends Service {
 		/**
 		 * STEP2 測試連線 start
 		 */
-		if (DataAccessCore.testConnection(ConfigReader.getDBConfig())) {
+		if (DataAccessCore.testConnection(ConfigReader.getConfigReader().getDBConfig())) {
 			System.out.println("連線成功");// 連線OK
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線成功
 					new Message(Message.Category.info, "連線測試成功．"));
@@ -74,7 +74,8 @@ public class Installation extends Service {
 		Properties createTableSqlMap = new Properties();
 		try {
 			createTableSqlMap.load(new FileInputStream(
-					new File(ConfigReader.getDBConfig().getSqlURL() + "/CreateTable.properties")));
+					new File(ConfigReader.getConfigReader().getDBConfig().getSqlURL()
+							+ "/CreateTable.properties")));
 		} catch (FileNotFoundException e) {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, // 訊息種類
@@ -108,6 +109,28 @@ public class Installation extends Service {
 			// 回傳建立資料表失敗
 			return InstallResponce.createTableFault();
 		} // 建立資料表END
+
+		/**
+		 * STEP5. 匯入主設定檔內
+		 */
+		try {
+			ConfigReader.getConfigReader().setNewDBConfig(reqContext.getDatabaseName());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.err,
+					"找不到db." + reqContext.getDatabaseName() + ".properties檔案"));
+			return InstallResponce.createTableFault();
+		} catch (NullPointerException e) {
+			MessageInit.getMsgManager()
+					.deliverMessage(new Message(Message.Category.err, e.getMessage()));
+			e.printStackTrace();
+			return InstallResponce.createTableFault();
+		} catch (IOException e) {
+			MessageInit.getMsgManager()
+					.deliverMessage(new Message(Message.Category.err, "設定讀取異常."));
+			e.printStackTrace();
+			return InstallResponce.createTableFault();
+		}
 
 		/**
 		 * 完成

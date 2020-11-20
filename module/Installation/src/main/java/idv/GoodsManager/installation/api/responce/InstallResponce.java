@@ -6,10 +6,11 @@ import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
 public class InstallResponce implements Responce {
 
+	@SuppressWarnings("unused")
 	private boolean buildDBConfig = true;
-
+	@SuppressWarnings("unused")
 	private boolean testConnect = true;
-
+	@SuppressWarnings("unused")
 	private boolean createTable = true;
 
 	private InstallResponce() {

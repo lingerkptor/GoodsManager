@@ -26,9 +26,10 @@ public class MessageInit implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		// 取得訊息設定
 		System.out.println("取得訊息設定");
-		MessageConfig msgconfig = ConfigReader.getMsgConfig();
+		MessageConfig msgconfig = ConfigReader.getConfigReader().getMsgConfig();
 		// 反序列化
-		File msgManagerEntity = new File(ConfigReader.getWebAddr() + "/Entity/MessageManager.json");
+		File msgManagerEntity = new File(
+				ConfigReader.getConfigReader().getWebAddr() + "/Entity/MessageManager.json");
 
 		try {
 			Gson gson = new Gson();
@@ -47,7 +48,7 @@ public class MessageInit implements ServletContextListener {
 			msgManagerEntity.delete();
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			new File(ConfigReader.getWebAddr() + "/Entity/").mkdirs();
+			new File(ConfigReader.getConfigReader().getWebAddr() + "/Entity/").mkdirs();
 			msgManager = new MessageManager(msgconfig);
 		}
 
@@ -55,7 +56,7 @@ public class MessageInit implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		File msgManagerEntity = new File(ConfigReader.getWebAddr() + "/Entity/MessageManager.json");
+		File msgManagerEntity = new File(ConfigReader.getConfigReader().getWebAddr() + "/Entity/MessageManager.json");
 		if (msgManagerEntity.exists())
 			msgManagerEntity.delete();
 		try {

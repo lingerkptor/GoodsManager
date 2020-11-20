@@ -3,7 +3,7 @@
 	obj.getCategory = {"category" : ["info","warn","err"]};
  */
 
-var getMessage = function (messagePool) {
+const getMessage = function (messagePool) {
 	request = new XMLHttpRequest();
 	request.onreadystatechange = function () {
 		if (request.readyState === XMLHttpRequest.DONE) {

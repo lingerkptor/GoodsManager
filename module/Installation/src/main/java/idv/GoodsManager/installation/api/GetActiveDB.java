@@ -31,15 +31,10 @@ import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 @WebServlet("/api/getActiveDB")
 public class GetActiveDB extends Service {
 
-	/**
-	 * 
-	 */
-
 	private static final long serialVersionUID = 188247525668921582L;
 
-	@Override
-	@ContentType(reqType = ContentType.RequestType.Text_Plain, respType = ContentType.ResponceType.Json)
-	public Responce process(Request requestObj) {
+	public static List<DB> getActivedDBList()
+			throws JsonIOException, JsonSyntaxException, FileNotFoundException, IOException {
 		Gson gson = new Gson();
 		Type type = new TypeToken<List<DB>>() {
 		}.getType();
@@ -47,23 +42,43 @@ public class GetActiveDB extends Service {
 
 		FileReader reader = null;
 		try {
-			reader = new FileReader(new File(ConfigReader.getWebAddr() + "//sql//activeDB.json"));
+			reader = new FileReader(
+					new File(ConfigReader.getConfigReader().getWebAddr() + "//sql//activeDB.json"));
 			activedDBList = gson.fromJson(reader, type);
+		} catch (FileNotFoundException e) {
+			throw e;
+		} catch (JsonIOException | JsonSyntaxException e) {
+			throw e;
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				throw e;
+			}
+		}
+		return activedDBList;
+	}
+
+	@Override
+	@ContentType(reqType = ContentType.RequestType.Text_Plain, respType = ContentType.ResponceType.Json)
+	public Responce process(Request requestObj) {
+
+		List<DB> activedDBList = null;
+
+		try {
+			activedDBList = GetActiveDB.getActivedDBList();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			MessageInit.getMsgManager().deliverMessage(
 					new Message(Message.Category.info, "除了預設的SQLite資料庫外，沒有其他的資料庫．"));
 		} catch (JsonIOException | JsonSyntaxException e) {
 			MessageInit.getMsgManager().deliverMessage(
-					new Message(Message.Category.warn, "取得資料失敗．Message: " +e.getMessage()));
+					new Message(Message.Category.warn, "取得資料失敗．Message: " + e.getMessage()));
 			e.printStackTrace();
 			return GetActiveDBResponce.readActivedDBListFail();
-		}finally {
-			try {
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return GetActiveDBResponce.readActivedDBListFail();
 		}
 		return GetActiveDBResponce.sendActivedDBList(this.getActivedDBNameList(activedDBList));
 	}

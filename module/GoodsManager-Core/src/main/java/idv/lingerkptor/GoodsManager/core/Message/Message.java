@@ -10,9 +10,7 @@ import java.util.Date;
  * @author lingerkptor
  */
 public class Message implements Cloneable, Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 3817151034106478631L;
 
 	/**
@@ -26,11 +24,6 @@ public class Message implements Cloneable, Serializable {
 		warn, // 警告
 		info; // 資訊
 	}
-
-	/**
-	 * 訊息碼(hashcode)
-	 */
-	private transient String key;
 
 	/**
 	 * 訊息分類
@@ -62,7 +55,6 @@ public class Message implements Cloneable, Serializable {
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		cloneObj.key = String.valueOf(cloneObj.hashCode());
 		cloneObj.dateTime = this.dateTime;
 		cloneObj.category = this.category;
 		cloneObj.context = this.context;
@@ -70,7 +62,6 @@ public class Message implements Cloneable, Serializable {
 	}
 
 	public Message(Category category, String context) {
-		this.key = String.valueOf(this.hashCode());
 		this.category = category;
 		this.context = context;
 	}
@@ -99,6 +90,9 @@ public class Message implements Cloneable, Serializable {
 	 * @return
 	 */
 	public String getMsgKey() {
-		return key;
+		StringBuilder key = new StringBuilder();
+		key.append(this.dateTime);
+		key.append(this.context.chars().sum());
+		return key.toString();
 	}
 }

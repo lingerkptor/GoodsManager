@@ -1,4 +1,4 @@
-var installPage = {
+const installPage = {
 	getMessagePool: function (element) {
 		messageList = [];
 		return {
@@ -9,7 +9,6 @@ var installPage = {
 				element.appendChild(msgNode);
 				msgNode.getElementsByClassName('time')[0].innerText = msg.dateTime;
 				msgNode.getElementsByClassName('context')[0].innerText = msg.context;
-				msgNode.style.display = '';
 				msgNode.classList.remove('prototype');
 				msgNode.classList.add(msg.category);
 			},
@@ -71,17 +70,16 @@ var installPage = {
 				}
 			}
 		};
-		request.open('Get', "/api/getActiveDB");
+		request.open('Get', "/GoodsManager/api/getActiveDB");
 		request.setRequestHeader('Content-Type', 'text/plain');
 		request.send();
-
 	},
 	installDB: function (installJsonObj, updateObj) {
 		/**
 			installJsonObj = {
 				"customized": boolean,
 				"databaseName": String,
-				"JDBC": String,
+				"JDBCName": String,
 				"URL": String,
 				"account": String,
 				"password": String,

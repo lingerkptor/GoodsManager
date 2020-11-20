@@ -27,7 +27,7 @@ public class MessageManager {
 	/**
 	 * 訊息對照碼
 	 */
-	private Map<String, Message> messageMap = new HashMap<String, Message>();
+	private transient Map<String, Message> messageMap = new HashMap<String, Message>();
 	/**
 	 * 訊息清單
 	 */
@@ -37,7 +37,7 @@ public class MessageManager {
 	 */
 	private transient List<Observer> recipientList = new LinkedList<Observer>();
 
-	private  Map<String, URI> URIMap = new HashMap<String, URI>();
+	private transient Map<String, URI> URIMap = new HashMap<String, URI>();
 
 	@SuppressWarnings("unused")
 	private MessageManager() {
@@ -70,6 +70,9 @@ public class MessageManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		messageList.stream().forEach(msg -> {
+			messageMap.put(msg.getMsgKey(), msg);
+		});
 	}
 
 	/**
@@ -84,8 +87,10 @@ public class MessageManager {
 		LinkedList<Message> list = new LinkedList<Message>();
 		// 避免多人存取list，先將鎖住．
 		synchronized (messageList) {
-			int startIndex = (key != null) ? messageList.indexOf(messageMap.get(key)) + 1 : 0;
-
+			int startIndex;
+			synchronized (messageMap) {
+				startIndex = (key != null) ? messageList.indexOf(messageMap.get(key)) + 1 : 0;
+			}
 			List<Category> cateList = Arrays.asList(cate);
 			for (int i = startIndex; i < messageList.size(); i++) {
 				Message msg = messageList.get(i);
@@ -102,6 +107,14 @@ public class MessageManager {
 	 * 交付訊息，給予管理．
 	 */
 	public void deliverMessage(Message message) {
+		/**
+		 * 假如有一個錯誤訊息在同一時間發生，可能會產生出相同的訊息
+		 */
+		synchronized (messageMap) {
+			if (this.messageMap.containsKey(message.getMsgKey()))
+				return;
+		}
+
 		URI uri = null;
 		switch (message.getCategory()) {
 		case err:
@@ -125,18 +138,20 @@ public class MessageManager {
 			e.printStackTrace();
 		}
 		synchronized (recipientList) {
-			/**
-			 * 如果沒有接收者就清空資料
-			 */
-			if (recipientList.isEmpty()) {
-				messageMap.clear();
-				messageList.clear();
-				return;
-			}
-			synchronized (messageMap) {
-				messageMap.put(message.getMsgKey(), message);
-			}
 			synchronized (messageList) {
+				synchronized (messageMap) {
+					/**
+					 * 如果沒有接收者就清空資料
+					 */
+					if (recipientList.isEmpty()) {
+						messageMap.clear();
+						messageList.clear();
+						return;
+					}
+
+					messageMap.put(message.getMsgKey(), message);
+				}
+
 				this.messageList.add(message);
 			}
 			/**

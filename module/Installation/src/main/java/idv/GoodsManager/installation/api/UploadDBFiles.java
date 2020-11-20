@@ -20,6 +20,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
 
 @WebServlet("/api/UploadDBFiles")
+@MultipartConfig
 public class UploadDBFiles extends Service {
 
 	private static final long serialVersionUID = 607009177805954705L;
@@ -76,7 +78,7 @@ public class UploadDBFiles extends Service {
 	 * @throws IOException
 	 */
 	private Path moveJDBC(Path source) throws IOException {
-		Path activeJDBCPath = Paths.get(ConfigReader.getWebAddr() + "//lib");
+		Path activeJDBCPath = Paths.get(ConfigReader.getConfigReader().getWebAddr() + "//lib");
 		Path newJDBC = null;
 		try {
 			newJDBC = Files.move(source, activeJDBCPath.resolve(source.getFileName().toString()),
@@ -99,7 +101,7 @@ public class UploadDBFiles extends Service {
 		ZipInputStream input = null;
 		try {
 			input = new ZipInputStream(new FileInputStream(SQLZIP));
-			File sqlDir = new File(ConfigReader.getWebAddr() + "//sql");
+			File sqlDir = new File(ConfigReader.getConfigReader().getWebAddr()  + "//sql");
 			ZipEntry entry;
 			while ((entry = input.getNextEntry()) != null) {
 				if (entry.isDirectory())
@@ -130,6 +132,7 @@ public class UploadDBFiles extends Service {
 		} finally {
 			try {
 				input.close();
+				SQLZIP.delete();
 			} catch (IOException e) {
 				e.printStackTrace();
 				MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.err,
@@ -174,7 +177,7 @@ public class UploadDBFiles extends Service {
 	 */
 	private boolean recordActivedDB(String DBName, String JDBCName) {
 		Gson gson = new Gson();
-		File activeDBListFile = new File(ConfigReader.getWebAddr() + "//sql//activeDB.json");
+		File activeDBListFile = new File(ConfigReader.getConfigReader().getWebAddr()  + "//sql//activeDB.json");
 
 		// 讀取紀錄Start
 		LinkedList<DB> activeDBList = null;
@@ -256,7 +259,7 @@ public class UploadDBFiles extends Service {
 	@ContentType(reqType = ContentType.RequestType.MultiPart, respType = ContentType.ResponceType.Json)
 	public Responce process(Request requestObj) {
 		UploadDBFilesRequest request = (UploadDBFilesRequest) requestObj;
-		
+
 		if (request.getDBName() == null || request.getJDBC() == null || request.getSQLZIP() == null)
 			return UploadDBFilesResponce.uploadFailure();
 
@@ -279,7 +282,7 @@ public class UploadDBFiles extends Service {
 		/**
 		 * STEP3. 解壓縮SQLZIP
 		 */
-		if (!decompressSQLZip(request.getJDBC())) {
+		if (!decompressSQLZip(request.getSQLZIP())) {
 			return UploadDBFilesResponce.uploadFailure();
 		}
 

@@ -1,13 +1,8 @@
 package idv.lingerkptor.GoodsManager.core.test.multipart;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 

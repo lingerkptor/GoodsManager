@@ -3,6 +3,7 @@ package idv.lingerkptor.GoodsManager.core.DataAccess;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -24,8 +25,8 @@ public class DatabaseConfigImp implements DatabaseConfig {
 
 	}
 
-	public DatabaseConfigImp(String dbName, String driver, String driverUrl, String url, String account,
-			String password, int maxConnection) {
+	public DatabaseConfigImp(String dbName, String driver, String driverUrl, String url,
+			String account, String password, int maxConnection) {
 		this.dbName = dbName;
 		this.driver = driver;
 		this.driverUrl = driverUrl;
@@ -33,14 +34,27 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		this.account = account;
 		this.password = password;
 		this.maxConnection = maxConnection;
-		this.sqlURL = ConfigReader.getWebAddr() + "/sql/" + dbName;
+		this.sqlURL = ConfigReader.getConfigReader().getWebAddr() + "/sql/" + dbName;
 	}
 
-	public boolean saveConfig() {
+	public boolean saveConfig() throws NullPointerException {
 		Properties prop = new Properties();
-		File dbConfig = new File(ConfigReader.getWebAddr() + "/config/db.properties");
+		File dbConfig = new File(ConfigReader.getConfigReader().getWebAddr() + "/config/db."
+				+ dbName + ".properties");
+		FileReader reader = null;
+		FileWriter writer = null;
 		try {
-			prop.load(new FileReader(dbConfig));
+			writer = new FileWriter(dbConfig);
+			reader = new FileReader(dbConfig);
+			prop.load(reader);
+			prop.put("name", this.dbName);
+			prop.put("driver", this.driver);
+			prop.put("driverUrl", this.driverUrl);
+			prop.put("url", this.url);
+			prop.put("maxConnection", this.maxConnection);
+			prop.put("account", this.account);
+			prop.put("password", this.password);
+			prop.store(writer, this.dbName);
 		} catch (FileNotFoundException e) {
 			try {
 				dbConfig.createNewFile();
@@ -52,15 +66,16 @@ public class DatabaseConfigImp implements DatabaseConfig {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			try {
+				reader.close();
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
-		;
-		prop.put("name", this.dbName);
-		prop.put("driver", this.driver);
-		prop.put("driverUrl", this.driverUrl);
-		prop.put("url", this.url);
-		prop.put("maxConnection", this.maxConnection);
-		prop.put("account", this.account);
-		prop.put("password", this.password);
+
 		return true;
 	}
 
@@ -93,8 +108,10 @@ public class DatabaseConfigImp implements DatabaseConfig {
 	public int getMaxConnection() {
 		return maxConnection;
 	}
+
 	/**
 	 * 取得SQL路徑
+	 * 
 	 * @return the sqlURL
 	 */
 	public String getSqlURL() {
@@ -103,6 +120,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 
 	/**
 	 * 取得資料庫名稱
+	 * 
 	 * @return the dbName
 	 */
 	public String getDbName() {

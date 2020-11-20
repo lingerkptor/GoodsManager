@@ -19,7 +19,7 @@ public class DatabaseInit implements ServletContextListener {
 		try {
 			System.out.println("取得資料庫設定");
 			// 取得資料庫設定
-			DatabaseConfig dbconfig = ConfigReader.getDBConfig();
+			DatabaseConfig dbconfig = ConfigReader.getConfigReader().getDBConfig();
 			System.out.println("設定資料庫");
 			DataAccessCore.setDatabase(dbconfig);
 		} catch (DBOperatorException e) {
