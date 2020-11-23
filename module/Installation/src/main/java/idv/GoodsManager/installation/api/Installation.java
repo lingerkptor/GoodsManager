@@ -56,7 +56,7 @@ public class Installation extends Service {
 		/**
 		 * STEP2 測試連線 start
 		 */
-		if (DataAccessCore.testConnection(ConfigReader.getConfigReader().getDBConfig())) {
+		if (DataAccessCore.testConnection()) {
 			System.out.println("連線成功");// 連線OK
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線成功
 					new Message(Message.Category.info, "連線測試成功．"));
@@ -113,24 +113,15 @@ public class Installation extends Service {
 		/**
 		 * STEP5. 匯入主設定檔內
 		 */
-		try {
-			ConfigReader.getConfigReader().setNewDBConfig(reqContext.getDatabaseName());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.err,
-					"找不到db." + reqContext.getDatabaseName() + ".properties檔案"));
-			return InstallResponce.createTableFault();
-		} catch (NullPointerException e) {
-			MessageInit.getMsgManager()
-					.deliverMessage(new Message(Message.Category.err, e.getMessage()));
-			e.printStackTrace();
-			return InstallResponce.createTableFault();
-		} catch (IOException e) {
-			MessageInit.getMsgManager()
-					.deliverMessage(new Message(Message.Category.err, "設定讀取異常."));
-			e.printStackTrace();
-			return InstallResponce.createTableFault();
-		}
+		if (reqContext.isCustomized())
+			try {
+				ConfigReader.getConfigReader().setNewDBConfig(reqContext.getDatabaseName());
+			} catch (NullPointerException e) {
+				MessageInit.getMsgManager()
+						.deliverMessage(new Message(Message.Category.err, e.getMessage()));
+				e.printStackTrace();
+				return InstallResponce.createTableFault();
+			}
 
 		/**
 		 * 完成

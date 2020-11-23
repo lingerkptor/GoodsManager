@@ -9,6 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,13 @@ public class AnalyzeMultiPart implements Analyzable {
 					Field field = requestObj.getClass().getDeclaredField(partName);
 					field.setAccessible(true);
 					if (part.getContentType() != null) {// 檔案處理
-						field.set(requestObj, this.saveFile(part));// 存檔
+						Field addFile = requestObj.getClass().getDeclaredField("fileMap");
+						addFile.setAccessible(true);
+						@SuppressWarnings("unchecked")
+						Map<String, File> fileMap = (Map<String, File>) addFile.get(requestObj);
+						fileMap.put(partName, this.saveFile(part));
+						addFile.setAccessible(false);
+						// field.set(requestObj, this.saveFile(part));// 存檔
 					} else {
 						try {
 							Class<?> fieldType = field.getType();

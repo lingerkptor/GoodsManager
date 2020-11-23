@@ -51,7 +51,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 			prop.put("driver", this.driver);
 			prop.put("driverUrl", this.driverUrl);
 			prop.put("url", this.url);
-			prop.put("maxConnection", this.maxConnection);
+			prop.put("maxConnection", String.valueOf(this.maxConnection));
 			prop.put("account", this.account);
 			prop.put("password", this.password);
 			prop.store(writer, this.dbName);
@@ -86,7 +86,7 @@ public class DatabaseConfigImp implements DatabaseConfig {
 
 	@Override
 	public String getDriverUrl() {
-		return driverUrl;
+		return ConfigReader.getConfigReader().getWebAddr() + driverUrl;
 	}
 
 	@Override

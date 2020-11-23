@@ -74,26 +74,11 @@ public class ConfigReader {
 	/**
 	 * 設定新資料庫設定檔
 	 * 
-	 * @param newDBConfigFileName 新資料庫設定檔檔名
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param dbName 資料庫名稱
 	 */
-	public void setNewDBConfig(String newDBConfigFileName)
-			throws FileNotFoundException, IOException {
-		try {
-			dbprops.load(new FileInputStream(new File(webAddr + "/config/" + newDBConfigFileName)));
-			props.setProperty("dbconfig", newDBConfigFileName);
-			dbprops.store(
-					new FileOutputStream(new File(webAddr + "/config/" + newDBConfigFileName)),
-					"newDBConfigFileName");
-			this.loadConfig();
-		} catch (FileNotFoundException e) {
-			System.err.println("找不到" + newDBConfigFileName + "檔案");
-			throw e;
-		} catch (IOException e) {
-			System.err.println("設定讀取異常.");
-			throw e;
-		}
+	public void setNewDBConfig(String dbName) {
+		props.setProperty("dbconfig", "db." + dbName + ".properties");
+		this.loadConfig();
 	}
 
 	/**
@@ -136,7 +121,7 @@ public class ConfigReader {
 		}
 		// 建立資料庫設定
 		dbconfig = new DatabaseConfigImp(dbprops.getProperty("name"), dbprops.getProperty("driver"),
-				webAddr + dbprops.getProperty("driverUrl"), dbprops.getProperty("url"),
+				dbprops.getProperty("driverUrl"), dbprops.getProperty("url"),
 				dbprops.getProperty("account"), dbprops.getProperty("password"),
 				Integer.parseInt(dbprops.getProperty("maxConnection")));
 	}

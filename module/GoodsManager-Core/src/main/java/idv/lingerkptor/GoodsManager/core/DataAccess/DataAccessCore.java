@@ -14,7 +14,7 @@ public class DataAccessCore {
 	/**
 	 * 連接池
 	 */
-	private static ConnectPool pool = new ConnectPool();
+	private static ConnectPool pool;
 	private static DataAccessTemplate template;
 
 	public static STATE getState() {
@@ -37,6 +37,7 @@ public class DataAccessCore {
 	 * @param dbconfig 資料庫設定
 	 */
 	public static void setDatabase(DatabaseConfig dbconfig) {
+		pool = new ConnectPool();
 		System.out.println("設定資料庫");
 		pool.setDatabase(Database.getDatabase(dbconfig));
 		System.out.println("建立資料存取樣板");
@@ -46,19 +47,22 @@ public class DataAccessCore {
 	/**
 	 * 測試連線
 	 */
-	public static boolean testConnection(DatabaseConfig config) {
+	public static boolean testConnection() {
 		Connection conn = null;
 		try {
-			conn=pool.getConnection() ;
-			if (conn!= null) {
+			conn = pool.getConnection();
+			if (conn != null) {
 				pool.returnConnection(conn);
 				return true;
 			}
 		} catch (DBOperatorException e) {
 			e.printStackTrace();
+			pool.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			pool.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return false;
 	}
