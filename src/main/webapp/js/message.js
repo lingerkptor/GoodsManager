@@ -4,21 +4,22 @@
  */
 
 const getMessage = function (messagePool) {
-	request = new XMLHttpRequest();
-	request.onreadystatechange = function () {
-		if (request.readyState === XMLHttpRequest.DONE) {
-			if (request.status === 200) {
-				JSON.parse(request.responseText).messageList.forEach(msg => {
-					messagePool.appendMessage(msg);
-				});
+	getMessageRequest = new XMLHttpRequest();
+	getMessageRequest.onreadystatechange = function () {
+		if (getMessageRequest.readyState === XMLHttpRequest.DONE) {
+			if (getMessageRequest.status === 200) {
+				console.log(JSON.parse(getMessageRequest.responseText));
+				JSON.parse(getMessageRequest.responseText).messageList.forEach(msg =>
+					messagePool.appendMessage(msg)
+				);
 				getMessage(messagePool);
 			} else {
 				console.log('There was a problem with the request(getMessage).');
-				console.log('http state: ' + request.readyState);
+				console.log('http state: ' + getMessageRequest.readyState);
 			}
 		}
 	};
-	request.open('Post', "/GoodsManager/api/getMessages");
-	request.setRequestHeader('Content-Type', 'application/json');
-	request.send(JSON.stringify(messagePool.getCategory));
+	getMessageRequest.open('Post', "/GoodsManager/api/getMessages");
+	getMessageRequest.setRequestHeader('Content-Type', 'application/json');
+	getMessageRequest.send(JSON.stringify(messagePool.getCategory));
 };

@@ -38,20 +38,23 @@ public class Installation extends Service {
 	@ContentType(reqType = RequestType.Json, respType = ResponseType.Json) // 請求跟回應的標頭型態
 	public Response process(Request reqObj) {
 		InstallationRequest reqContext = (InstallationRequest) reqObj;
+
 		/**
 		 * STEP1 建立自訂資料庫設定(如果有需要)
 		 */
 		DatabaseConfigImp dbconfig = ConfigReader.getConfigReader().getDBConfig();
 		// 如果要自訂資料庫，需要預先上傳資料
-		if (reqContext.isCustomized())
+		if (reqContext.isCustomized()) {
 			if ((dbconfig = CustomizedDBConfig.createDBconfig(reqContext)) == null) {// 建立自訂資料庫設定
 				MessageInit.getMsgManager().deliverMessage( //
 						new Message(Message.Category.warn, "建立自訂資料庫設定失敗．"));
 				// 回傳安裝失敗
 				return InstallResponse.buildDBConfigFault();
-			} else {
+			} else
 				DataAccessCore.setDatabase(dbconfig);
-			}
+		} else
+			MessageInit.getMsgManager().deliverMessage( //
+					new Message(Message.Category.info, "初始化預設資料庫"));
 
 		/**
 		 * STEP2 測試連線 start
@@ -102,16 +105,13 @@ public class Installation extends Service {
 		} catch (SQLException e) {
 			System.out.println("建立資料表失敗");
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
-					new Message(Message.Category.info, "SQL發生錯誤，請詳閱訊息，並確認SQL內容． "));
-			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
-					new Message(Message.Category.warn,
-							"SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
+					new Message(Message.Category.warn, "SQL發生錯誤，訊息：　 " + e.getMessage()));
 			// 回傳建立資料表失敗
 			return InstallResponse.createTableFault();
 		} // 建立資料表END
 
 		/**
-		 * STEP5. 匯入主設定檔內
+		 * STEP5. 匯入主設定檔內(預設的不用)
 		 */
 		if (reqContext.isCustomized())
 			try {

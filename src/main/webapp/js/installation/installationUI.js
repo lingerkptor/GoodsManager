@@ -61,9 +61,9 @@ const UIConfiger = function () {
         installPage.installDB(installJsonObj, {
             update: function (resultObj) {
                 if (resultObj.buildDBConfig)
-                    installResult.innerHTML += "<p>建立資料庫成功</p>";
+                    installResult.innerHTML = "<p>建立資料庫成功</p>";
                 else
-                    installResult.innerHTML += "<p>建立資料庫失敗</p>";
+                    installResult.innerHTML = "<p>建立資料庫失敗</p>";
                 if (resultObj.testConnect)
                     installResult.innerHTML += "<p>連接資料庫成功</p>";
                 else

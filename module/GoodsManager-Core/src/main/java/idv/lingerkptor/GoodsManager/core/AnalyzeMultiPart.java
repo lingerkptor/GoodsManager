@@ -29,17 +29,18 @@ public class AnalyzeMultiPart implements Analyzable {
 				String partName = part.getName();
 				System.out.println("part:" + partName);
 				try {
-					Field field = requestObj.getClass().getDeclaredField(partName);
-					field.setAccessible(true);
+					Field field = null;
 					if (part.getContentType() != null) {// 檔案處理
-						Field addFile = requestObj.getClass().getDeclaredField("fileMap");
-						addFile.setAccessible(true);
+						field = requestObj.getClass().getDeclaredField("fileMap");
+						field.setAccessible(true);
 						@SuppressWarnings("unchecked")
-						Map<String, File> fileMap = (Map<String, File>) addFile.get(requestObj);
+						Map<String, File> fileMap = (Map<String, File>) field.get(requestObj);
+						field.setAccessible(false);
 						fileMap.put(partName, this.saveFile(part));
-						addFile.setAccessible(false);
 						// field.set(requestObj, this.saveFile(part));// 存檔
 					} else {
+						field = requestObj.getClass().getDeclaredField(partName);
+						field.setAccessible(true);
 						try {
 							Class<?> fieldType = field.getType();
 							Object fieldObj = null;
@@ -105,8 +106,8 @@ public class AnalyzeMultiPart implements Analyzable {
 						} catch (IllegalArgumentException e) {// 參數錯誤
 							e.printStackTrace();
 						}
+						field.setAccessible(false); // 啟用安全性檢查
 					}
-					field.setAccessible(false);
 				} catch (IllegalAccessException e) {// 存取權限出錯
 					e.printStackTrace();
 				} catch (NoSuchFieldException e) {// 找不到指定的Field

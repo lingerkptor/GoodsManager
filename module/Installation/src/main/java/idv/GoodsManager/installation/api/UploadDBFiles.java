@@ -101,7 +101,7 @@ public class UploadDBFiles extends Service {
 		ZipInputStream input = null;
 		try {
 			input = new ZipInputStream(new FileInputStream(SQLZIP));
-			File sqlDir = new File(ConfigReader.getConfigReader().getWebAddr()  + "//sql");
+			File sqlDir = new File(ConfigReader.getConfigReader().getWebAddr() + "//sql");
 			ZipEntry entry;
 			while ((entry = input.getNextEntry()) != null) {
 				if (entry.isDirectory())
@@ -177,7 +177,8 @@ public class UploadDBFiles extends Service {
 	 */
 	private boolean recordActivedDB(String DBName, String JDBCName) {
 		Gson gson = new Gson();
-		File activeDBListFile = new File(ConfigReader.getConfigReader().getWebAddr()  + "//sql//activeDB.json");
+		File activeDBListFile = new File(
+				ConfigReader.getConfigReader().getWebAddr() + "//sql//activeDB.json");
 
 		// 讀取紀錄Start
 		LinkedList<DB> activeDBList = null;
@@ -260,8 +261,21 @@ public class UploadDBFiles extends Service {
 	public Response process(Request requestObj) {
 		UploadDBFilesRequest request = (UploadDBFilesRequest) requestObj;
 
-		if (request.getDBName() == null || request.getJDBC() == null || request.getSQLZIP() == null)
+		StringBuilder message = new StringBuilder();
+		if (request.getDBName().isEmpty()) {
+			message.append(" 資料庫名稱為空白 ");
+		}
+		if (request.getJDBC() == null) {
+			message.append(" 沒有JDBC檔 ");
+		}
+		if (request.getSQLZIP() == null) {
+			message.append(" 沒有SQLzip檔");
+		}
+		if (!message.toString().isEmpty()) {
+			MessageInit.getMsgManager()
+					.deliverMessage(new Message(Message.Category.warn, message.toString()));
 			return UploadDBFilesResponse.uploadFailure();
+		}
 
 		/**
 		 * STEP1. 確認SQLZIP是否為zip檔

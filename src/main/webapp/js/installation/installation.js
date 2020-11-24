@@ -1,6 +1,6 @@
 const installPage = {
 	getMessagePool: function (element) {
-		messageList = [];
+		let messageList = [];
 		return {
 			getCategory: { "category": ["info", "warn", "err"] },
 			appendMessage: function (msg) {
@@ -36,11 +36,11 @@ const installPage = {
 				}
 			}
 		 */
-		request = new XMLHttpRequest();
-		request.onreadystatechange = function () {
-			if (request.readyState === XMLHttpRequest.DONE) {
-				if (request.status === 200) {
-					let responce = JSON.parse(request.responseText);
+		let uploadDBFileRequest = new XMLHttpRequest();
+		uploadDBFileRequest.onreadystatechange = function () {
+			if (uploadDBFileRequest.readyState === XMLHttpRequest.DONE) {
+				if (uploadDBFileRequest.status === 200) {
+					let responce = JSON.parse(uploadDBFileRequest.responseText);
 					if (responce.uploadSuccess) {
 						console.log('上傳成功');
 					} else {
@@ -53,8 +53,8 @@ const installPage = {
 				}
 			}
 		};
-		request.open('Post', "/GoodsManager/api/UploadDBFiles");
-		request.send(formObj);
+		uploadDBFileRequest.open('Post', "/GoodsManager/api/UploadDBFiles");
+		uploadDBFileRequest.send(formObj);
 
 
 	},
