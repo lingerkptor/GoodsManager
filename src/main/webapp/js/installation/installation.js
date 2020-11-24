@@ -40,7 +40,7 @@ const installPage = {
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
-					let responce = JSON.parse(request.responceText);
+					let responce = JSON.parse(request.responseText);
 					if (responce.uploadSuccess) {
 						console.log('上傳成功');
 					} else {
@@ -63,8 +63,7 @@ const installPage = {
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
-					let responce = JSON.parse(request.responseText);
-					updateObj.update(responce.activedDBList);
+					updateObj.update(JSON.parse(request.responseText).activedDBList);
 				} else {
 					alert('There was a problem with the request(getActiveDB).');
 				}
@@ -90,10 +89,9 @@ const installPage = {
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
 				if (request.status === 200) {
-					console.log(request.responceText);
-					updateObj.update(JSON.parse(request.responceText));
+					updateObj.update(JSON.parse(request.responseText));
 				} else
-					alert('There was a problem with the request(getActiveDB).');
+					alert('There was a problem with the request(installDB).');
 			}
 		};
 		request.open('Post', "/GoodsManager/api/install");

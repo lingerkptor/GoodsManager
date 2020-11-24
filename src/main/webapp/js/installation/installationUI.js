@@ -61,17 +61,17 @@ const UIConfiger = function () {
         installPage.installDB(installJsonObj, {
             update: function (resultObj) {
                 if (resultObj.buildDBConfig)
-                    installResult.innerText += 建立資料庫成功;
+                    installResult.innerHTML += "<p>建立資料庫成功</p>";
                 else
-                    installResult.innerText += 建立資料庫失敗;
+                    installResult.innerHTML += "<p>建立資料庫失敗</p>";
                 if (resultObj.testConnect)
-                    installResult.innerText += 連接資料庫成功;
+                    installResult.innerHTML += "<p>連接資料庫成功</p>";
                 else
-                    installResult.innerText += 連接資料庫失敗;
+                    installResult.innerHTML += "<p>連接資料庫失敗</p>";
                 if (resultObj.createTable)
-                    installResult.innerText += 新增資料表成功;
+                    installResult.innerHTML += "<p>新增資料表成功</p>";
                 else
-                    installResult.innerText += 新增資料表失敗;
+                    installResult.innerHTML += "<p>新增資料表失敗</p>";
             }
         });
 
