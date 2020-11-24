@@ -1,4 +1,4 @@
-package idv.lingerkptor.GoodsManager.core.api.responce;
+package idv.lingerkptor.GoodsManager.core.api.response;
 
 import java.util.List;
 
@@ -6,13 +6,13 @@ import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 
-public class GetMessageResponce implements Responce {
+public class GetMessageResponse implements Response {
 	private List<Message> messageList = null;
 
-	public static GetMessageResponce getMessageList(List<Message> messageList) {
-		GetMessageResponce responce = new GetMessageResponce();
-		responce.messageList = messageList;
-		return responce;
+	public static GetMessageResponse getMessageList(List<Message> messageList) {
+		GetMessageResponse Response = new GetMessageResponse();
+		Response.messageList = messageList;
+		return Response;
 	}
 
 	@Override

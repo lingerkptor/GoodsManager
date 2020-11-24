@@ -11,7 +11,7 @@ import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 public abstract class Service extends HttpServlet {
 
@@ -36,7 +36,7 @@ public abstract class Service extends HttpServlet {
 	 * @param requestObj 請求物件，帶有工作流程(process)所要知道的條件或是一些要處理的資料
 	 * @return 要送出去的物件
 	 */
-	public abstract Responce process(Request requestObj);
+	public abstract Response process(Request requestObj);
 
 	/**
 	 * 設定請求內容的的類別
@@ -47,7 +47,7 @@ public abstract class Service extends HttpServlet {
 	 * 作業流程
 	 *
 	 * @param req  HttpRequest
-	 * @param resp HttpResponce
+	 * @param resp HttpResponse
 	 */
 	protected final void operater(HttpServletRequest req, HttpServletResponse resp) {
 		HttpSession session = req.getSession();
@@ -60,11 +60,11 @@ public abstract class Service extends HttpServlet {
 				// 設定伺服器端資料
 				request.setAttribute(session);
 				// 處理請求，取得回應物件
-				Responce responceObj = process(request);
+				Response ResponseObj = process(request);
 				// 設定伺服器端資料
-				responceObj.setAttribute(req.getSession());
+				ResponseObj.setAttribute(req.getSession());
 				// 寄送回應物件
-				sendobj.send(responceObj, resp);
+				sendobj.send(ResponseObj, resp);
 			} else
 				return;
 		} catch (Exception e) {
@@ -103,7 +103,7 @@ public abstract class Service extends HttpServlet {
 	 */
 	private final boolean setSendObj(ServletRequest req, ServletResponse resp) {
 		try {
-			ContentType.ResponceType contentType = getClass().getMethod("process", Request.class)
+			ContentType.ResponseType contentType = getClass().getMethod("process", Request.class)
 					.getAnnotation(ContentType.class).respType();
 			sendobj = contentType.factory();
 			return true;

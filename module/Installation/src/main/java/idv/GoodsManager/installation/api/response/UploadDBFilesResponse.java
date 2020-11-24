@@ -1,13 +1,13 @@
-package idv.GoodsManager.installation.api.responce;
+package idv.GoodsManager.installation.api.response;
 
 import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 @SuppressWarnings("unused")
-public class UploadDBFilesResponce implements Responce {
+public class UploadDBFilesResponse implements Response {
 
 	private boolean uploadSuccess = true;
 	private String DBName;
@@ -22,10 +22,10 @@ public class UploadDBFilesResponce implements Responce {
 	 * 
 	 * @return 回應物件
 	 */
-	public static Responce uploadFailure() {
-		UploadDBFilesResponce responce = new UploadDBFilesResponce();
-		responce.uploadSuccess = false;
-		return responce;
+	public static Response uploadFailure() {
+		UploadDBFilesResponse Response = new UploadDBFilesResponse();
+		Response.uploadSuccess = false;
+		return Response;
 	}
 
 	/**
@@ -34,11 +34,11 @@ public class UploadDBFilesResponce implements Responce {
 	 * @param DBName 資料庫名稱
 	 * @return 回應物件
 	 */
-	public static Responce uploadSusscess(String DBName) {
+	public static Response uploadSusscess(String DBName) {
 		MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.info, "上傳資料完成"));
-		UploadDBFilesResponce responce = new UploadDBFilesResponce();
-		responce.DBName = DBName;
-		return responce;
+		UploadDBFilesResponse Response = new UploadDBFilesResponse();
+		Response.DBName = DBName;
+		return Response;
 	}
 
 }

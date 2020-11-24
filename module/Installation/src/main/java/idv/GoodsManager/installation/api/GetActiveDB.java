@@ -19,14 +19,14 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import idv.GoodsManager.installation.api.request.GetActiveDBRequest;
-import idv.GoodsManager.installation.api.responce.GetActiveDBResponce;
+import idv.GoodsManager.installation.api.response.GetActiveDBResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 @WebServlet("/api/getActiveDB")
 public class GetActiveDB extends Service {
@@ -60,8 +60,8 @@ public class GetActiveDB extends Service {
 	}
 
 	@Override
-	@ContentType(reqType = ContentType.RequestType.Text_Plain, respType = ContentType.ResponceType.Json)
-	public Responce process(Request requestObj) {
+	@ContentType(reqType = ContentType.RequestType.Text_Plain, respType = ContentType.ResponseType.Json)
+	public Response process(Request requestObj) {
 
 		List<DB> activedDBList = null;
 
@@ -75,12 +75,12 @@ public class GetActiveDB extends Service {
 			MessageInit.getMsgManager().deliverMessage(
 					new Message(Message.Category.warn, "取得資料失敗．Message: " + e.getMessage()));
 			e.printStackTrace();
-			return GetActiveDBResponce.readActivedDBListFail();
+			return GetActiveDBResponse.readActivedDBListFail();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return GetActiveDBResponce.readActivedDBListFail();
+			return GetActiveDBResponse.readActivedDBListFail();
 		}
-		return GetActiveDBResponce.sendActivedDBList(this.getActivedDBNameList(activedDBList));
+		return GetActiveDBResponse.sendActivedDBList(this.getActivedDBNameList(activedDBList));
 	}
 
 	private List<String> getActivedDBNameList(List<DB> activedDBList) {

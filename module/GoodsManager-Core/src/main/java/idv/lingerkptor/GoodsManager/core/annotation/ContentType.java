@@ -65,7 +65,7 @@ public @interface ContentType {
 		}
 	};
 
-	public enum ResponceType {
+	public enum ResponseType {
 		// 在這裡註冊
 		Json("application/json", SendJson.class);
 
@@ -73,7 +73,7 @@ public @interface ContentType {
 
 		private Class<? extends Sendable> sendObj = null;
 
-		ResponceType(String key, Class<? extends Sendable> sendObj) {
+		ResponseType(String key, Class<? extends Sendable> sendObj) {
 			this.key = key;
 			this.sendObj = sendObj;
 		}
@@ -96,6 +96,6 @@ public @interface ContentType {
 
 	public RequestType reqType();
 
-	public ResponceType respType();
+	public ResponseType respType();
 
 }

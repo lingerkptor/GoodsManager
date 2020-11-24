@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType.RequestType;
-import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponceType;
+import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponseType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 @MultipartConfig
 @WebServlet("/api/testMultiPart")
@@ -25,20 +25,20 @@ public class TestMultipart extends Service {
 	private static final long serialVersionUID = 1537960356654410381L;
 
 	@Override
-	@ContentType(reqType = RequestType.MultiPart, respType = ResponceType.Json)
-	public Responce process(Request requestObj) {
+	@ContentType(reqType = RequestType.MultiPart, respType = ResponseType.Json)
+	public Response process(Request requestObj) {
 		TestMultiPartRequest request = (TestMultiPartRequest) requestObj;
 		System.out.println(request.getDescription());
 		try {
 			if (request.getTestFile().exists()) {
 				System.out.println("file OK!");
 			} else
-				return TestMultiPartResponce.FAILURE();
+				return TestMultiPartResponse.FAILURE();
 		} catch (Exception e) {
-			return TestMultiPartResponce.FAILURE();
+			return TestMultiPartResponse.FAILURE();
 		}
 		System.out.println("boolean = >" + request.isTestboolean());
-		return TestMultiPartResponce.SUCESS();
+		return TestMultiPartResponse.SUCESS();
 	}
 
 	@Override

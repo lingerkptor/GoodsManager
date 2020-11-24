@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import idv.GoodsManager.installation.CustomizedDBConfig;
 import idv.GoodsManager.installation.DataAccess.CreateTable;
 import idv.GoodsManager.installation.api.request.InstallationRequest;
-import idv.GoodsManager.installation.api.responce.InstallResponce;
+import idv.GoodsManager.installation.api.response.InstallResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DataAccessCore;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DatabaseConfigImp;
@@ -23,10 +23,10 @@ import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType.RequestType;
-import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponceType;
+import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponseType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
 
 @WebServlet("/api/install")
@@ -35,8 +35,8 @@ public class Installation extends Service {
 	private static final long serialVersionUID = 47239711249208659L;
 
 	@Override
-	@ContentType(reqType = RequestType.Json, respType = ResponceType.Json) // 請求跟回應的標頭型態
-	public Responce process(Request reqObj) {
+	@ContentType(reqType = RequestType.Json, respType = ResponseType.Json) // 請求跟回應的標頭型態
+	public Response process(Request reqObj) {
 		InstallationRequest reqContext = (InstallationRequest) reqObj;
 		/**
 		 * STEP1 建立自訂資料庫設定(如果有需要)
@@ -48,7 +48,7 @@ public class Installation extends Service {
 				MessageInit.getMsgManager().deliverMessage( //
 						new Message(Message.Category.warn, "建立自訂資料庫設定失敗．"));
 				// 回傳安裝失敗
-				return InstallResponce.buildDBConfigFault();
+				return InstallResponse.buildDBConfigFault();
 			} else {
 				DataAccessCore.setDatabase(dbconfig);
 			}
@@ -65,7 +65,7 @@ public class Installation extends Service {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知連線失敗
 					new Message(Message.Category.warn, "連線測試失敗，請檢查自定義資料庫設定．"));
 			// 回傳連線失敗
-			return InstallResponce.testConnectFault();
+			return InstallResponse.testConnectFault();
 		} // 測試連線 end
 
 		/**
@@ -80,12 +80,12 @@ public class Installation extends Service {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, // 訊息種類
 							"沒有找到CreateTable.properties．Message:  " + e.getMessage()));
-			return InstallResponce.createTableFault();
+			return InstallResponse.createTableFault();
 		} catch (IOException e) {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, // 訊息種類
 							"讀寫檔案出錯，請確認檔案狀態，如：檔案權限．Message:  " + e.getMessage()));
-			return InstallResponce.createTableFault();
+			return InstallResponse.createTableFault();
 		}
 
 		/**
@@ -107,7 +107,7 @@ public class Installation extends Service {
 					new Message(Message.Category.warn,
 							"SQL發生錯誤，請詳閱訊息，並確認SQL內容．Message:  " + e.getMessage()));
 			// 回傳建立資料表失敗
-			return InstallResponce.createTableFault();
+			return InstallResponse.createTableFault();
 		} // 建立資料表END
 
 		/**
@@ -120,7 +120,7 @@ public class Installation extends Service {
 				MessageInit.getMsgManager()
 						.deliverMessage(new Message(Message.Category.err, e.getMessage()));
 				e.printStackTrace();
-				return InstallResponce.createTableFault();
+				return InstallResponse.createTableFault();
 			}
 
 		/**
@@ -128,7 +128,7 @@ public class Installation extends Service {
 		 */
 		MessageInit.getMsgManager().deliverMessage( // 廣播通知安裝成功
 				new Message(Message.Category.info, "安裝成功."));
-		return InstallResponce.createTableSucess();
+		return InstallResponse.createTableSucess();
 	}
 
 	@Override

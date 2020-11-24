@@ -14,11 +14,11 @@ import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.Message.MessageManager;
 import idv.lingerkptor.GoodsManager.core.api.request.GetMessageRequest;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.GetMessageResponce;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.GetMessageResponse;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType.RequestType;
-import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponceType;
+import idv.lingerkptor.GoodsManager.core.annotation.ContentType.ResponseType;
 
 /**
  * 取得訊息
@@ -41,8 +41,8 @@ public class GetMessages extends Service {
 	 * @return 回傳要傳送過去的訊息清單
 	 */
 	@Override
-	@ContentType(reqType = RequestType.Json, respType = ResponceType.Json) // 輸入跟輸出都是Json
-	public Responce process(Request reqContext) {
+	@ContentType(reqType = RequestType.Json, respType = ResponseType.Json) // 輸入跟輸出都是Json
+	public Response process(Request reqContext) {
 		MessageManager msgManager = MessageInit.getMsgManager();
 		GetMessageRequest reqObj = (GetMessageRequest) reqContext;
 		MessageObserver observer = new MessageObserver();
@@ -59,7 +59,7 @@ public class GetMessages extends Service {
 			}
 			msgManager.logout(observer);
 		}
-		return GetMessageResponce.getMessageList(observer.msgList);
+		return GetMessageResponse.getMessageList(observer.msgList);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class GetMessages extends Service {
 	 * HTTP Post方法
 	 *
 	 * @param req  httpRespuest
-	 * @param resp httpResponce
+	 * @param resp httpResponse
 	 * @throws ServletException
 	 * @throws IOException
 	 */

@@ -31,14 +31,14 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import idv.GoodsManager.installation.api.request.UploadDBFilesRequest;
-import idv.GoodsManager.installation.api.responce.UploadDBFilesResponce;
+import idv.GoodsManager.installation.api.response.UploadDBFilesResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
-import idv.lingerkptor.GoodsManager.core.api.responce.Responce;
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 @WebServlet("/api/UploadDBFiles")
 @MultipartConfig
@@ -256,18 +256,18 @@ public class UploadDBFiles extends Service {
 	}
 
 	@Override
-	@ContentType(reqType = ContentType.RequestType.MultiPart, respType = ContentType.ResponceType.Json)
-	public Responce process(Request requestObj) {
+	@ContentType(reqType = ContentType.RequestType.MultiPart, respType = ContentType.ResponseType.Json)
+	public Response process(Request requestObj) {
 		UploadDBFilesRequest request = (UploadDBFilesRequest) requestObj;
 
 		if (request.getDBName() == null || request.getJDBC() == null || request.getSQLZIP() == null)
-			return UploadDBFilesResponce.uploadFailure();
+			return UploadDBFilesResponse.uploadFailure();
 
 		/**
 		 * STEP1. 確認SQLZIP是否為zip檔
 		 */
 		if (!checkFileIsZipFile(request.getSQLZIP()))
-			return UploadDBFilesResponce.uploadFailure();
+			return UploadDBFilesResponse.uploadFailure();
 		/**
 		 * STEP2. 搬移JDBC
 		 */
@@ -276,14 +276,14 @@ public class UploadDBFiles extends Service {
 			newJDBC = moveJDBC(request.getJDBC().toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
-			return UploadDBFilesResponce.uploadFailure();
+			return UploadDBFilesResponse.uploadFailure();
 		}
 
 		/**
 		 * STEP3. 解壓縮SQLZIP
 		 */
 		if (!decompressSQLZip(request.getSQLZIP())) {
-			return UploadDBFilesResponce.uploadFailure();
+			return UploadDBFilesResponse.uploadFailure();
 		}
 
 		/**
@@ -291,12 +291,12 @@ public class UploadDBFiles extends Service {
 		 * 存放於 /WEB-INF/sql/activeDB.json
 		 */
 		if (!recordActivedDB(request.getDBName(), newJDBC.getFileName().toString()))
-			return UploadDBFilesResponce.uploadFailure();
+			return UploadDBFilesResponse.uploadFailure();
 
 		/**
 		 * 上傳成功
 		 */
-		return UploadDBFilesResponce.uploadSusscess(request.getDBName());
+		return UploadDBFilesResponse.uploadSusscess(request.getDBName());
 	}
 
 	@Override
