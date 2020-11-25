@@ -1,5 +1,13 @@
 const UIConfiger = function () {
     const customized = document.getElementById('customized');
+    customized.addEventListener('click', function (e) {
+        let block = document.getElementById('customizedBlock');
+        if (customized.checked) {
+            block.classList.remove('closed');
+        } else {
+            block.classList.add('closed');
+        }
+    });
 
     const DBName = document.getElementById('DBName');
     const JDBC = document.getElementById('JDBC');
