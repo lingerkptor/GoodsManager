@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品列表</title>
+    <script src="js/searchGoods.js"></script>
+    <script src="js/searchGoodsUI.js"></script>
+    <style>
+        .prototype {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="filter">
+        <label>分類：</label><select id='class'>
+            <option></option>
+        </select><br />
+        <label>標籤：</label> <select id='tag'>
+            <option></option>
+        </select><br />
+        <label>日期：</label> <input id='date' type="date"></input><br />
+        <label>關鍵字：</label><input id='keyword' />
+        <input id='filterBtn' type="button" value="搜尋" /><input id='clearfilterBtn' type="button" value="清除" />
+    </div>
+    <div id="GoodsTable">
+        <div class="prototype">
+            <div><input name="select" type="checkbox" value="true" /></div>
+            <div><a name="goodName"></a></div>
+            <div name="functionBlock">
+                <input name="modify" type="button" value="修改" />
+                <input name="delete" type="button" value="刪除" />
+            </div>
+        </div>
+    </div>
+    <div id="GoodsDetail">
+        <label>商品名稱:</label><a id="GoodsName"></a><br />
+        <label>長:</label><a id="L"></a><label>mm</label><br />
+        <label>寬:</label><a id="W"></a><label>mm</label><br />
+        <label>厚:</label><a id="H"></a><label>mm</label><br />
+        <label>價格:</label><a id="price"></a><br />
+        <label>分類:</label><a id="className"></a><br />
+        <label>標籤:</label><a name="tagName"></a><br />
+        <label>日期:</label><a id="datetime"></a> <br />
+    </div>
+
+</body>
+
+</html>

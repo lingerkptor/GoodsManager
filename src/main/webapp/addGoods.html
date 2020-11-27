@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增商品</title>
+    <script src="./js/addGoods.js"></script>
+    <script src="./js/addGoodsUI.js"></script>
+    <style>
+        .prototype {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <a>商品名稱:</a><input id="gName" /><br />
+        <a>長:</a><input id="L" />
+        <a>mm 寬:</a><input id="W" />
+        <a>mm 厚:</a><input id="H" /><a>mm</a><br />
+        <a>價錢:</a><input id="price" /><br />
+        <a>分類:</a><select id="classId">
+            <option class="prototype"></option>
+        </select><input id="getClassIdList" type="button" value="讀取分類" /><br />
+        <a>標籤:</a><textarea id="tags" type="text" readonly></textarea>
+        <input id="addTag" type="button" value="新增標籤" /><input id="removeTag" type="button" value="移除標籤" /><br />
+        <input id="pictureFiles" type="file" multiple /><br />
+        <input id="addGoods" type="button" value="新增商品" />
+
+    </div>
+</body>
+
+</html>
