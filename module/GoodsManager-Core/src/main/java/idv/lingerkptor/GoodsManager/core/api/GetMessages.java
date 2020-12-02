@@ -55,6 +55,7 @@ public class GetMessages extends Service {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					System.out.println("MessageObserver 中斷");
+					break;
 				}
 			}
 			msgManager.logout(observer);
