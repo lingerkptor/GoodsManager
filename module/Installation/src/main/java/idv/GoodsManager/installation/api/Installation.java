@@ -107,7 +107,7 @@ public class Installation extends Service {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, "SQL發生錯誤，訊息：　 " + e.getMessage()));
 			// 回傳建立資料表失敗
-			return InstallResponse.createTableFault(InstallResponse.ERRORCODE.SQLERROR.name());
+			return InstallResponse.createTableFault(InstallResponse.ERRORCODE.SQLERROR);
 		} catch (DAORuntimeException e) {
 			return InstallResponse.createTableFault(e.getCode());
 		}

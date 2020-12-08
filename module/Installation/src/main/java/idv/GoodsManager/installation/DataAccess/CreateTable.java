@@ -35,9 +35,8 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			conn.rollback();
 			throw new DAORuntimeException("GOODS資料表已建立",
-					InstallResponse.ERRORCODE.GoodsTable.name());
+					InstallResponse.ERRORCODE.GoodsTable);
 		}
 
 		/**
@@ -53,10 +52,8 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			conn.rollback();
-			
 			throw new DAORuntimeException("CLASSES資料表已建立",
-					InstallResponse.ERRORCODE.ClassesTable.name());
+					InstallResponse.ERRORCODE.ClassesTable);
 		}
 
 		/**
@@ -72,9 +69,8 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			conn.rollback();
 			throw new DAORuntimeException("PICTURE資料表已建立",
-					InstallResponse.ERRORCODE.PictureTable.name());
+					InstallResponse.ERRORCODE.PictureTable);
 		}
 
 		/**
@@ -90,8 +86,7 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			conn.rollback();
-			throw new DAORuntimeException("TAGS資料表已建立", InstallResponse.ERRORCODE.TagsTable.name());
+			throw new DAORuntimeException("TAGS資料表已建立", InstallResponse.ERRORCODE.TagsTable);
 		}
 
 		/**
@@ -106,9 +101,8 @@ public class CreateTable implements PreparedStatementCreator {
 			prep = conn.prepareStatement(SQL);
 			prep.addBatch();
 		} else {
-			conn.rollback();
 			throw new DAORuntimeException("GOODSTAGS資料表已建立",
-					InstallResponse.ERRORCODE.GoodsTagsTable.name());
+					InstallResponse.ERRORCODE.GoodsTagsTable);
 		}
 		prep.executeBatch();
 		return prep;

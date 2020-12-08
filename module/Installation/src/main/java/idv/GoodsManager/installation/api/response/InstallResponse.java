@@ -49,9 +49,9 @@ public class InstallResponse implements Response {
 		return resp;
 	}
 
-	public static InstallResponse createTableFault(String code) {
+	public static InstallResponse createTableFault(Enum<?> code) {
 		InstallResponse resp = new InstallResponse();
-		resp.code = code;
+		resp.code = code.name();
 		resp.importMainConfig = false;
 		return resp;
 	}

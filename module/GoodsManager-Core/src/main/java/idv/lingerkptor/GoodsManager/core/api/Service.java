@@ -20,7 +20,7 @@ public abstract class Service extends HttpServlet {
 	 * 分析請求的物件
 	 */
 	private Analyzable analyzobj = null;
-	
+
 	/**
 	 * 寄送的方法
 	 */
@@ -65,8 +65,9 @@ public abstract class Service extends HttpServlet {
 				ResponseObj.setAttribute(req.getSession());
 				// 寄送回應物件
 				sendobj.send(ResponseObj, resp);
-			} else
-				return;
+			} else {
+				throw new Exception("找不到分析物件或回應物件");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
