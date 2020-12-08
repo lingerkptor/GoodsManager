@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>類別管理</title>
+    <title>分類管理</title>
     <script src="js/classManage.js"></script>
     <script src="js/classManageUI.js"></script>
     <style>
@@ -16,11 +16,13 @@
 
 <body>
     <div id="functionBlock">
-        <label>類別名稱</label><input id="className" /><input type="button" value="新增" />
+        <label>分類名稱：</label><input id="className" /><input id="createClassBtn" type="button" value="新增分類" />
+        <p id="report"></p>
     </div>
-    <div id="classTable">
+    <div id="classTree">
         <div class="prototype">
             <div name="function">
+                <input type="button" value="新增子分類">
                 <input type="button" value="刪除" />
             </div>
             <div name="className"></div>

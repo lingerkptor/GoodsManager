@@ -6,6 +6,8 @@ const indexPage = function () {
             return {
                 getCategory: { "category": ["info", "warn", "err"] },
                 appendMessage: function (msg) {
+                    console.log(messageList);
+                    console.log(msg);
                     messageList.push(msg);
                     msgNode = element.getElementsByClassName('prototype')[0].cloneNode(true);
                     element.appendChild(msgNode);
@@ -15,10 +17,13 @@ const indexPage = function () {
                     msgNode.classList.add(msg.category);
                 },
                 beforeMsgRead: function () {
-                    messageList = JSON.parse(localStorage.getItem('messageList'));
+                    if (JSON.parse(localStorage.getItem('messageList')) !== null)
+                        JSON.parse(localStorage.getItem('messageList')).forEach(msg => {
+                            this.appendMessage(msg);
+                        });
                 },
                 afterMsgWriting: function () {
-                    localStorage.setItem('messageList', JSON.stringify(messageList));
+                    localStorage.setItem('messageList', JSON.stringify(this.messageList));
                 },
                 listening: function () {
                     getMessage(this);
@@ -31,7 +36,7 @@ const indexPage = function () {
         changeWork: function (page) {
             workDesk.src = page;
         }
-        
+
     };
 
-}();
+};

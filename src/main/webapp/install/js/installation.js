@@ -13,7 +13,10 @@ const installPage = {
 				msgNode.classList.add(msg.category);
 			},
 			beforeMsgRead: function () {
-				messageList = JSON.parse(localStorage.getItem('messageList'));
+				if (JSON.parse(localStorage.getItem('messageList')) !== null)
+					JSON.parse(localStorage.getItem('messageList')).forEach(msg => {
+						this.appendMessage(msg);
+					});
 			},
 			afterMsgWriting: function () {
 				localStorage.setItem('messageList', JSON.stringify(messageList));

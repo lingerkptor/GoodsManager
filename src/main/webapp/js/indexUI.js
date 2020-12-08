@@ -9,22 +9,23 @@ window.onload = function () {
     const workDeskele = document.getElementById('workdesk');
 
 
+    const main = indexPage();
 
-    messagePool = indexPage.getMessagePool(messageArea);
+    const messagePool = main.getMessagePool(messageArea);
     messagePool.beforeMsgRead();
     messagePool.listening();
-    indexPage.registerWorkDesk(workDeskele);
+    main.registerWorkDesk(workDeskele);
     queryGoodsBtn.addEventListener('click', function (e) {
-        indexPage.changeWork("./searchGoods.html");
+        main.changeWork("./searchGoods.html");
     });
     addGoodsBtn.addEventListener('click', function (e) {
-        indexPage.changeWork("./addGoods.html");
+        main.changeWork("./addGoods.html");
     });
     classManageBtn.addEventListener('click', function (e) {
-        indexPage.changeWork("./classManage.html");
+        main.changeWork("./classManage.html");
     });
     tagManageBtn.addEventListener('click', function (e) {
-        indexPage.changeWork("./tagManage.html");
+        main.changeWork("./tagManage.html");
     });
 };
 
