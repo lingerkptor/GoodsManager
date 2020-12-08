@@ -62,8 +62,13 @@ const installPage = {
 		let request = new XMLHttpRequest();
 		request.onreadystatechange = function () {
 			if (request.readyState === XMLHttpRequest.DONE) {
+
 				if (request.status === 200) {
-					updateObj.update(JSON.parse(request.responseText).activedDBList);
+					responceObj = JSON.parse(request.responseText);
+					if (typeof (responceObj.activedDBList) == 'undefined')
+						updateObj.update([]);
+					else
+						updateObj.update(JSON.parse(request.responseText).activedDBList);
 				} else {
 					alert('There was a problem with the request(getActiveDB).');
 				}

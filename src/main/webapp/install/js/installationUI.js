@@ -69,17 +69,35 @@ const UIConfiger = function () {
         installPage.installDB(installJsonObj, {
             update: function (resultObj) {
                 if (resultObj.buildDBConfig)
-                    installResult.innerHTML = "<p>建立資料庫成功</p>";
+                    installResult.innerHTML = "<p>資料庫設定成功</p>";
                 else
-                    installResult.innerHTML = "<p>建立資料庫失敗</p>";
+                    installResult.innerHTML = "<p>資料庫設定失敗</p>";
                 if (resultObj.testConnect)
                     installResult.innerHTML += "<p>連接資料庫成功</p>";
                 else
                     installResult.innerHTML += "<p>連接資料庫失敗</p>";
-                if (resultObj.createTable)
-                    installResult.innerHTML += "<p>新增資料表成功</p>";
+                if (!resultObj.SQLReading)
+                    installResult.innerHTML += "<p>SQL檔案讀取失敗</p>";
+                switch (resultObj.code) {
+                    case "": break;
+                    case "GoodsTable":
+                        installResult.innerHTML += "<p>Goods資料表建立失敗</p>";
+                    case "ClassesTable":
+                        installResult.innerHTML += "<p>Classes資料表建立失敗</p>";
+                    case "PictureTable":
+                        installResult.innerHTML += "<p>Picture資料表建立失敗</p>";
+                    case "TagsTable":
+                        installResult.innerHTML += "<p>Tags資料表建立失敗</p>";
+                    case "GoodsTagsTable":
+                        installResult.innerHTML += "<p>GoodsTags資料表建立失敗</p>";
+                    case "SQLERROR":
+                        installResult.innerHTML += "<p>SQL內容出錯</p>";
+                    default: break;
+                }
+                if (resultObj.importMainConfig)
+                    installResult.innerHTML += "<p>資料庫建立成功</p>";
                 else
-                    installResult.innerHTML += "<p>新增資料表失敗</p>";
+                    installResult.innerHTML += "<p>資料庫建立失敗</p>";
             }
         });
 

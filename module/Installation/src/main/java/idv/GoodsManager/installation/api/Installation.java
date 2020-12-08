@@ -17,6 +17,7 @@ import idv.GoodsManager.installation.DataAccess.CreateTable;
 import idv.GoodsManager.installation.api.request.InstallationRequest;
 import idv.GoodsManager.installation.api.response.InstallResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
+import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DataAccessCore;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DatabaseConfigImp;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
@@ -83,17 +84,16 @@ public class Installation extends Service {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, // 訊息種類
 							"沒有找到CreateTable.properties．Message:  " + e.getMessage()));
-			return InstallResponse.createTableFault();
+			return InstallResponse.readSQLFileFault();
 		} catch (IOException e) {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, // 訊息種類
 							"讀寫檔案出錯，請確認檔案狀態，如：檔案權限．Message:  " + e.getMessage()));
-			return InstallResponse.createTableFault();
+			return InstallResponse.readSQLFileFault();
 		}
 
 		/**
 		 * STEP4 建立資料表
-		 * 
 		 */
 		CreateTable createTable = new CreateTable(createTableSqlMap);
 
@@ -107,8 +107,11 @@ public class Installation extends Service {
 			MessageInit.getMsgManager().deliverMessage( // 廣播通知建立資料表失敗訊息
 					new Message(Message.Category.warn, "SQL發生錯誤，訊息：　 " + e.getMessage()));
 			// 回傳建立資料表失敗
-			return InstallResponse.createTableFault();
-		} // 建立資料表END
+			return InstallResponse.createTableFault(InstallResponse.ERRORCODE.SQLERROR.name());
+		} catch (DAORuntimeException e) {
+			return InstallResponse.createTableFault(e.getCode());
+		}
+		// 建立資料表END
 
 		/**
 		 * STEP5. 匯入主設定檔內(預設的不用)
@@ -120,7 +123,7 @@ public class Installation extends Service {
 				MessageInit.getMsgManager()
 						.deliverMessage(new Message(Message.Category.err, e.getMessage()));
 				e.printStackTrace();
-				return InstallResponse.createTableFault();
+				return InstallResponse.importMainConfigFault();
 			}
 
 		/**

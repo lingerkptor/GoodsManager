@@ -48,13 +48,12 @@ public class GetActiveDB extends Service {
 		} catch (FileNotFoundException e) {
 			throw e;
 		} catch (JsonIOException | JsonSyntaxException e) {
-			throw e;
-		} finally {
 			try {
 				reader.close();
-			} catch (IOException e) {
-				throw e;
+			} catch (IOException e1) {
+				throw e1;
 			}
+			throw e;
 		}
 		return activedDBList;
 	}
@@ -68,13 +67,12 @@ public class GetActiveDB extends Service {
 		try {
 			activedDBList = GetActiveDB.getActivedDBList();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 			MessageInit.getMsgManager().deliverMessage(
 					new Message(Message.Category.info, "除了預設的SQLite資料庫外，沒有其他的資料庫．"));
+			return GetActiveDBResponse.readActivedDBListFail();
 		} catch (JsonIOException | JsonSyntaxException e) {
 			MessageInit.getMsgManager().deliverMessage(
 					new Message(Message.Category.warn, "取得資料失敗．Message: " + e.getMessage()));
-			e.printStackTrace();
 			return GetActiveDBResponse.readActivedDBListFail();
 		} catch (IOException e) {
 			e.printStackTrace();

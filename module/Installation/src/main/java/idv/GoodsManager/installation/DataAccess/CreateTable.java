@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import idv.GoodsManager.installation.api.response.InstallResponse;
+import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
 
 public class CreateTable implements PreparedStatementCreator {
@@ -19,7 +21,6 @@ public class CreateTable implements PreparedStatementCreator {
 	@Override
 	public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
 		PreparedStatement prep;
-		StringBuilder exceptionMsg = new StringBuilder();
 
 		/**
 		 * 確認GOODS資料表
@@ -34,7 +35,9 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			exceptionMsg.append("GOODS資料表已建立、");
+			conn.rollback();
+			throw new DAORuntimeException("GOODS資料表已建立",
+					InstallResponse.ERRORCODE.GoodsTable.name());
 		}
 
 		/**
@@ -50,7 +53,10 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			exceptionMsg.append("CLASSES資料表已建立、");
+			conn.rollback();
+			
+			throw new DAORuntimeException("CLASSES資料表已建立",
+					InstallResponse.ERRORCODE.ClassesTable.name());
 		}
 
 		/**
@@ -66,7 +72,9 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			exceptionMsg.append("PICTURE資料表已建立、");
+			conn.rollback();
+			throw new DAORuntimeException("PICTURE資料表已建立",
+					InstallResponse.ERRORCODE.PictureTable.name());
 		}
 
 		/**
@@ -82,7 +90,8 @@ public class CreateTable implements PreparedStatementCreator {
 			prep.addBatch();
 			prep.execute();
 		} else {
-			exceptionMsg.append("TAGS資料表已建立、");
+			conn.rollback();
+			throw new DAORuntimeException("TAGS資料表已建立", InstallResponse.ERRORCODE.TagsTable.name());
 		}
 
 		/**
@@ -97,10 +106,11 @@ public class CreateTable implements PreparedStatementCreator {
 			prep = conn.prepareStatement(SQL);
 			prep.addBatch();
 		} else {
-			exceptionMsg.append("GOODSTAGS資料表已建立");
+			conn.rollback();
+			throw new DAORuntimeException("GOODSTAGS資料表已建立",
+					InstallResponse.ERRORCODE.GoodsTagsTable.name());
 		}
-		if (!(exceptionMsg.toString().isEmpty()))
-			throw new SQLException(exceptionMsg.toString());
+		prep.executeBatch();
 		return prep;
 
 	}
