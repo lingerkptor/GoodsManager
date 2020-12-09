@@ -29,7 +29,7 @@ import idv.lingerkptor.GoodsManager.core.api.response.Response;
 import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
 
 @WebServlet("/api/CreateClassification")
-public class CreateClass extends Service {
+public class CreateClassification extends Service {
 	private static final long serialVersionUID = 358488607999193204L;
 
 	@Override
