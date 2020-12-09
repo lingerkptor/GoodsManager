@@ -12,7 +12,7 @@ const classManagePage = function () {
                     }
                 }
             };
-            getClassListRequest.open('Get', "/GoodsManager/api/getClassList");
+            getClassListRequest.open('Get', "/GoodsManager/api/getClassificationList");
             getClassListRequest.setRequestHeader('Content-Type', 'application/json');
             getClassListRequest.send();
 
@@ -29,7 +29,7 @@ const classManagePage = function () {
                 }
             };
 
-            addClassRequest.open('Post', "/GoodsManager/api/CreateClass");
+            addClassRequest.open('Post', "/GoodsManager/api/CreateClassification");
             addClassRequest.setRequestHeader('Content-Type', 'application/json');
             addClassRequest.send(JSON.stringify(sendObj));
         }

@@ -5,7 +5,7 @@ window.onload = function () {
     createClass.addEventListener("click", function (e) {
         classManagePage().addClass(
             {
-                className: className.value
+                classificationName: className.value
             },
             {
                 update: function (code) {

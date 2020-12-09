@@ -47,7 +47,7 @@ public class CreateTable implements PreparedStatementCreator {
 		prep.addBatch();
 		rs = prep.executeQuery();
 		if (!rs.next()) {// 如果CLASSES資料表不存在
-			SQL = sqlProp.getProperty("CLASSES");
+			SQL = sqlProp.getProperty("Classification");
 			prep = conn.prepareStatement(SQL);
 			prep.addBatch();
 			prep.execute();

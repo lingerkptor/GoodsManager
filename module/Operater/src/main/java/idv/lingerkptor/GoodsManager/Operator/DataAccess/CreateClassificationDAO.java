@@ -6,22 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import idv.lingerkptor.GoodsManager.Operator.api.request.CreateClassRequest;
-import idv.lingerkptor.GoodsManager.Operator.api.response.CreateClassResponse.STATECODE;
+import idv.lingerkptor.GoodsManager.Operator.api.request.CreateClassificationRequest;
+import idv.lingerkptor.GoodsManager.Operator.api.response.CreateClassificationResponse.STATECODE;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
 
-public class CreateClassDAO implements PreparedStatementCreator {
+public class CreateClassificationDAO implements PreparedStatementCreator {
 	private Properties prop;
-	private CreateClassRequest request;
+	private CreateClassificationRequest request;
 
 	@SuppressWarnings("unused")
-	private CreateClassDAO() {
+	private CreateClassificationDAO() {
 	}
 
-	public CreateClassDAO(Properties prop, CreateClassRequest request) {
+	public CreateClassificationDAO(Properties prop, CreateClassificationRequest request) {
 		this.prop = prop;
 		this.request = request;
 	}
@@ -33,58 +33,58 @@ public class CreateClassDAO implements PreparedStatementCreator {
 		/**
 		 * STEP1. 查詢分類是否已建立
 		 */
-		String SQL = prop.getProperty("searchClassId");
+		String SQL = prop.getProperty("searchClassificationId");
 		PreparedStatement stat = conn.prepareStatement(SQL);
-		stat.setString(1, request.getClassName());
+		stat.setString(1, request.getClassificationName());
 		ResultSet rs = stat.executeQuery();
 
 		if (rs.next()) {
 			MessageInit.getMsgManager().deliverMessage(
-					new Message(Message.Category.warn, request.getClassName() + "分類已存在"));
+					new Message(Message.Category.warn, request.getClassificationName() + "分類已存在"));
 			throw new DAORuntimeException("分類已存在", STATECODE.CLASSISEXIST);
 		}
 		/**
 		 * STEP2. 確定上層分類
 		 */
-		if (!request.getParentClassName().isEmpty()) {
+		if (!request.getParentClassificationName().isEmpty()) {
 			int PCID;
 			stat = conn.prepareStatement(SQL);
-			stat.setString(1, request.getParentClassName());
+			stat.setString(1, request.getParentClassificationName());
 			rs = stat.executeQuery();
 			if (!rs.next()) {
 				MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.warn,
-						request.getParentClassName() + "上層分類不存在"));
+						request.getParentClassificationName() + "上層分類不存在"));
 				throw new DAORuntimeException("上層分類已存在", STATECODE.PARENTCLASSNONEXIST);
 			}
 			/**
 			 * STEP3 新增分類(有上層類別的情況)
 			 */
-			SQL = prop.getProperty("insertClass");
+			SQL = prop.getProperty("insertClassification");
 			PCID = rs.getInt(1);
 			stat = conn.prepareStatement(SQL);
-			stat.setString(1, request.getClassName());
+			stat.setString(1, request.getClassificationName());
 			stat.setInt(2, PCID);
-			stat.execute();
+			stat.executeUpdate();
 		} else {
 			/**
 			 * STEP3 新增分類(無上層類別的情況)
 			 */
-			SQL = prop.getProperty("insertClassNonParent");
+			SQL = prop.getProperty("insertClassificationNonParent");
 			stat = conn.prepareStatement(SQL);
-			stat.setString(1, request.getClassName());
-			stat.execute();
+			stat.setString(1, request.getClassificationName());
+			stat.executeUpdate();
 		}
 		/**
 		 * STEP4. 查詢是否完成建立分類
 		 */
-		SQL = prop.getProperty("searchClassId");
+		SQL = prop.getProperty("searchClassificationId");
 		stat = conn.prepareStatement(SQL);
-		stat.setString(1, request.getClassName());
+		stat.setString(1, request.getClassificationName());
 		rs = stat.executeQuery();
 
 		if (!rs.next()) {
 			MessageInit.getMsgManager().deliverMessage(
-					new Message(Message.Category.warn, request.getClassName() + "分類建立失敗"));
+					new Message(Message.Category.warn, request.getClassificationName() + "分類建立失敗"));
 			throw new DAORuntimeException("分類建立失敗", STATECODE.LOSTCLASS);
 		}
 		return stat;

@@ -22,7 +22,7 @@ window.onload = function () {
         main.changeWork("./addGoods.html");
     });
     classManageBtn.addEventListener('click', function (e) {
-        main.changeWork("./classManage.html");
+        main.changeWork("./classificationManage.html");
     });
     tagManageBtn.addEventListener('click', function (e) {
         main.changeWork("./tagManage.html");
