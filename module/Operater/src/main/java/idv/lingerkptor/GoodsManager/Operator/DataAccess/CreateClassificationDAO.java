@@ -26,7 +26,6 @@ public class CreateClassificationDAO implements PreparedStatementCreator {
 		this.request = request;
 	}
 
-
 	@SuppressWarnings("resource")
 	@Override
 	public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -59,6 +58,11 @@ public class CreateClassificationDAO implements PreparedStatementCreator {
 			/**
 			 * STEP3 新增分類(有上層類別的情況)
 			 */
+			if (request.getClassificationName().length() == 0) {
+				MessageInit.getMsgManager().deliverMessage(
+						new Message(Message.Category.warn, "Classification Name 不得為空字串"));
+				throw new DAORuntimeException("Classification Name 不得為空字串", STATECODE.DATAERROR);
+			}
 			SQL = prop.getProperty("insertClassification");
 			PCID = rs.getInt(1);
 			stat = conn.prepareStatement(SQL);

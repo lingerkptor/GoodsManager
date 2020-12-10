@@ -27,7 +27,6 @@ public class DataAccessCore {
 	 * @return 資料處理樣板
 	 */
 	public static DataAccessTemplate getSQLTemplate() {
-		System.out.println("取得資料存取樣板");
 		return template;
 	}
 
@@ -40,6 +39,8 @@ public class DataAccessCore {
 		pool = new ConnectPool();
 		System.out.println("設定資料庫");
 		pool.setDatabase(Database.getDatabase(dbconfig));
+		System.out.println("測試連線");
+		testConnection();
 		System.out.println("建立資料存取樣板");
 		template = new DataAccessTemplate(pool);
 	}

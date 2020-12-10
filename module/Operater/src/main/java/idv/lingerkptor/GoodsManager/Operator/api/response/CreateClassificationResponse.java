@@ -11,7 +11,8 @@ public class CreateClassificationResponse implements Response {
 		PARENTCLASSNONEXIST, // 找不到上層分類
 		CLASSISEXIST, // 分類已存在
 		CREATECLASSSUCESS, // 分類建立成功
-		LOSTCLASS;// 已建立商品，但是查詢不到．
+		LOSTCLASS, // 已建立商品，但是查詢不到．
+		DATAERROR;// 資料內容錯誤
 	};
 
 	@SuppressWarnings("unused")

@@ -81,7 +81,6 @@ public class MessageManager {
 	 * @param key  最後收到訊息的訊息碼
 	 * @param cate 想收到的訊息分類
 	 * @return 訊息清單
-	 * @throws Exception
 	 */
 	public List<Message> getMessages(String key, Message.Category[] cate) {
 		LinkedList<Message> list = new LinkedList<Message>();
