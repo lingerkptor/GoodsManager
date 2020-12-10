@@ -4,7 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
-public class CreateClassificationResponse implements Response {
+public class IncreateClassificationResponse implements Response {
 	public enum STATECODE {
 		SQLFile, // SQL檔案錯誤，可能是找不到檔案，或是讀取有問題
 		SQLException, // 執行SQL產生的錯誤．
@@ -24,13 +24,13 @@ public class CreateClassificationResponse implements Response {
 	}
 
 	public static Response CreateClassificationFailure(Enum<?> CODE) {
-		CreateClassificationResponse response = new CreateClassificationResponse();
+		IncreateClassificationResponse response = new IncreateClassificationResponse();
 		response.Code = CODE.name();
 		return response;
 	}
 
 	public static Response CreateClassificationSucess() {
-		CreateClassificationResponse response = new CreateClassificationResponse();
+		IncreateClassificationResponse response = new IncreateClassificationResponse();
 		response.Code = STATECODE.CREATECLASSSUCESS.name();
 		return response;
 	}

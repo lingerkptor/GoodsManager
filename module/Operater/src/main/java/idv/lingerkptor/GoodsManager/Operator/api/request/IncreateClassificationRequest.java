@@ -4,7 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 
-public class CreateClassificationRequest implements Request {
+public class IncreateClassificationRequest implements Request {
 	private String classificationName = "";
 	private String parentClassificationName = "";
 

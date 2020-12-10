@@ -6,22 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import idv.lingerkptor.GoodsManager.Operator.api.request.CreateClassificationRequest;
-import idv.lingerkptor.GoodsManager.Operator.api.response.CreateClassificationResponse.STATECODE;
+import idv.lingerkptor.GoodsManager.Operator.api.request.IncreateClassificationRequest;
+import idv.lingerkptor.GoodsManager.Operator.api.response.IncreateClassificationResponse.STATECODE;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
 
-public class CreateClassificationDAO implements PreparedStatementCreator {
+public class IncreateClassificationDAO implements PreparedStatementCreator {
 	private Properties prop;
-	private CreateClassificationRequest request;
+	private IncreateClassificationRequest request;
 
 	@SuppressWarnings("unused")
-	private CreateClassificationDAO() {
+	private IncreateClassificationDAO() {
 	}
 
-	public CreateClassificationDAO(Properties prop, CreateClassificationRequest request) {
+	public IncreateClassificationDAO(Properties prop, IncreateClassificationRequest request) {
 		this.prop = prop;
 		this.request = request;
 	}

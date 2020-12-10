@@ -31,7 +31,7 @@ const classManagePage = function () {
                 }
             };
 
-            addClassRequest.open('Post', "/GoodsManager/api/CreateClassification");
+            addClassRequest.open('Post', "/GoodsManager/api/IncreateClassification");
             addClassRequest.setRequestHeader('Content-Type', 'application/json');
             addClassRequest.send(JSON.stringify(sendObj));
         }
