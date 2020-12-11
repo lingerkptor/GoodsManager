@@ -52,6 +52,33 @@ const classManagePage = function () {
             addClassRequest.setRequestHeader('Content-Type', 'application/json');
             addClassRequest.send(JSON.stringify(sendObj));
         },
+        updateClass: function (sendObj, updateObj) {
+            /**
+             * sendObj
+             * {
+             *  classificationName : String
+             *  classificationNewName : String
+             * parentClassificationName :String
+             * }
+             * updateObj
+             * {
+             *  update: function(){ // doUpdate  }
+             * }
+             */
+            let updateClassRequest = new XMLHttpRequest();
+            updateClassRequest.onreadystatechange = function () {
+                if (updateClassRequest.readyState == XMLHttpRequest.DONE) {
+                    if (updateClassRequest.status == 200) {
+                        let responseObj = JSON.parse(updateClassRequest.responseText);
+                        if (typeof (responseObj.Code) != "undefined")
+                            updateObj.update(responseObj.Code);
+                    }
+                }
+            };
+            updateClassRequest.open('Post', "/GoodsManager/api/UpdateClassification");
+            updateClassRequest.setRequestHeader('Content-Type', 'application/json');
+            updateClassRequest.send(JSON.stringify(sendObj));
+        },
         deleteClass: function (sendObj, updateObj) {
             /**
              * sendObj

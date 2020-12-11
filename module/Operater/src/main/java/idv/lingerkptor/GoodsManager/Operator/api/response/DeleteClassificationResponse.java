@@ -15,7 +15,7 @@ public class DeleteClassificationResponse implements Response {
 	};
 
 	@SuppressWarnings("unused")
-	private String STATE ;
+	private String Code ;
 
 	private DeleteClassificationResponse() {
 
@@ -28,13 +28,13 @@ public class DeleteClassificationResponse implements Response {
 
 	public static Response failure(Enum<?> code) {
 		DeleteClassificationResponse response = new DeleteClassificationResponse();
-		response.STATE = code.name();
+		response.Code = code.name();
 		return response;
 	}
 
 	public static Response sucess() {
 		DeleteClassificationResponse response = new DeleteClassificationResponse();
-		response.STATE = STATECODE.DELETESUCESS.name();
+		response.Code = STATECODE.DELETESUCESS.name();
 		return response;
 	}
 
