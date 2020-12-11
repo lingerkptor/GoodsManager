@@ -2,6 +2,12 @@ const classManagePage = function () {
     let classifictionList = [];
     return {
         getClassList: function (updateObj) {
+            /**
+             *  updateObj
+             * {
+             *  update: function(){ // doUpdate  }
+             * }
+             */
             let getClassListRequest = new XMLHttpRequest();
             getClassListRequest.onreadystatechange = function () {
                 if (getClassListRequest.readyState == XMLHttpRequest.DONE) {
@@ -20,6 +26,17 @@ const classManagePage = function () {
 
         },
         addClass: function (sendObj, updateObj) {
+            /**
+             * sendObj
+             * {
+             *  classificationName : String
+             *  parentClassificationName : String
+             * }
+             * updateObj
+             * {
+             *  update: function(){ // doUpdate  }
+             * }
+             */
             let addClassRequest = new XMLHttpRequest();
             addClassRequest.onreadystatechange = function () {
                 if (addClassRequest.readyState == XMLHttpRequest.DONE) {
@@ -34,6 +51,31 @@ const classManagePage = function () {
             addClassRequest.open('Post', "/GoodsManager/api/IncreateClassification");
             addClassRequest.setRequestHeader('Content-Type', 'application/json');
             addClassRequest.send(JSON.stringify(sendObj));
+        },
+        deleteClass: function (sendObj, updateObj) {
+            /**
+             * sendObj
+             * {
+             *  classificationName: String
+             * }
+             * updateObj
+             * {
+             *  update: function(){ // doUpdate  }
+             * }
+             */
+            let deleteClassRequest = new XMLHttpRequest();
+            deleteClassRequest.onreadystatechange = function () {
+                if (deleteClassRequest.readyState == XMLHttpRequest.DONE) {
+                    if (deleteClassRequest.status == 200) {
+                        let responseObj = JSON.parse(deleteClassRequest.responseText);
+                        if (typeof (responseObj.Code) != "undefined")
+                            updateObj.update(responseObj.Code);
+                    }
+                }
+            };
+            deleteClassRequest.open('Post', "/GoodsManager/api/DeleteClassification");
+            deleteClassRequest.setRequestHeader('Content-Type', 'application/json');
+            deleteClassRequest.send(JSON.stringify(sendObj));
         }
     };
 }();
