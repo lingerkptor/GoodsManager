@@ -5,13 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分類管理</title>
-    <script src="js/classManage.js"></script>
-    <script src="js/classManageUI.js"></script>
     <style>
         .prototype {
             display: none;
         }
+
+        .classification .function,
+        .classification .className,
+        .classification .count,
+        .classification .parent {
+            display: inline-block;
+            border: 1px;
+            border-style: solid;
+            padding: 3px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .caret {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .caret-down::before {
+            transform: rotate(90deg);
+        }
+
+        .nested {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .classification {
+            margin: 5px;
+            border: 1px;
+            border-style: solid;
+            padding: 3px;
+        }
     </style>
+    <script src="js/classManage.js"></script>
+    <script src="js/classManageUI.js"></script>
+
 </head>
 
 <body>
@@ -19,20 +65,28 @@
         <label>分類名稱：</label><input id="className" /><input id="createClassBtn" type="button" value="新增分類" />
         <p id="report"></p>
     </div>
-    <div id="classTree">
-        <div class="prototype">
-            <div name="function">
+    <ul id="classTree">
+        <li class="prototype classification">
+            <div class="className">
+                <label>分類名稱</label><br />
+                <div></div>
+            </div>
+            <div class="count">
+                <label>子分類數量</label><br />
+                <div></div>
+            </div>
+            <div class="function">
                 <label>分類名稱：</label>
                 <input /><br />
-                <input type="button" value="新增子分類"/>
-                <input type="button" value="更新分類名稱"/>
+                <input type="button" value="新增子分類" />
+                <input type="button" value="更新分類名稱" />
                 <input type="button" value="刪除" />
             </div>
-            <div name="className"></div>
-            <div name="count"></div>
-        </div>
+            <ul class="nested"></ul>
+        </li>
 
-    </div>
+    </ul>
+  
 </body>
 
 

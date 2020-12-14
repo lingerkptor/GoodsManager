@@ -1,18 +1,21 @@
-
-
-
 window.onload = function () {
     const className = document.getElementById("className");
     const createClass = document.getElementById("createClassBtn");
+    createClass.addEventListener("click", function (e) {
+        classManagePage.addClass({ classificationName: className.value }, addClassUpdateobj);
+    });
+    const classTree = document.getElementById("classTree");
+
     const report = document.getElementById("report");
+    
     const updateClassList = function () {
         let prototype = classTree.getElementsByClassName("prototype")[0].cloneNode(true);
-        function setClassifiction(parent, classificationList) {
+        function setClassifiction(parent, classificationList, parentName) {
             classificationList.forEach((classification) => {//逐一填入
                 newNode = prototype.cloneNode(true);
                 newNode.classList.remove("prototype");
                 parent.appendChild(newNode);
-                let input = newNode.children[0].getElementsByTagName('input');
+                let input = newNode.children[2].getElementsByTagName('input');
                 let addClassInput = input[0];
                 //addClassBtn
                 input[1].addEventListener('click', function (e) {
@@ -36,15 +39,21 @@ window.onload = function () {
                         { classificationName: classification.classificationName },
                         deleteClassupdateObj);
                 });
-
                 // set Classification Name
-                newNode.children[1].innerText = classification.classificationName;
+                newNode.children[0].getElementsByTagName("div")[0].innerText = classification.classificationName;
+
                 // count sub Classification
                 if (!(typeof (classification.subClassificationList) === "undefined")) {
-                    newNode.children[2].innerText = classification.subClassificationList.length;
-                    setClassifiction(parent, classification.subClassificationList);
+                    newNode.children[0].classList.add("caret");
+                    newNode.children[0].addEventListener('click', function (e) {
+                        e.currentTarget.parentElement.querySelector(".nested").classList.toggle("active");
+                        e.currentTarget.classList.toggle("caret-down");
+                    });
+                    newNode.children[1].getElementsByTagName("div")[0].innerText = classification.subClassificationList.length;
+                    setClassifiction(newNode.getElementsByTagName("ul")[0], classification.subClassificationList, classification.classificationName);
                 } else
-                    newNode.children[2].innerText = 0;
+                    newNode.children[1].getElementsByTagName("div")[0].innerText = 0;
+
 
             });
         };
@@ -156,14 +165,13 @@ window.onload = function () {
     };
 
 
-    createClass.addEventListener("click", function (e) {
-        classManagePage.addClass({ classificationName: className.value }, addClassUpdateobj);
-    });
-    const classTree = document.getElementById("classTree");
+  
 
 
     classManagePage.getClassList(updateClassList());
 
 
 };
+
+
 window.unonload = function () { };

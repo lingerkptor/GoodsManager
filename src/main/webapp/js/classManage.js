@@ -49,7 +49,7 @@ const classManagePage = function () {
             };
 
             addClassRequest.open('Post', "/GoodsManager/api/IncreateClassification");
-            addClassRequest.setRequestHeader('Content-Type', 'application/json');
+            addClassRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             addClassRequest.send(JSON.stringify(sendObj));
         },
         updateClass: function (sendObj, updateObj) {
@@ -76,7 +76,7 @@ const classManagePage = function () {
                 }
             };
             updateClassRequest.open('Post', "/GoodsManager/api/UpdateClassification");
-            updateClassRequest.setRequestHeader('Content-Type', 'application/json');
+            updateClassRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             updateClassRequest.send(JSON.stringify(sendObj));
         },
         deleteClass: function (sendObj, updateObj) {
@@ -101,7 +101,7 @@ const classManagePage = function () {
                 }
             };
             deleteClassRequest.open('Post', "/GoodsManager/api/DeleteClassification");
-            deleteClassRequest.setRequestHeader('Content-Type', 'application/json');
+            deleteClassRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             deleteClassRequest.send(JSON.stringify(sendObj));
         }
     };
