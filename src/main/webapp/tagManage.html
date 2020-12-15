@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>標籤管理</title>
+    <script src="js/tagManageUIControler.js"></script>
     <script src="js/tagManage.js"></script>
     <script src="js/tagManageUI.js"></script>
     <style>
@@ -15,16 +16,18 @@
 </head>
 
 <body>
-    <div id="functionBlock">
-        <label>標籤名稱</label><input id="tagName" /><input type="button" value="新增" />
+    <div>
+        <label>標籤名稱</label><input id="tagName" /><input id="addtag" type="button" value="新增" />
+        <br /> <label id="result"></label>
     </div>
     <div id="tagTable">
         <div class="prototype">
-            <div name="function">
+            <div class="function">
+                <input type="button" value="修改" />
                 <input type="button" value="刪除" />
             </div>
-            <div name="tagName"></div>
-            <div name="count"></div>
+            <input class="tagName" readonly="readonly" />
+            <div class="count"></div>
         </div>
 
     </div>
