@@ -13,7 +13,8 @@ const searchGoodsPage = function () {
                     }
                 }
             };
-            getclassListRequest.open('Get', '/GoodsManager/api/getClassList');
+            getclassListRequest.open('Get', '/GoodsManager/api/GetClassificationList');
+            getclassListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
             getclassListRequest.send();
         },
         getTagList: function () {
@@ -27,6 +28,7 @@ const searchGoodsPage = function () {
                 }
             };
             getTagListRequest.open('Get', '/GoodsManager/api/getTagList');
+            getTagListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
             getTagListRequest.send();
         },
 

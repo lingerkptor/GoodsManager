@@ -12,6 +12,7 @@ const addGoodsPage = {
 
         };
         getClassIdListRequest.open("Get", "/GoodsManager/api/getClassIDLIst");
+        getClassIdListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
         getClassIdListRequest.send();
     },
     sendNewGoods: function (formObj, element) {
@@ -25,6 +26,7 @@ const addGoodsPage = {
             }
         };
         sendGoodsRequest.open('Post', '/GoodsManager/api/addGoods');
+        sendGoodsRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         sendGoodsRequest.send(formObj);
     }
 

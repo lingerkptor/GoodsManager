@@ -47,7 +47,7 @@ const tagUIView = function () {
     function updateTagsUI() {
         data.forEach(element => {
             let newTag = prototype.cloneNode(true);
-            tagTable.appendChild(newTag);
+
             // modify button
             newTag.children[0].children[0].addEventListener('click', function (e) {
                 let tagNameElement = e.currentTarget.parentElement.children[1];
@@ -118,12 +118,13 @@ const tagUIView = function () {
                 );
             };
             // tageName input (view)
-            newTag.children[1].value = element.tagName;
-            newTag.children[1].tagName = element.tagName;
-            newTag.children[1].addEventListener('input', updateTag);
+            console.log("tagName=>" + element.tagName);
             newTag.children[2].value = element.tagName;
             newTag.children[2].tagName = element.tagName;
-            newTag.children[2].addEventListener('input',
+            newTag.children[2].addEventListener('input', updateTag);
+            newTag.children[4].value = element.tagName;
+            newTag.children[4].tagName = element.tagName;
+            newTag.children[4].addEventListener('input',
                 updateTag
                 // function (e) {
                 //     data.find((tag) => {
@@ -142,7 +143,9 @@ const tagUIView = function () {
                 // }
             );
 
-            newTag.children[3].innerText = element.count;
+            newTag.children[6].innerText = element.count;
+            newTag.classList.remove("prototype");
+            tagTable.appendChild(newTag);
         });
     }
 
