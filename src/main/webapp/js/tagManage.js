@@ -4,18 +4,19 @@ const tagManageModel = {
          * tag
          * {
          *  tagName: string
+         *  tagDescription:string
          * }
          */
         let addTagRequest = new XMLHttpRequest();
         addTagRequest.onreadystatechange = function () {
             if (addTagRequest.readyState === XMLHttpRequest.DONE) {
-                if (renameTagRequest.status === 200) {
+                if (addTagRequest.status === 200) {
                     element.update(JSON.parse(addTagRequest.responseText));
                 }
             } else
-                console.log('There was problem with request about addTag.');
+                console.log('There was problem with request about IncreateTag.');
         };
-        addTagRequest.open('Post', "/GoodsManager/api/addTag");
+        addTagRequest.open('Post', "/GoodsManager/api/IncreateTag");
         addTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         addTagRequest.send(JSON.stringify(tag));
     },
@@ -29,7 +30,7 @@ const tagManageModel = {
         let removeTagRequest = new XMLHttpRequest();
         removeTagRequest.onreadystatechange = function () {
             if (removeTagRequest.readyState === XMLHttpRequest.DONE) {
-                if (renameTagRequest.status === 200) {
+                if (removeTagRequest.status === 200) {
                     element.update(JSON.parse(removeTagRequest.responseText));
                 }
                 else
@@ -40,43 +41,44 @@ const tagManageModel = {
         removeTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         removeTagRequest.send(JSON.stringify(tag));
     },
-    renameTag: function (tag, element) {
+    updateTag: function (tag, element) {
         /**
          * tag
          * {
          *  tagName: string
          *  newTagName : string
+         *  tagDescription:string
          * }
          */
-        let renameTagRequest = new XMLHttpRequest();
-        renameTagRequest.onreadystatechange = function () {
-            if (renameTagRequest.readyState === XMLHttpRequest.DONE) {
-                if (renameTagRequest.status === 200) {
-                    element.update(JSON.parse(renameTagRequest.responseText));
+        let updateTagRequest = new XMLHttpRequest();
+        updateTagRequest.onreadystatechange = function () {
+            if (updateTagRequest.readyState === XMLHttpRequest.DONE) {
+                if (updateTagRequest.status === 200) {
+                    element.update(JSON.parse(updateTagRequest.responseText));
                 }
                 else
-                    console.log('There was problem with request about renameTag.');
+                    console.log('There was problem with request about updateTag.');
             }
         };
-        renameTagRequest.open('Post', "/GoodsManager/api/renameTag");
-        renameTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        renameTagRequest.send(JSON.stringify(tag));
+        updateTagRequest.open('Post', "/GoodsManager/api/updateTag");
+        updateTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        updateTagRequest.send(JSON.stringify(tag));
 
     },
     getTagList: function (element) {
-        let updateTagsRequest = new XMLHttpRequest();
-        updateTagsRequest.onreadystatechange = function () {
-            if (updateTagsRequest.readyState === XMLHttpRequest.DONE) {
-                if (renameTagRequest.status === 200) {
-                    tags = JSON.parse(updateTagsRequest.responseText);
+        let getTagsRequest = new XMLHttpRequest();
+        getTagsRequest.onreadystatechange = function () {
+            if (getTagsRequest.readyState === XMLHttpRequest.DONE) {
+                if (getTagsRequest.status === 200) {
+                    tags = JSON.parse(getTagsRequest.responseText);
                     element.update(tags);
                 }
             } else
                 console.log('There was a problem with request about getTagList.')
 
         };
-        updateTagsRequest.open('Get', "/GoodsManager/api/getTagList");
-        updateTagsRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-        updateTagsRequest.send();
+        getTagsRequest.open('Get', "/GoodsManager/api/getTagList");
+        getTagsRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        getTagsRequest.send();
     }
 };

@@ -17,16 +17,18 @@
 
 <body>
     <div>
-        <label>標籤名稱</label><input id="tagName" /><input id="addtag" type="button" value="新增" />
+        <label>標籤名稱</label><input id="tagName" /><br /><label>標籤描述</label><textarea
+            id="tagDescription"></textarea><input id="addtag" type="button" value="新增" />
         <br /> <label id="result"></label>
     </div>
     <div id="tagTable">
         <div class="prototype">
             <div class="function">
-                <input type="button" value="修改" />
+                <input type="button" value="修改" locked="true" />
                 <input type="button" value="刪除" />
             </div>
-            <input class="tagName" readonly="readonly" />
+            <input class="tagName" readonly="readonly" tagName />
+            <textarea class="tagDescription" readonly="readonly"></textarea>
             <div class="count"></div>
         </div>
 

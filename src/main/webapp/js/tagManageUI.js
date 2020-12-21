@@ -5,6 +5,7 @@ const tagUIView = function () {
     let tagTable = document.getElementById("tagTable");
     let prototype = document.getElementsByClassName("prototype")[0].cloneNode(true);
     let tagName = document.getElementById("tagName");
+    let tagDescription = document.getElementById("tagDescription");
     let addtag = document.getElementById("addtag");
     let data = [];
     let functionMap = new Map();
@@ -30,7 +31,10 @@ const tagUIView = function () {
         });
         if (typeof (selectedTag) === "undefined") {
             (functionMap.get("addTag"))(
-                {}, {
+                {
+                    tagName: tagName.value,
+                    tagDescription: tagDescription.value
+                }, {
                 update: function (responseObj) {
                     result(responseObj.result);
                 }
@@ -46,16 +50,23 @@ const tagUIView = function () {
             tagTable.appendChild(newTag);
             // modify button
             newTag.children[0].children[0].addEventListener('click', function (e) {
-                tagNameElement = e.currentTarget.parentElement.children[1];
-                if (tagNameElement.hasAttribute("readonly")) {
-                    e.currentTarget.value = "確認";
+                let tagNameElement = e.currentTarget.parentElement.children[1];
+                let tagDescriptionElement = e.currentTarget.parentElement.children[2];
+                if (e.currentTarget.locked == "true") {
+                    e.currentTarget.value = "修改確認";
+                    e.currentTarget.locked = "false";
                     tagNameElement.removeAttribute("readonly");
+                    tagDescriptionElement.removeAttribute("readonly");
                 } else {
                     let selectedTag = data.find((tag) => {
                         tag.newTagName = tagNameElement.tagName;
                     });
                     (functionMap.get("modifyTag"))(
-                        { tagName: selectedTag.tagName, newTagName: selectedTag.newTagName }//sendObj
+                        {//sendObj
+                            tagName: selectedTag.tagName,
+                            newTagName: selectedTag.newTagName,
+                            tagDescription: selectedTag.tagDescription
+                        }
                         , {//updateObj
                             update: function (responseObj) {
                                 if (!(typeof (responseObj.result) === "undefined")) {
@@ -64,7 +75,9 @@ const tagUIView = function () {
                             }
                         });
                     e.currentTarget.value = "修改";
+                    e.currentTarget.locked = "true";
                     tagNameElement.setAttribute("readonly", "readonly");
+                    tagDescriptionElement.setAttribute("readonly", "readonly");
                 }
             });
             // delete button
@@ -87,15 +100,14 @@ const tagUIView = function () {
                     data.splice(data.indexOf(selectedTag), 1);
                 }
             });
-            // tageName input (view)
-            newTag.children[1].value = element.tagName;
-            newTag.children[1].tagName = element.tagName;
-            newTag.children[1].addEventListener('input', function (e) {
-                data.find((tag) => {
-                    tag.tagName = e.currentTarget.tagName;
-                }).newTagName = newTag.children[1].value;
-                (functionMap.get("addTag"))(
-                    { tagName: selectedTag.tagName },//sendObj
+            function updateTag() {
+                let selectedtag = data.find((tag) => {
+                    tag.tagName = newTag.children[1].tagName;
+                });
+                selectedtag.newTagName = newTag.children[1].value;
+                selectedtag.tagDescription = newTag.children[2].value;
+                (functionMap.get("updateTag"))(
+                    selectedtag,//sendObj
                     {//updateObj
                         update: function (responseObj) {
                             if (!(typeof (responseObj.result) === "undefined")) {
@@ -104,11 +116,36 @@ const tagUIView = function () {
                         }
                     }
                 );
-            });
-            newTag.children[2].innerText = element.count;
+            };
+            // tageName input (view)
+            newTag.children[1].value = element.tagName;
+            newTag.children[1].tagName = element.tagName;
+            newTag.children[1].addEventListener('input', updateTag);
+            newTag.children[2].value = element.tagName;
+            newTag.children[2].tagName = element.tagName;
+            newTag.children[2].addEventListener('input',
+                updateTag
+                // function (e) {
+                //     data.find((tag) => {
+                //         tag.tagName = e.currentTarget.tagName;
+                //     }).tagDescription = newTag.children[2].value;
+                //     (functionMap.get("updateTag"))(
+                //         { tagName: selectedTag.tagName },//sendObj
+                //         {//updateObj
+                //             update: function (responseObj) {
+                //                 if (!(typeof (responseObj.result) === "undefined")) {
+                //                     result(responseObj.result);
+                //                 }
+                //             }
+                //         }
+                //     );
+                // }
+            );
+
+            newTag.children[3].innerText = element.count;
         });
     }
-    
+
     function updateTagSource() {
         let dataSource = functionMap.get("updatetagList");
         if (typeof (dataSource) === "undefined") {
