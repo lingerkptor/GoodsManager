@@ -29,10 +29,7 @@ public class TestMultiPartRequest implements Request {
 		return "C:\\GoodsManager\\";
 	}
 
-	@Override
-	public void setAttribute(HttpSession session) {
 
-	}
 
 	public String getDescription() {
 		return description;

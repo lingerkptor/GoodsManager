@@ -1,13 +1,11 @@
 package idv.GoodsManager.installation.api.response;
 
-import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 public class InstallResponse implements Response {
 	public enum ERRORCODE {
-		GoodsTable, ClassesTable, PictureTable, TagsTable, GoodsTagsTable,
-		SQLERROR;
+		GoodsTable, ClassesTable, PictureTable, TagsTable, GoodsTagsTable, SQLERROR;
 	};
 
 	@SuppressWarnings("unused")
@@ -65,11 +63,5 @@ public class InstallResponse implements Response {
 	public static InstallResponse createTableSucess() {
 		return new InstallResponse();
 	}
-
-	@Override
-	public void setAttribute(HttpSession session) {
-
-	}
-
 
 }

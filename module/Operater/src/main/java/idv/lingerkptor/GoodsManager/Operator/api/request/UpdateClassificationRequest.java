@@ -1,7 +1,5 @@
 package idv.lingerkptor.GoodsManager.Operator.api.request;
 
-import javax.servlet.http.HttpSession;
-
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 
 public class UpdateClassificationRequest implements Request {
@@ -9,11 +7,6 @@ public class UpdateClassificationRequest implements Request {
 	private String classificationName = null;
 	private String classificationNewName = null;
 	private String parentClassificationName = null;
-
-	@Override
-	public void setAttribute(HttpSession session) {
-
-	}
 
 	public int getUpdateContent() {
 		int result = 0;

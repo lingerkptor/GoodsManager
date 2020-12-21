@@ -1,7 +1,5 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import javax.servlet.http.HttpSession;
-
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 public class IncreateClassificationResponse implements Response {
@@ -17,11 +15,6 @@ public class IncreateClassificationResponse implements Response {
 
 	@SuppressWarnings("unused")
 	private String Code = "";
-
-	@Override
-	public void setAttribute(HttpSession session) {
-
-	}
 
 	public static Response CreateClassificationFailure(Enum<?> CODE) {
 		IncreateClassificationResponse response = new IncreateClassificationResponse();

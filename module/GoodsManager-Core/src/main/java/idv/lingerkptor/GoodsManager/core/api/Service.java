@@ -10,8 +10,10 @@ import javax.servlet.http.HttpSession;
 import idv.lingerkptor.GoodsManager.core.Analyzable;
 import idv.lingerkptor.GoodsManager.core.Sendable;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
+import idv.lingerkptor.GoodsManager.core.api.request.GetableAttributeBySession;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.api.response.SetableAttributeBySession;
 
 public abstract class Service extends HttpServlet {
 
@@ -58,11 +60,13 @@ public abstract class Service extends HttpServlet {
 				// 取得請求物件
 				Request request = analyzobj.analyze(req, requestClass);
 				// 設定伺服器端資料
-				request.setAttribute(session);
+				if (request instanceof GetableAttributeBySession)
+					((GetableAttributeBySession) request).setAttribute(session);
 				// 處理請求，取得回應物件
 				Response ResponseObj = process(request);
 				// 設定伺服器端資料
-				ResponseObj.setAttribute(req.getSession());
+				if (ResponseObj instanceof SetableAttributeBySession)
+					((SetableAttributeBySession) ResponseObj).setAttribute(req.getSession());
 				// 寄送回應物件
 				sendobj.send(ResponseObj, resp);
 			} else {

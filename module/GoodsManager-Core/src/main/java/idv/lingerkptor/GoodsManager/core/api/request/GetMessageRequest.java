@@ -14,7 +14,7 @@ import idv.lingerkptor.GoodsManager.core.Message.Message;
  *
  * @author lingerkptor
  */
-public class GetMessageRequest implements Request {
+public class GetMessageRequest implements Request ,GetableAttributeBySession{
 	private Message.Category[] category;
 	/**
 	 * 最後傳出的訊息碼

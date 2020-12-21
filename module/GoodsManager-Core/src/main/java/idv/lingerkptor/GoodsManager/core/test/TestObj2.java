@@ -24,14 +24,6 @@ public class TestObj2 implements Request{
 		return " String:" + testString + " ,  Boolean:" + testBoolean + " ,   Int:" + testInt + ", obj " + objtoString;
 	}
 
-	@Override
-	public void setAttribute(HttpSession session) {
-	}
 
-//	@Override
-//	public void setAttribute(String attrName, Object obj) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 
 }

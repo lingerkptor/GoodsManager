@@ -1,6 +1,5 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
@@ -21,10 +20,7 @@ public class DeleteClassificationResponse implements Response {
 
 	}
 
-	@Override
-	public void setAttribute(HttpSession session) {
 
-	}
 
 	public static Response failure(Enum<?> code) {
 		DeleteClassificationResponse response = new DeleteClassificationResponse();

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 
-public class GetMessageResponse implements Response {
+public class GetMessageResponse implements Response ,SetableAttributeBySession{
 	private List<Message> messageList = null;
 
 	public static GetMessageResponse getMessageList(List<Message> messageList) {

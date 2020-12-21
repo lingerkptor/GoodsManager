@@ -1,7 +1,5 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import javax.servlet.http.HttpSession;
-
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 public class UpdateClassificationResponse implements Response {
@@ -13,19 +11,14 @@ public class UpdateClassificationResponse implements Response {
 		OTHEREXCEPTION, // 其他例外
 		UPDATENAMEFAILURE, // 更新名稱失敗
 		UPDATEPARENTFAILURE, // 更新上層分類失敗
-		UPDATESUCESS,// 更新成功
-		NEWNAMEISEXIST;//新名稱已存在
+		UPDATESUCESS, // 更新成功
+		NEWNAMEISEXIST;// 新名稱已存在
 	}
 
 	@SuppressWarnings("unused")
 	private String Code = "";
 
 	private UpdateClassificationResponse() {
-
-	}
-
-	@Override
-	public void setAttribute(HttpSession session) {
 
 	}
 

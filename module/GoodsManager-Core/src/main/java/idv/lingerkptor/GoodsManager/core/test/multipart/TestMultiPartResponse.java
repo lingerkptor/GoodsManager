@@ -1,10 +1,8 @@
 package idv.lingerkptor.GoodsManager.core.test.multipart;
 
-import javax.servlet.http.HttpSession;
-
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
-public class TestMultiPartResponse implements Response{
+public class TestMultiPartResponse implements Response {
 
 	@SuppressWarnings("unused")
 	private boolean OK;
@@ -21,8 +19,4 @@ public class TestMultiPartResponse implements Response{
 		return new TestMultiPartResponse(true);
 	}
 
-	@Override
-	public void setAttribute(HttpSession session) {
-		
-	}
 }

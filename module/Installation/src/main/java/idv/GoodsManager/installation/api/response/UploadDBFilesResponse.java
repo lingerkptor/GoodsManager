@@ -12,11 +12,6 @@ public class UploadDBFilesResponse implements Response {
 	private boolean uploadSuccess = true;
 	private String DBName;
 
-	@Override
-	public void setAttribute(HttpSession session) {
-
-	}
-
 	/**
 	 * 通知上傳失敗
 	 * 

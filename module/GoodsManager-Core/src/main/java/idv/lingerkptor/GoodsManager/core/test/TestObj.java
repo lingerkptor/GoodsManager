@@ -18,10 +18,7 @@ public class TestObj implements Request{
 		return "String:" + testString + "   Boolean:" + testBoolean + "   Int:" + testInt;
 	}
 
-	@Override
-	public void setAttribute(HttpSession session) {
-		
-	}
+
 
 //	@Override
 //	public void setAttribute(String attrName, Object obj) {

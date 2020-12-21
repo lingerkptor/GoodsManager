@@ -2,8 +2,6 @@ package idv.lingerkptor.GoodsManager.Operator.api.response;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Classification;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
@@ -18,10 +16,6 @@ public class GetClassificationListResponse implements Response {
 	private String Code = "";
 	@SuppressWarnings("unused")
 	private List<Classification> classificationList;
-
-	@Override
-	public void setAttribute(HttpSession session) {
-	}
 
 	public static GetClassificationListResponse getClassificationListFailure(STATECODE code) {
 		GetClassificationListResponse response = new GetClassificationListResponse();
