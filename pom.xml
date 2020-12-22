@@ -39,6 +39,16 @@
 			<artifactId>GoodsManager-Core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>idv.lingerkptor.GoodsManager</groupId>
+			<artifactId>Installation</artifactId>
+			<version>0.0.1-Release</version>
+		</dependency>
+		<dependency>
+			<groupId>idv.lingerkptor.GoodsManager</groupId>
+			<artifactId>GoodsManager-Operater</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 
