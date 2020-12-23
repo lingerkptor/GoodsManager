@@ -25,17 +25,17 @@ public class DeleteTag extends Service {
     public Response process(Request request) {
         DeleteTagRequest deleteTagRequest = (DeleteTagRequest) request;
         if (deleteTagRequest.getTagName().equals(""))
-            return DeleteTagResponse.TAGNAMEISEMPTY;
+            return DeleteTagResponse.Code.TAGNAMEISEMPTY.getResponse();
         DataAccessTemplate template = DataAccessCore.getSQLTemplate();
         try {
             template.update(new DeleteTagDAO(deleteTagRequest));
         } catch (SQLException e) {
-            return DeleteTagResponse.SQLEXCEPTION;
+            return DeleteTagResponse.Code.SQLEXCEPTION.getResponse();
         } catch (DAORuntimeException e) {
             MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.warn, e.getMessage()));
-            return (DeleteTagResponse) e.getCode();
+            return ((DeleteTagResponse.Code) e.getCode()).getResponse();
         }
-        return null;
+        return DeleteTagResponse.Code.SUCCESS.getResponse();
     }
 
     @Override

@@ -12,9 +12,9 @@ const tagManageModel = {
             if (addTagRequest.readyState === XMLHttpRequest.DONE) {
                 if (addTagRequest.status === 200) {
                     element.update(JSON.parse(addTagRequest.responseText));
-                }
-            } else
-                console.log('There was problem with request about IncreateTag.');
+                } else
+                    console.log('There was problem with request about IncreateTag.');
+            }
         };
         addTagRequest.open('Post', "/GoodsManager/api/IncreateTag");
         addTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -31,13 +31,13 @@ const tagManageModel = {
         removeTagRequest.onreadystatechange = function () {
             if (removeTagRequest.readyState === XMLHttpRequest.DONE) {
                 if (removeTagRequest.status === 200) {
+                    console.log(JSON.parse(removeTagRequest.responseText));
                     element.update(JSON.parse(removeTagRequest.responseText));
-                }
-                else
+                } else
                     console.log('There was problem with request about removeTag.');
             }
         };
-        removeTagRequest.open('Post', "/GoodsManager/api/removeTag");
+        removeTagRequest.open('Post', "/GoodsManager/api/DeleteTag");
         removeTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         removeTagRequest.send(JSON.stringify(tag));
     },
@@ -55,8 +55,7 @@ const tagManageModel = {
             if (updateTagRequest.readyState === XMLHttpRequest.DONE) {
                 if (updateTagRequest.status === 200) {
                     element.update(JSON.parse(updateTagRequest.responseText));
-                }
-                else
+                } else
                     console.log('There was problem with request about updateTag.');
             }
         };
@@ -72,10 +71,9 @@ const tagManageModel = {
                 if (getTagsRequest.status === 200) {
                     tags = JSON.parse(getTagsRequest.responseText);
                     element.update(tags);
-                }
-            } else
-                console.log('There was a problem with request about getTagList.')
-
+                } else
+                    console.log('There was a problem with request about getTagList.');
+            }
         };
         getTagsRequest.open('Get', "/GoodsManager/api/getTagList");
         getTagsRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');

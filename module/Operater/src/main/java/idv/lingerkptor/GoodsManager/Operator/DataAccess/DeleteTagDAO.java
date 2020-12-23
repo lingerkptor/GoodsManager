@@ -50,7 +50,7 @@ public class DeleteTagDAO implements PreparedStatementCreator {
             prop.load(new FileReader(new File(ConfigReader.getConfigReader().getDBConfig().getSqlURL() + "/DeleteTag.properties")));
         } catch (IOException e) {
             e.printStackTrace();
-            throw new DAORuntimeException("SQL檔案讀取發生問題", DeleteTagResponse.SQLFILEERROR);
+            throw new DAORuntimeException("SQL檔案讀取發生問題", DeleteTagResponse.Code.SQLFILEERROR);
         }
     }
 
@@ -67,7 +67,7 @@ public class DeleteTagDAO implements PreparedStatementCreator {
         ResultSet rs = stat.executeQuery();
         if (rs.next())
             return rs.getInt(1);
-        throw new DAORuntimeException("標籤不存在", DeleteTagResponse.TAGISNOTEXIST);
+        throw new DAORuntimeException("標籤不存在", DeleteTagResponse.Code.TAGISNOTEXIST);
     }
 
     /**

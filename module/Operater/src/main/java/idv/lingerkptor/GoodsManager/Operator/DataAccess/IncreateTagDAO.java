@@ -1,5 +1,11 @@
 package idv.lingerkptor.GoodsManager.Operator.DataAccess;
 
+import idv.lingerkptor.GoodsManager.Operator.api.request.IncreateTagRequest;
+import idv.lingerkptor.GoodsManager.Operator.api.response.IncreateTagResponse;
+import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
+import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
+import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,12 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-
-import idv.lingerkptor.GoodsManager.Operator.api.request.IncreateTagRequest;
-import idv.lingerkptor.GoodsManager.Operator.api.response.IncreateTagResponse;
-import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
-import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
-import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
 
 public class IncreateTagDAO implements PreparedStatementCreator {
 	private IncreateTagRequest request;
@@ -30,13 +30,13 @@ public class IncreateTagDAO implements PreparedStatementCreator {
 		// STEP2. 確認是否已存在相同的標籤
 		if (this.checkTagisExist(conn))
 			throw new DAORuntimeException("標籤名：" + request.getTagName() + "已經存在．",
-					IncreateTagResponse.TAGISEXIST);
+					IncreateTagResponse.Code.TAGISEXIST);
 		// STEP3. 建立標籤
 		this.increateTag(conn);
 		// STEP4. 確認是否建立成功
 		if (!this.checkTagisExist(conn))
 			throw new DAORuntimeException("標籤名：" + request.getTagName() + "建立失敗．",
-					IncreateTagResponse.INCREATEFAILURE);
+					IncreateTagResponse.Code.INCREATEFAILURE);
 		return null;
 	}
 
@@ -53,7 +53,7 @@ public class IncreateTagDAO implements PreparedStatementCreator {
 		} catch (NullPointerException | IOException e) {
 			e.printStackTrace();
 			throw new DAORuntimeException("SQL檔案出問題 Message：" + e.getMessage(),
-					IncreateTagResponse.SQLFILEERROR);
+					IncreateTagResponse.Code.SQLFILEERROR);
 		}
 	}
 

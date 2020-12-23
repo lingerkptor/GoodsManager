@@ -13,54 +13,57 @@ const tagUIView = function () {
     let result = function (resultObj) {
         let resultElement = document.getElementById("result");
         switch (resultObj) {
-            case "sucess":
-                resultElement.innerText;
-                functionMap.get("")
+            case "SUCCESS":
+                resultElement.innerText = "成功";
+                updateTagSource();
                 break;
             case "failure":
+                resultElement.innerText = "失敗"
                 break;
             default:
+                resultElement.innerText = resultObj;
                 break;
         }
     }
 
 
     addtag.addEventListener('click', function (e) {
-        let selectedTag = data.find((tag) => {
-            tag.tagName = tagName.value;
-        });
-        if (typeof (selectedTag) === "undefined") {
-            (functionMap.get("addTag"))(
-                {
-                    tagName: tagName.value,
-                    tagDescription: tagDescription.value
-                }, {
-                update: function (responseObj) {
-                    result(responseObj.result);
-                }
+        let selectedTag = data.find((tag) =>
+            tag.tagName == tagName.value
+        );
+
+        (functionMap.get("addTag"))(
+            {
+                tagName: tagName.value,
+                tagDescription: tagDescription.value
+            }, {
+            update: function (responseObj) {
+                result(responseObj.code);
             }
-            );
         }
+        );
     });
 
     //updateTagsUI
     function updateTagsUI() {
+        tagTable.innerHTML = "";
+        tagTable.appendChild(prototype.cloneNode(true));
         data.forEach(element => {
             let newTag = prototype.cloneNode(true);
 
             // modify button
             newTag.children[0].children[0].addEventListener('click', function (e) {
-                let tagNameElement = e.currentTarget.parentElement.children[1];
-                let tagDescriptionElement = e.currentTarget.parentElement.children[2];
-                if (e.currentTarget.locked == "true") {
+                let tagNameElement = e.currentTarget.parentElement.parentElement.children[2];
+                let tagDescriptionElement = e.currentTarget.parentElement.parentElement.children[4];
+                if (tagNameElement.getAttribute("readonly") === "readonly") {
                     e.currentTarget.value = "修改確認";
                     e.currentTarget.locked = "false";
                     tagNameElement.removeAttribute("readonly");
                     tagDescriptionElement.removeAttribute("readonly");
                 } else {
-                    let selectedTag = data.find((tag) => {
-                        tag.newTagName = tagNameElement.tagName;
-                    });
+                    let selectedTag = data.find((tag) =>
+                        tag.tagName == tagNameElement.getAttribute("tagName")
+                    );
                     (functionMap.get("modifyTag"))(
                         {//sendObj
                             tagName: selectedTag.tagName,
@@ -69,8 +72,8 @@ const tagUIView = function () {
                         }
                         , {//updateObj
                             update: function (responseObj) {
-                                if (!(typeof (responseObj.result) === "undefined")) {
-                                    result(responseObj.result);
+                                if (!(typeof (responseObj) === "undefined")) {
+                                    result(responseObj.code);
                                 }
                             }
                         });
@@ -83,16 +86,16 @@ const tagUIView = function () {
             // delete button
             newTag.children[0].children[1].addEventListener('click', function (e) {
                 if (confirm("確定要刪除?")) {
-                    let tagNameElement = e.currentTarget.parentElement.children[1];
-                    let selectedTag = data.find((tag) => {
-                        tag.tagName = tagNameElement.tagName;
-                    });
+                    let tagNameElement = e.currentTarget.parentElement.parentElement.children[2];
+                    let selectedTag = data.find((tag) =>
+                        tag.tagName == tagNameElement.getAttribute("tagName")
+                    );
                     (functionMap.get("deleteTag"))(
                         { tagName: selectedTag.tagName },//sendObj
                         {//updateObj
                             update: function (responseObj) {
-                                if (!(typeof (responseObj.result) === "undefined")) {
-                                    result(responseObj.result);
+                                if (!(typeof (responseObj.code) === "undefined")) {
+                                    result(responseObj.code);
                                 }
                             }
                         }
@@ -101,29 +104,22 @@ const tagUIView = function () {
                 }
             });
             function updateTag() {
-                let selectedtag = data.find((tag) => {
-                    tag.tagName = newTag.children[1].tagName;
-                });
-                selectedtag.newTagName = newTag.children[1].value;
-                selectedtag.tagDescription = newTag.children[2].value;
-                (functionMap.get("updateTag"))(
-                    selectedtag,//sendObj
-                    {//updateObj
-                        update: function (responseObj) {
-                            if (!(typeof (responseObj.result) === "undefined")) {
-                                result(responseObj.result);
-                            }
-                        }
-                    }
+                let selectedtag = data.find((tag) =>
+                    tag.tagName == newTag.children[2].getAttribute("tagname")
                 );
+                selectedtag.newTagName = newTag.children[2].value;
+                selectedtag.tagDescription = newTag.children[4].value;
+                let updatedtag = data.find((tag) =>
+                    tag.tagName == newTag.children[2].getAttribute("tagname")
+                );
+                console.log(updatedtag);
             };
             // tageName input (view)
-            console.log("tagName=>" + element.tagName);
             newTag.children[2].value = element.tagName;
-            newTag.children[2].tagName = element.tagName;
+            newTag.children[2].setAttribute("tagName", element.tagName);
             newTag.children[2].addEventListener('input', updateTag);
             newTag.children[4].value = element.tagName;
-            newTag.children[4].tagName = element.tagName;
+            newTag.children[4].setAttribute("tagDescription", element.tagName);
             newTag.children[4].addEventListener('input',
                 updateTag
                 // function (e) {
@@ -157,6 +153,7 @@ const tagUIView = function () {
             dataSource(
                 {//udpateObj
                     update: function (responseObj) {
+                        console.log(responseObj.tagList);
                         data = responseObj.tagList;
                         updateTagsUI();
                     }

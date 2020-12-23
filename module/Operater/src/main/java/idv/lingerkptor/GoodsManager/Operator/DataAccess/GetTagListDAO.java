@@ -1,5 +1,12 @@
 package idv.lingerkptor.GoodsManager.Operator.DataAccess;
 
+import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Tag;
+import idv.lingerkptor.GoodsManager.Operator.api.response.GetTagListResponse;
+import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
+import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
+import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
+import idv.lingerkptor.util.DBOperator.RowCallbackHandler;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,16 +16,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Tag;
-import idv.lingerkptor.GoodsManager.Operator.api.response.GetTagListResponse;
-import idv.lingerkptor.GoodsManager.core.DataAccess.ConfigReader;
-import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
-import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
-import idv.lingerkptor.util.DBOperator.RowCallbackHandler;
-
 public class GetTagListDAO implements PreparedStatementCreator, RowCallbackHandler {
 	private Properties prop = new Properties();
-	private GetTagListResponse response = GetTagListResponse.STATECODE.SUCESS.getResponse();
+	private GetTagListResponse response = GetTagListResponse.STATECODE.SUCCESS.getResponse();
 
 	/**
 	 * Step1. 載入存放SQL的檔案
