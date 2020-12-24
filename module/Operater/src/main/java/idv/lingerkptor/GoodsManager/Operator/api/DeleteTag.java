@@ -20,31 +20,34 @@ import java.sql.SQLException;
 
 @WebServlet("/api/DeleteTag")
 public class DeleteTag extends Service {
-    @Override
-    @ContentType(reqType = ContentType.RequestType.Json, respType = ContentType.ResponseType.Json)
-    public Response process(Request request) {
-        DeleteTagRequest deleteTagRequest = (DeleteTagRequest) request;
-        if (deleteTagRequest.getTagName().equals(""))
-            return DeleteTagResponse.Code.TAGNAMEISEMPTY.getResponse();
-        DataAccessTemplate template = DataAccessCore.getSQLTemplate();
-        try {
-            template.update(new DeleteTagDAO(deleteTagRequest));
-        } catch (SQLException e) {
-            return DeleteTagResponse.Code.SQLEXCEPTION.getResponse();
-        } catch (DAORuntimeException e) {
-            MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.warn, e.getMessage()));
-            return ((DeleteTagResponse.Code) e.getCode()).getResponse();
-        }
-        return DeleteTagResponse.Code.SUCCESS.getResponse();
-    }
+	private static final long serialVersionUID = 2929824093426059471L;
 
-    @Override
-    protected void configRequestClass() {
-        this.requestClass = DeleteTagRequest.class;
-    }
+	@Override
+	@ContentType(reqType = ContentType.RequestType.Json, respType = ContentType.ResponseType.Json)
+	public Response process(Request request) {
+		DeleteTagRequest deleteTagRequest = (DeleteTagRequest) request;
+		if (deleteTagRequest.getTagName().equals(""))
+			return DeleteTagResponse.Code.TAGNAMEISEMPTY.getResponse();
+		DataAccessTemplate template = DataAccessCore.getSQLTemplate();
+		try {
+			template.update(new DeleteTagDAO(deleteTagRequest));
+		} catch (SQLException e) {
+			return DeleteTagResponse.Code.SQLEXCEPTION.getResponse();
+		} catch (DAORuntimeException e) {
+			MessageInit.getMsgManager()
+					.deliverMessage(new Message(Message.Category.warn, e.getMessage()));
+			return ((DeleteTagResponse.Code) e.getCode()).getResponse();
+		}
+		return DeleteTagResponse.Code.SUCCESS.getResponse();
+	}
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-        this.operater(request, response);
-    }
+	@Override
+	protected void configRequestClass() {
+		this.requestClass = DeleteTagRequest.class;
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		this.operater(request, response);
+	}
 }

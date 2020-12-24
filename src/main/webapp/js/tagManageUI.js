@@ -109,10 +109,6 @@ const tagUIView = function () {
                 );
                 selectedtag.newTagName = newTag.children[2].value;
                 selectedtag.tagDescription = newTag.children[4].value;
-                let updatedtag = data.find((tag) =>
-                    tag.tagName == newTag.children[2].getAttribute("tagname")
-                );
-                console.log(updatedtag);
             };
             // tageName input (view)
             newTag.children[2].value = element.tagName;
@@ -120,25 +116,7 @@ const tagUIView = function () {
             newTag.children[2].addEventListener('input', updateTag);
             newTag.children[4].value = element.tagName;
             newTag.children[4].setAttribute("tagDescription", element.tagName);
-            newTag.children[4].addEventListener('input',
-                updateTag
-                // function (e) {
-                //     data.find((tag) => {
-                //         tag.tagName = e.currentTarget.tagName;
-                //     }).tagDescription = newTag.children[2].value;
-                //     (functionMap.get("updateTag"))(
-                //         { tagName: selectedTag.tagName },//sendObj
-                //         {//updateObj
-                //             update: function (responseObj) {
-                //                 if (!(typeof (responseObj.result) === "undefined")) {
-                //                     result(responseObj.result);
-                //                 }
-                //             }
-                //         }
-                //     );
-                // }
-            );
-
+            newTag.children[4].addEventListener('input', updateTag);
             newTag.children[6].innerText = element.count;
             newTag.classList.remove("prototype");
             tagTable.appendChild(newTag);
@@ -153,7 +131,6 @@ const tagUIView = function () {
             dataSource(
                 {//udpateObj
                     update: function (responseObj) {
-                        console.log(responseObj.tagList);
                         data = responseObj.tagList;
                         updateTagsUI();
                     }

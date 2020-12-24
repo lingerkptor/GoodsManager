@@ -2,7 +2,6 @@ package idv.lingerkptor.GoodsManager.Operator.api.request;
 
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 
-import javax.servlet.http.HttpSession;
 
 public class DeleteTagRequest implements Request {
     /**

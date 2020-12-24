@@ -5,6 +5,7 @@ public class Tag {
 	private String tagName = "";
 	@SuppressWarnings("unused")
 	private String tagDescription = "";
+	@SuppressWarnings("unused")
 	private int count = 0;
 
 	@SuppressWarnings("unused")

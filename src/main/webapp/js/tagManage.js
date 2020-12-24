@@ -31,7 +31,6 @@ const tagManageModel = {
         removeTagRequest.onreadystatechange = function () {
             if (removeTagRequest.readyState === XMLHttpRequest.DONE) {
                 if (removeTagRequest.status === 200) {
-                    console.log(JSON.parse(removeTagRequest.responseText));
                     element.update(JSON.parse(removeTagRequest.responseText));
                 } else
                     console.log('There was problem with request about removeTag.');
@@ -59,7 +58,7 @@ const tagManageModel = {
                     console.log('There was problem with request about updateTag.');
             }
         };
-        updateTagRequest.open('Post', "/GoodsManager/api/updateTag");
+        updateTagRequest.open('Post', "/GoodsManager/api/modifyTag");
         updateTagRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         updateTagRequest.send(JSON.stringify(tag));
 

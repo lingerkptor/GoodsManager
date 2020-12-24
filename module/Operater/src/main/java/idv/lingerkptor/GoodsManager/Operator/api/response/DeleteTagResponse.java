@@ -21,7 +21,8 @@ public class DeleteTagResponse implements Response {
 
     }
 
-    private String code;
+    @SuppressWarnings("unused")
+	private String code;
 
 
 }

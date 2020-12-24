@@ -1,22 +1,21 @@
 # intellij idea 專案相關檔案
 .idea
 GoodsManager.iml
-module/GoodsManager-Core/GoodsManager-Core.iml
-module/Installation/Installation.iml
+/module/GoodsManager-Core/GoodsManager-Core.iml
+/module/Installation/Installation.iml
 
 # eclipse 專案相關檔案
-.settings
-module/*/target/*
-.settings/*
+.settings/
 .classpath
 .project
 
 # maven 相關檔案
-target/*
+/target/
+/module/*/target/
 
 #測試用檔案
 #module/GoodsManager-Core/src/main/java/idv/lingerkptor/GoodsManager/core/test
 #src/main/webapp/TestGson.html
 
 #其他自動新增的檔案
-module/*/.gitignore
+/module/*/.gitignore
