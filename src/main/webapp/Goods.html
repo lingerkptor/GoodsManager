@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增商品</title>
+    <script src="./js/Goods.js"></script>
+    <script src="./js/GoodsUI.js"></script>
+    <script src="./js/GoodsUIControler.js"></script>
+    <style>
+        .prototype {
+            display: none;
+        }
+
+        .classList {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label>商品名稱:</label><input id="gName" /><br />
+        <label>長:</label><input id="L" />
+        <label>mm 寬:</label><input id="W" />
+        <label>mm 厚:</label><input id="H" /><label>mm</label><br />
+        <label>價錢:</label><input id="price" /><br />
+        <label>數量:</label><input id="count" /><br />
+        <label>分類:</label>
+        <div>
+            <div class="prototype classList">
+                >
+                <select>
+                    <option></option>
+                </select>
+            </div>
+        </div> <br />
+        <label>標籤:</label>
+        <textarea id="tags" type="text" readonly></textarea>
+        <input id="addTag" type="button" value="新增標籤" /><input id="removeTag" type="button" value="移除標籤" /><br />
+        <label>圖片:</label>
+        <div id="pictureArea"><img class="prototype picture" /></div><br />
+        <input id="uploadPictureBtn" type="file" multiple /><br />
+        <input id="addGoodsBtn" type="button" value="新增商品" /><input id="modifyGoodsBtn" type="button" value="修改商品" />
+
+    </div>
+</body>
+
+</html>

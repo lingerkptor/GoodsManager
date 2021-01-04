@@ -3,7 +3,6 @@ package idv.lingerkptor.GoodsManager.core.DataAccess;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -17,6 +16,8 @@ public class ConfigReader {
 	private DatabaseConfigImp dbconfig;
 	private MessageConfig msgConfig;
 	private String tempDir;
+	private String photoConfig;
+	private String WHClass;
 
 	private ConfigReader() {
 	}
@@ -66,6 +67,9 @@ public class ConfigReader {
 		// 讀取暫存資料夾設定
 		System.out.println("讀取暫存資料夾設定");
 		this.readTempDirConfig();
+		// 讀取圖片資料夾設定
+		System.out.println("讀取圖片資料夾設定");
+		this.readPhotoDirConfig();
 		// 讀取資料庫設定
 		System.out.println("讀取資料庫設定檔");
 		this.readDatabaseConfig();
@@ -85,14 +89,23 @@ public class ConfigReader {
 	 * 讀取系統訊息設定
 	 */
 	private void readMessageConfig() {
-		msgConfig = new MessageConfig(props.getProperty("msgURL"));
+		msgConfig = new MessageConfig(
+				props.getProperty("systemDir") + "\\" + props.getProperty("msgURL"));
 	}
 
 	/**
 	 * 讀取暫存資料夾設定
 	 */
 	private void readTempDirConfig() {
-		tempDir = props.getProperty("tempDir");
+		tempDir = props.getProperty("systemDir") + "\\" + props.getProperty("tempDir");
+	}
+
+	/**
+	 * 讀取圖片資料夾設定
+	 */
+	private void readPhotoDirConfig() {
+		this.WHClass = props.getProperty("photoWarehouse");
+		this.photoConfig =  webAddr +"\\config\\"+ props.getProperty("photoConfig");
 	}
 
 	/**
@@ -155,6 +168,14 @@ public class ConfigReader {
 
 	public String getTempDir() {
 		return tempDir;
+	}
+
+	public String getPhotoConfig() {
+		return this.photoConfig;
+	}
+
+	public String getWHClass() {
+		return this.WHClass;
 	}
 
 }

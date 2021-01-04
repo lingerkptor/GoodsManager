@@ -19,7 +19,7 @@ window.onload = function () {
         main.changeWork("./searchGoods.html");
     });
     addGoodsBtn.addEventListener('click', function (e) {
-        main.changeWork("./addGoods.html");
+        main.changeWork("./Goods.html");
     });
     classManageBtn.addEventListener('click', function (e) {
         main.changeWork("./classificationManage.html");

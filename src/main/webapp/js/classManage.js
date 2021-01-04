@@ -17,7 +17,8 @@ const classManagePage = function () {
                             classifictionList = responseObj.classificationList;
                             updateObj.update(responseObj.classificationList);
                         }
-                    }
+                    } else
+                        console.log("There was a problem with the request(getClassListRequest).");
                 }
             };
             getClassListRequest.open('Get', "/GoodsManager/api/GetClassificationList");
@@ -44,7 +45,8 @@ const classManagePage = function () {
                         let responseObj = JSON.parse(addClassRequest.responseText);
                         if (typeof (responseObj.Code) != "undefined")
                             updateObj.update(responseObj.Code);
-                    }
+                    } else
+                        console.log("There was a problem with the request(addClassRequest).");
                 }
             };
 
@@ -72,7 +74,8 @@ const classManagePage = function () {
                         let responseObj = JSON.parse(updateClassRequest.responseText);
                         if (typeof (responseObj.Code) != "undefined")
                             updateObj.update(responseObj.Code);
-                    }
+                    } else
+                        console.log("There was a problem with the request(updateClassRequest).");
                 }
             };
             updateClassRequest.open('Post', "/GoodsManager/api/UpdateClassification");
@@ -97,7 +100,8 @@ const classManagePage = function () {
                         let responseObj = JSON.parse(deleteClassRequest.responseText);
                         if (typeof (responseObj.Code) != "undefined")
                             updateObj.update(responseObj.Code);
-                    }
+                    } else
+                        console.log("There was a problem with the request(deleteClassRequest).");
                 }
             };
             deleteClassRequest.open('Post', "/GoodsManager/api/DeleteClassification");

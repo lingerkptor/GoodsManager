@@ -138,7 +138,7 @@ public class AnalyzeMultiPart implements Analyzable {
 			BufferedInputStream fileInput = // Source Stream
 					new BufferedInputStream(source.getInputStream(), 1024);
 
-			String fileAddr = filePath + fileName;
+			String fileAddr = filePath + "\\" + fileName;
 			target = new File(fileAddr);
 			if (!target.getParentFile().exists())
 				target.getParentFile().mkdirs();
