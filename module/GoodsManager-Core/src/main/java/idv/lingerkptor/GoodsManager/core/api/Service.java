@@ -88,16 +88,20 @@ public abstract class Service extends HttpServlet {
 			ContentType.RequestType RequestContent = this.getClass()
 					.getMethod("process", Request.class).getAnnotation(ContentType.class).reqType();
 
-			if (req.getContentType().indexOf(RequestContent.getKey()) >= 0) {
-				analyzobj = RequestContent.factory();
-				return true;
-			}
+//			if (req.getContentType().indexOf(RequestContent.getKey()) >= 0) {
+//				analyzobj = RequestContent.factory();
+//				return true;
+//			}
+			analyzobj = RequestContent.factory();
+
 		} catch (NoSuchMethodException e) {
 			// 有可能沒有設定請求參數，該方法的請求參數都要設定，不然match不到．
 			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			return false;
 		}
-		return false;
-
+		return true;
 	}
 
 	/**

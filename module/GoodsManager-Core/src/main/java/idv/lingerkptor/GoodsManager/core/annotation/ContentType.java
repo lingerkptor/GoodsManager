@@ -10,6 +10,7 @@ import idv.lingerkptor.GoodsManager.core.AnalyzeMultiPart;
 import idv.lingerkptor.GoodsManager.core.AnalyzeTextPlain;
 import idv.lingerkptor.GoodsManager.core.SendJson;
 import idv.lingerkptor.GoodsManager.core.Sendable;
+import idv.lingerkptor.GoodsManager.core.SendFile;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,30 +24,36 @@ import java.lang.annotation.Retention;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface ContentType {
-	
+
 	public enum RequestType {
 		// 在這裡註冊
-		Json("application/json", AnalyzeJson.class),
-		MultiPart("multipart/form-data", AnalyzeMultiPart.class),
-		Text_Plain("text/plain",AnalyzeTextPlain.class);
+//		Json("application/json", AnalyzeJson.class),
+//		MultiPart("multipart/form-data", AnalyzeMultiPart.class),
+//		Text_Plain("text/plain", AnalyzeTextPlain.class);
+		Json(AnalyzeJson.class), MultiPart(AnalyzeMultiPart.class),
+		Text_Plain(AnalyzeTextPlain.class);
 
 		/**
 		 * 請求的關鍵字
 		 */
-		private String key = null;
+//		private String key = null;
 		/**
 		 * 對應的分析法
 		 */
 		private Class<? extends Analyzable> analyzeObj = null;
 
-		RequestType(String key, Class<? extends Analyzable> analyzable) {
-			this.key = key;
+		RequestType(Class<? extends Analyzable> analyzable) {
 			this.analyzeObj = analyzable;
 		}
-
-		public String getKey() {
-			return key;
-		}
+//		
+//		RequestType(String key, Class<? extends Analyzable> analyzable) {
+//			this.key = key;
+//			this.analyzeObj = analyzable;
+//		}
+//
+//		public String getKey() {
+//			return key;
+//		}
 
 		/**
 		 * 建立請求的分析方法
@@ -67,19 +74,13 @@ public @interface ContentType {
 
 	public enum ResponseType {
 		// 在這裡註冊
-		Json("application/json", SendJson.class);
-
-		private String key = null;
+		Json(SendJson.class)// JSON方式寄送
+		, File(SendFile.class);// 檔案方式寄送
 
 		private Class<? extends Sendable> sendObj = null;
 
-		ResponseType(String key, Class<? extends Sendable> sendObj) {
-			this.key = key;
+		ResponseType(Class<? extends Sendable> sendObj) {
 			this.sendObj = sendObj;
-		}
-
-		public String getKey() {
-			return key;
 		}
 
 		public Sendable factory() {

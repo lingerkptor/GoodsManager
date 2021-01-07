@@ -21,6 +21,7 @@ public class AnalyzeTextPlain implements Analyzable {
 			while (paraNames.hasMoreElements()) {
 				String name = paraNames.nextElement();
 				Field field = requestObj.getClass().getDeclaredField(name);
+				field.setAccessible(true);
 				String value = req.getParameter(name);
 				try {
 					Class<?> fieldType = field.getType();
@@ -75,6 +76,7 @@ public class AnalyzeTextPlain implements Analyzable {
 						} else {// String.valueOf(Object obj)所以不能使用reflection
 							field.set(requestObj, value);
 						}
+						field.setAccessible(false);
 					}
 				} catch (IllegalArgumentException e) {// 參數錯誤
 					e.printStackTrace();
@@ -82,6 +84,7 @@ public class AnalyzeTextPlain implements Analyzable {
 					e.printStackTrace();
 				}
 			}
+
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {
