@@ -13,8 +13,35 @@
             display: none;
         }
 
-        .classList {
+        .classNode {
             display: inline;
+        }
+
+        #pictureArea>img {
+            width: 200px;
+            height: auto;
+            margin: 3px;
+        }
+
+        #tags div {
+            display: inline-block;
+            margin: 3px;
+        }
+
+        #marked,
+        #tagList {
+            border: 1px;
+            border-style: solid;
+        }
+
+        #marked>label,
+        #tagList>label {
+            margin: 10px;
+
+        }
+
+        .selected {
+            background-color: brown;
         }
     </style>
 </head>
@@ -28,8 +55,8 @@
         <label>價錢:</label><input id="price" /><br />
         <label>數量:</label><input id="count" /><br />
         <label>分類:</label>
-        <div>
-            <div class="prototype classList">
+        <div id="classList">
+            <div class="prototype">
                 >
                 <select>
                     <option></option>
@@ -37,10 +64,22 @@
             </div>
         </div> <br />
         <label>標籤:</label>
-        <textarea id="tags" type="text" readonly></textarea>
-        <input id="addTag" type="button" value="新增標籤" /><input id="removeTag" type="button" value="移除標籤" /><br />
+        <div id="tags">
+            <label class="prototype"></label>
+            <div id="marked">
+
+            </div>
+            <div>
+                <input id="addTag" type="button" value="新增標籤" />
+
+                <input id="removeTag" type="button" value="移除標籤" />
+            </div>
+            <div id="tagList">
+            </div>
+        </div>
+
         <label>圖片:</label>
-        <div id="pictureArea"><img class="prototype picture" /></div><br />
+        <div id="pictureArea"><img class="prototype" /></div><br />
         <input id="uploadPictureBtn" type="file" multiple /><br />
         <input id="addGoodsBtn" type="button" value="新增商品" /><input id="modifyGoodsBtn" type="button" value="修改商品" />
 

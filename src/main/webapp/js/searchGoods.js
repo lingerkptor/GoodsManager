@@ -43,7 +43,7 @@ const searchGoodsPage = function () {
             element.update(common.sorting(GoodsList, (x, y) => Date.parse(x.date) - Date.parse(y.date)));
         },
         addfilter: function (key, value) {
-            for (i = 0; i < filterList.length; i++) {
+            for (let i = 0; i < filterList.length; i++) {
                 if (filterList[i].key = key) {
                     filterList.splice(i, 1);
                     break;
@@ -52,7 +52,7 @@ const searchGoodsPage = function () {
             filterList.push({ key: key, value: value });
         },
         removefilter: function (key) {
-            for (i = 0; i < filterList.length; i++) {
+            for (let i = 0; i < filterList.length; i++) {
                 if (filterList[i].key = key)
                     filterList.splice(i, 1);
             }
@@ -70,7 +70,7 @@ const searchGoodsPage = function () {
             };
             if (filterList.length > 0) {
                 let paraStr = '?';
-                for (i = 0; i < filterList.length - 1; i++) {
+                for (let i = 0; i < filterList.length - 1; i++) {
                     paraStr += filterList[i].key + "=" + filterList[i].value + '&';
                 }
                 updateGoodsListRequest.open('Get', '/GoodsManager/api/getGoodsList' + paraStr + filterList[filterList.length - 1]);

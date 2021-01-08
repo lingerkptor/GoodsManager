@@ -5,7 +5,7 @@ const common = {
         let less = [], pivotList = [], greater = [];
         let pivot = unsortarray[unsortarray.length - 1];
         pivotList.push(pivot);
-        for (i = 0; i < (unsortarray.length - 1); i++) {
+        for (let i = 0; i < (unsortarray.length - 1); i++) {
             let goods = unsortarray[i];
             let compareResult = compare(goods, pivot);
             if (compareResult < 0)
