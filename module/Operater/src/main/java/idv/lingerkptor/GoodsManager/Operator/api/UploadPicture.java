@@ -1,13 +1,8 @@
 
 package idv.lingerkptor.GoodsManager.Operator.api;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -20,7 +15,6 @@ import idv.lingerkptor.GoodsManager.Operator.api.request.UploadPictureRequest;
 import idv.lingerkptor.GoodsManager.Operator.api.response.UploadPictureResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DataAccessCore;
-import idv.lingerkptor.GoodsManager.core.DataAccess.PictureManager;
 import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
 import idv.lingerkptor.GoodsManager.core.Message.Message;
 import idv.lingerkptor.GoodsManager.core.annotation.ContentType;

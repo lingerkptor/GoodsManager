@@ -117,8 +117,8 @@ const GoodsView = function GoodsView() {
                 }
             });
             uploadPicBtn.addEventListener('change', function () { GoodsModel.addPicture(uploadPicBtn.files); });
-            addGoodsBtn.addEventListener("click", function (e) { });
-            modifyGoodsBtn.addEventListener("click", function (e) { });
+            addGoodsBtn.addEventListener("click", function (e) { GoodsModel.increateGoods(); });
+            modifyGoodsBtn.addEventListener("click", function (e) { GoodsModel.modifyGoods(); });
         } else {
             console.log("GoodsModel isn't binded.");
         }
