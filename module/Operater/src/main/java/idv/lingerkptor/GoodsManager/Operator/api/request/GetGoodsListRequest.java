@@ -6,6 +6,7 @@ public class GetGoodsListRequest implements Request {
 	private String[] tags = null;
 	private String className = null;
 	private String keyword = null;
+	private String date = null;
 	private String token = null;
 
 	/**
@@ -35,6 +36,14 @@ public class GetGoodsListRequest implements Request {
 	 */
 	public String getToken() {
 		return token;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDate() {
+		return this.date;
 	}
 
 }

@@ -50,8 +50,8 @@ public class GetGoodsListData implements PreparedStatementCreator {
 
 		// Step3. 加入要處理的條件
 		if (request != null) {
-			// className filter condition
-			if (request.getClassName() != null) {
+			// 條件 className
+			if (request.getClassName() != null && (!request.getClassName().isEmpty())) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -69,8 +69,8 @@ public class GetGoodsListData implements PreparedStatementCreator {
 					}
 				});
 			}
-			// goods name keyword filter condition
-			if (request.getKeyword() != null) {
+			// 條件 goods name keyword
+			if (request.getKeyword() != null && (!request.getKeyword().isEmpty())) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -89,8 +89,8 @@ public class GetGoodsListData implements PreparedStatementCreator {
 
 				});
 			}
-			// tag names filter condition
-			if (request.getTags() != null) {
+			// 條件: tag names
+			if (request.getTags() != null && request.getTags().length > 0) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -114,6 +114,25 @@ public class GetGoodsListData implements PreparedStatementCreator {
 							stat.setString(parameterIndex++, tagName);
 						}
 						return parameterIndex;
+					}
+				});
+			}
+
+			// 條件:指定時間
+			if ((request.getDate() != null && (!request.getDate().isEmpty()))) {
+				conditions.add(new SQLCondition() {
+					@Override
+					public void appendCondition(StringBuilder builder) {
+						builder.append(" ");
+						builder.append(SQLProp.getProperty("conditionDate"));
+						builder.append(" ");
+					}
+
+					@Override
+					public int insertData(PreparedStatement stat, int parameterIndex)
+							throws SQLException {
+						stat.setDate(parameterIndex, java.sql.Date.valueOf(request.getDate()));
+						return parameterIndex++;
 					}
 				});
 			}

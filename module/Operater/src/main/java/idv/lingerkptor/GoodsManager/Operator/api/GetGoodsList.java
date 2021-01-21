@@ -45,7 +45,7 @@ public class GetGoodsList extends Service {
 
 			template.query(new GetGoodsListData(request), (ResultSet rs) -> {
 				response.appendGoods(new Goods(rs.getInt(1), rs.getString(2), rs.getInt(3),
-						rs.getInt(4), rs.getString(5), rs.getDouble(6)));
+						rs.getInt(4), rs.getString(5), rs.getDate(6).getTime()));
 				response.setToken(rs.getInt(1));
 			});
 

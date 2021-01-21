@@ -51,7 +51,7 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 		// Step3. 加入要處理的條件
 		if (request != null) {
 			// className filter condition
-			if (request.getClassName() != null) {
+			if (request.getClassName() != null && (!request.getClassName().isEmpty())) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -70,7 +70,7 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 				});
 			}
 			// goods name keyword filter condition
-			if (request.getKeyword() != null) {
+			if (request.getKeyword() != null && (!request.getKeyword().isEmpty())) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -90,7 +90,7 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 				});
 			}
 			// tag names filter condition
-			if (request.getTags() != null) {
+			if (request.getTags() != null && request.getTags().length > 0) {
 				conditions.add(new SQLCondition() {
 
 					@Override
@@ -117,6 +117,26 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 					}
 				});
 			}
+			// 指定時間條件
+			if (request.getDate() != null && (!request.getDate().isEmpty())) {
+				conditions.add(new SQLCondition() {
+					@Override
+					public void appendCondition(StringBuilder builder) {
+						builder.append(" ");
+						builder.append(SQLProp.getProperty("conditionDate"));
+						builder.append(" ");
+					}
+
+					@Override
+					public int insertData(PreparedStatement stat, int parameterIndex)
+							throws SQLException {
+						stat.setDate(parameterIndex, java.sql.Date.valueOf(request.getDate()));
+						return parameterIndex++;
+					}
+				});
+
+			}
+
 		}
 
 		Iterator<SQLCondition> iterator = conditions.iterator();
@@ -135,7 +155,7 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 		}
 
 		countData.append(" ;");
-//		System.out.println("countData String=>" + countData.toString());
+		// System.out.println("countData String=>" + countData.toString());
 		// SQL語句組合完成
 		// Step5. 開始插入資料
 		PreparedStatement stat = conn.prepareStatement(countData.toString());

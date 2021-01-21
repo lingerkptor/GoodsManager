@@ -1,85 +1,283 @@
-const searchGoodsPage = function () {
-    let GoodsList = [];
-    let filterList = [];
-    return {
-        getclassList: function (element) {
-            let getclassListRequest = new XMLHttpRequest();
-            getclassListRequest.onreadystatechange = function () {
-                if (getclassListRequest.readyState === XMLHttpRequest.DONE) {
-                    if (getclassListRequest.status === 200) {
-                        element.update(JSON.parse(getclassListRequest.responseText));
-                    } else {
-                        console.log('There was a problem with request about \'getClassList\'');
-                    }
-                }
-            };
-            getclassListRequest.open('Get', '/GoodsManager/api/GetClassificationList');
-            getclassListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-            getclassListRequest.send();
-        },
-        getTagList: function () {
-            let getTagListRequest = new XMLHttpRequest();
-            getTagListRequest.onreadystatechange = function () {
-                if (getTagListRequest.onreadystatechange === XMLHttpRequest.DONE) {
-                    if (getTagListRequest.status === 200) {
-                        element.update(JSON.parse(getTagListRequest.responseText));
-                    } else
-                        console.log('There was a porblem with request about \'getTagList\'');
-                }
-            };
-            getTagListRequest.open('Get', '/GoodsManager/api/getTagList');
-            getTagListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-            getTagListRequest.send();
-        },
+
+const GoodsListModel = function () {
+    let GoodsList;
+    let sumPages;
+    let token = [];
+    let filterMap = new Map();
+    let observer;
+
+    //getGoodsList();
 
 
-        SortingGoodsByClass: function (element) {
-            element.update(common.sorting(GoodsList, (x, y) => x.classId - y.classId));
-        },
-        SortingGoodsbyId: function (element) {
-            element.update(common.sorting(GoodsList, (x, y) => x.goodsId - y.goodsId));
-        },
-        SortingGoodsbyDate: function (element) {
-            element.update(common.sorting(GoodsList, (x, y) => Date.parse(x.date) - Date.parse(y.date)));
-        },
-        addfilter: function (key, value) {
-            for (let i = 0; i < filterList.length; i++) {
-                if (filterList[i].key = key) {
-                    filterList.splice(i, 1);
-                    break;
-                }
-            }
-            filterList.push({ key: key, value: value });
-        },
-        removefilter: function (key) {
-            for (let i = 0; i < filterList.length; i++) {
-                if (filterList[i].key = key)
-                    filterList.splice(i, 1);
-            }
-        },
-        getGoodsList: function (element) {
-            let updateGoodsListRequest = new XMLHttpRequest();
-            updateGoodsListRequest.onreadystatechange = function () {
-                if (updateGoodsListRequest.readyState === XMLHttpRequest.DONE) {
-                    if (updateGoodsListRequest.status === 200) {
-                        GoodsList = JSON.parse(updateGoodsListRequest.responseText);
-                        element.update(GoodsList);
-                    } else
-                        console.log('There was problom with request about \'getGoodsList\'');
-                }
-            };
-            if (filterList.length > 0) {
-                let paraStr = '?';
-                for (let i = 0; i < filterList.length - 1; i++) {
-                    paraStr += filterList[i].key + "=" + filterList[i].value + '&';
-                }
-                updateGoodsListRequest.open('Get', '/GoodsManager/api/getGoodsList' + paraStr + filterList[filterList.length - 1]);
+    function getGoodsList(page) {
+        let filterObj;
+        if (typeof sumPages != 'undefined') {
+            if (sumPages < page)
+                return;
+
+            if (token.length >= page) {
+                filterObj = getFilterObj(page - 1);
             } else
-                updateGoodsListRequest.open('Get', '/GoodsManager/api/getGoodsList');
+                filterObj = getFilterObj(token.length - 1);
+        } else filterObj = getFilterObj();
 
-            updateGoodsListRequest.send();
+        let getGoodsListRequest = new XMLHttpRequest();
+        getGoodsListRequest.onreadystatechange = function () {
+            if (getGoodsListRequest.readyState === XMLHttpRequest.DONE) {
+                if (getGoodsListRequest.status === 200) {
+                    let responseObj = JSON.parse(getGoodsListRequest.responseText);
+                    if (responseObj.Code == "SUCCESS") {
+                        if (!token.includes(responseObj.token))
+                            token.push(responseObj.token);
+                        if (token.length < page) {
+                            console.log("token.length:" + token.length);
+                            console.log("page:" + page);
+                            getGoodsList(page);
+                        } else {
+                            sumPages = responseObj.sumPages;
+                            GoodsList = responseObj.goodsList;
+                            if (typeof observer != 'undefined')
+                                observer.update();
+                        }
+                    } else {
+                        console.log("Code is" + responseObj.Code);
+                    }
+                } else
+                    console.log('There was problom with request about \'getGoodsList\'');
+            }
+        };
+        getGoodsListRequest.open('Post', '/GoodsManager/api/getGoodsList');
 
+        getGoodsListRequest.send(JSON.stringify(filterObj));
+    }
+
+
+    function getFilterObj(index) {
+        let filterObj = {};
+        console.log(filterMap);
+        filterMap.forEach((v, k) => {
+            switch (k) {
+                case 'class':
+                    filterObj.className = v;
+                    break;
+                case 'tags':
+                    filterObj.tags = [];
+                    console.log(v);
+                    v.forEach((value) => filterObj.tags.push(value));
+                    break;
+                case 'date':
+                    filterObj.date = v;
+                    break;
+                case 'keyword':
+                    filterObj.keyword = v;
+                    break;
+            }
+        });
+        if (typeof index != 'undefined')
+            if (token.length > index)
+                filterObj.token = token[index];
+            else {
+                filterObj.token = token[token.length - 1];
+            }
+        console.log(filterObj);
+        return filterObj;
+    }
+
+
+    return {
+        registerObserver: function (ob) {
+            observer = ob;
+            token.length = 0;
+            getGoodsList();
+        },
+        SortingGoodsByClass: function () {
+
+            return GoodsList.sort((x, y) => x.className - y.className);
+        },
+        SortingGoodsbyId: function () {
+            return GoodsList.sort((x, y) => x.id - y.id);
+        },
+        SortingGoodsbyDate: function () {
+            return GoodsList.sort((x, y) => x.date - y.date);
+        },
+
+        setClassFilter: function (value) {
+            if (typeof value != 'undefined')
+                filterMap.set('class', value);
+            else
+                filterMap.delete('class');
+        },
+        setTagsFilter: function (value) {
+            filterMap.set('tags', new Set(value));
+        },
+        setDateFilter: function (value) {
+            if (typeof value != 'undefined')
+                filterMap.set('date', value);
+            else
+                filterMap.delete('date');
+        },
+        setKeywordFilter: function (value) {
+            if (typeof value != 'undefined')
+                filterMap.set('keyword', value);
+            else
+                filterMap.delete('keyword');
+        },
+        searchGoodsList: function () {
+            token.length = 0;
+            getGoodsList();
+        },
+        changePage: function (page) {
+            getGoodsList(page);
         }
 
     };
-}();
+};
+const ClassModel = function () {
+    let classList;
+    let observer;
+
+    //初始化(建構式)START
+    //載入所有分類清單
+    // getALLClassData();
+    //初始化 END
+
+    /** 抓資料 */
+    function getALLClassData() {
+        let getClassListRequest = new XMLHttpRequest();
+        getClassListRequest.onreadystatechange = function () {
+            if (getClassListRequest.readyState == XMLHttpRequest.DONE) {
+                if (getClassListRequest.status == 200) {
+                    let responseObj = JSON.parse(getClassListRequest.responseText);
+                    if (typeof (responseObj.classificationList) !== "undefined") {
+                        classList = responseObj.classificationList;
+                        observer.update();
+                    }
+                } else
+                    console.log("There was a problem with the request(getClassListRequest).");
+            }
+        };
+        getClassListRequest.open('Get', "/GoodsManager/api/GetClassificationList");
+        getClassListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        getClassListRequest.send();
+    }
+
+    /** 找尋指定分類名稱的下一階分類清單
+     * @param {String} className 分類名稱
+     * @param {Array} list 分類清單
+     */
+    function searchClassList(className, list) {
+        let result = [];
+        for (let i = 0; i < list.length; i++) {
+            if (className == list[i].classificationName) {
+                if ((typeof list[i].subClassificationList) !== "undefined")
+                    list[i].subClassificationList.forEach(ele => {
+                        result.push(ele.classificationName);
+                    });
+                break;
+            }
+            if ((typeof list[i].subClassificationList) !== "undefined") {
+                result = searchClassList(className, list[i].subClassificationList);
+                if (result.length > 0)
+                    break;
+            }
+        }
+
+        return result;
+    }
+
+    /**查詢分類鏈(從主分類到該分類名稱經過的途徑)
+     * @param {String} className Search Condition with Classifiction Name
+     * @param {Object} classTreeNode sub Classifiction Node
+     */
+    function classSearchChain(className, classTreeNode) {//tree search
+        if (className == classTreeNode.classificationName)
+            return [classTreeNode.classificationName];
+        if ((typeof classTreeNode.subClassificationList) === "undefined") {
+            return null;
+        }
+
+        for (let i = 0; i < classTreeNode.subClassificationList.length; i++) {
+            let result = classSearchChain(className, classTreeNode.subClassificationList[i]);
+            if (result !== null) {
+                return [classTreeNode.classificationName].concat(result);
+            }
+        }
+        return null;
+    }
+    return {
+        registerObserver: function (ob) {
+            observer = ob;
+            getALLClassData();
+        },
+        getClassList: function (className) {
+            if ((typeof className) === "undefined") {
+                let result = [];
+                classList.forEach(ele => {
+                    result.push(ele.classificationName);
+                });
+                return result;
+            } else {
+                return searchClassList(className, classList);
+            }
+        },
+        getClassChain: function (className) {
+            if (className == "")
+                return [];
+            for (let i = 0; i < classList.length; i++) {
+                let result = classSearchChain(className, classList[i]);
+                if (result !== null)
+                    return result;
+            }
+            return [];
+        },
+    };
+};
+const TagModel = function () {
+    /**
+     * @type {Set<string>}
+     */
+    let tagList;
+    let observer;
+
+    //初始化(建構式)START
+    //載入所有分類清單
+    //getALLTagData();
+    //初始化 END
+
+    /** 抓資料
+     * 
+     */
+    function getALLTagData() {
+        let getTagListRequest = new XMLHttpRequest();
+        getTagListRequest.onreadystatechange = function () {
+            if (getTagListRequest.readyState == XMLHttpRequest.DONE) {
+                if (getTagListRequest.status == 200) {
+                    let responseObj = JSON.parse(getTagListRequest.responseText);
+                    if (typeof (responseObj.tagList) !== "undefined") {
+                        tagList = new Set(responseObj.tagList);
+                        observer.update();
+                    }
+                } else
+                    console.log("There was a problem with the request(getTagListRequest).");
+            }
+        };
+        getTagListRequest.open('Get', "/GoodsManager/api/getTagList");
+        getTagListRequest.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        getTagListRequest.send();
+    }
+
+    return {
+        registerObserver: function (ob) {
+            observer = ob;
+            getALLTagData();
+        },
+        /**
+         * @field 回傳TagList的Iterator
+         * @returns {Iterable<string>} TagList的Iterator
+         */
+        getTagIterator: function () {
+            return tagList.values();
+        }
+
+    }
+};

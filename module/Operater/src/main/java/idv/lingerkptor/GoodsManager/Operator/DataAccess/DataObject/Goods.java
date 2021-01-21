@@ -1,5 +1,6 @@
 package idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject;
 
+
 public class Goods {
 //	GID,GNAME,L,W,H,PRICE,COUNT,C_NAME,DATE
 	@SuppressWarnings("unused")
@@ -11,9 +12,9 @@ public class Goods {
 	@SuppressWarnings("unused")
 	private String className = null;
 	@SuppressWarnings("unused")
-	private double date = 0;
+	private long date = 0;
 
-	public Goods(int GID, String GNAME, int PRICE, int COUNT, String C_Name, double DATE) {
+	public Goods(int GID, String GNAME, int PRICE, int COUNT, String C_Name, long DATE) {
 		this.id = GID;
 		this.gName = GNAME;
 		this.price = PRICE;

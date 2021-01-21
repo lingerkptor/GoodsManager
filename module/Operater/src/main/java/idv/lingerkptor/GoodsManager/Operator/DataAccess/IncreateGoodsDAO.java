@@ -110,6 +110,7 @@ public class IncreateGoodsDAO implements PreparedStatementCreator {
 		stat.setInt(7, CID);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		stat.setDate(8, java.sql.Date.valueOf(format.format(new java.util.Date())));
+		
 		stat.executeUpdate();
 
 		sql = sqlProp.getProperty("searchGoodsId");
