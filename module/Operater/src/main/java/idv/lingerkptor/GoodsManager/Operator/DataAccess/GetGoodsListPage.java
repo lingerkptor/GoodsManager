@@ -134,9 +134,7 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 						return parameterIndex++;
 					}
 				});
-
 			}
-
 		}
 
 		Iterator<SQLCondition> iterator = conditions.iterator();
@@ -146,7 +144,6 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 		}
 		while (hasNaxt) {
 			SQLCondition con = iterator.next();
-
 			con.appendCondition(countData);
 
 			if (hasNaxt = iterator.hasNext()) {
@@ -155,11 +152,14 @@ public class GetGoodsListPage implements PreparedStatementCreator {
 		}
 
 		countData.append(" ;");
-		// System.out.println("countData String=>" + countData.toString());
+//		 System.out.println("countData String=>" + countData.toString());
 		// SQL語句組合完成
 		// Step5. 開始插入資料
 		PreparedStatement stat = conn.prepareStatement(countData.toString());
 		int index = 1;
+		stat.setInt(index++, request.getCount());
+		stat.setInt(index++, request.getCount());
+		stat.setInt(index++, request.getCount());
 		for (SQLCondition con : conditions) {
 			index = con.insertData(stat, index);
 		}

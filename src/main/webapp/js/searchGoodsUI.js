@@ -19,7 +19,20 @@ let searchGoodsView = function () {
     const keyword = document.getElementById('keyword');
     const filterBtn = document.getElementById('filterBtn');
     const clearfilterBtn = document.getElementById('clearfilterBtn');
+    const previousPageBtn = document.getElementById('previous');
+    const nextPageBtn = document.getElementById('next');
+    const page = document.getElementById('page');
+    const sumPage = document.getElementById('sumPage');
+    const rowCount = document.getElementById('rowCount');
+
+    const idSorter = document.querySelector("#idSorter");
+    const dateSorter = document.querySelector("#dateSorter");
+    const classSorter = document.querySelector("#classSorter");
+
     const GoodsTable = document.getElementById('GoodsTable');
+
+
+
 
     /**  建立分類節點清單
      * @param {Array} classList
@@ -75,16 +88,19 @@ let searchGoodsView = function () {
     function goodsRowFactory(goodsObj) {
         let prototype = GoodsTable.querySelector(".prototype").cloneNode(true);
         let date = new Date(goodsObj.date);
-        prototype.key = goodsObj.id;
+        prototype.setAttribute('key', goodsObj.id);
+        prototype.querySelector("a[name='id']").innerText = goodsObj.id;
         prototype.querySelector("a[name='datetime']").innerText = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         prototype.querySelector("a[name='GoodsName']").innerText = goodsObj.gName;
         prototype.querySelector("a[name='price']").innerText = goodsObj.price;
         prototype.querySelector("a[name='className']").innerText = goodsObj.className;
         prototype.querySelector("input.modify").addEventListener('click', function () {
-
+            // console.log("/GoodsManager/Goods.html?GID=" + goodsObj.id);
+            let href = "/GoodsManager/Goods.html?GID=" + goodsObj.id;
+            window.location.href = href;
         });
         prototype.querySelector("input.delete").addEventListener('click', function () {
-
+            //console.log('delete');
         });
         prototype.classList.remove("prototype");
         return prototype;
@@ -113,6 +129,58 @@ let searchGoodsView = function () {
         }
     }
 
+    rowCount.addEventListener('change', function (e) {
+        let value = e.currentTarget.value;
+        goodsListModel.setGoodCount(value);
+
+        goodsListModel.searchGoodsList();
+
+        idSorter.classList.remove('caret-down');
+        dateSorter.classList.remove('caret-down');
+        classSorter.classList.remove('caret-down');
+    });
+
+    /** 排序 ID */
+    idSorter.addEventListener('click', function (e) {
+        e.currentTarget.classList.toggle("caret-down");
+        if (typeof goodsListModel == 'undefined')
+            return;
+
+        page.value = 1;
+        goodsListModel.SortingGoodsbyId(e.currentTarget.classList.contains("caret-down"));
+
+        goodsListModel.searchGoodsList();
+        dateSorter.classList.remove('caret-down');
+        classSorter.classList.remove('caret-down');
+    });
+    /** 排序 日期 */
+    dateSorter.addEventListener("click", function (e) {
+        e.currentTarget.classList.toggle("caret-down");
+        if (typeof goodsListModel == 'undefined')
+            return;
+        
+        page.value = 1;
+        goodsListModel.SortingGoodsbyDate(e.currentTarget.classList.contains("caret-down"));
+
+        goodsListModel.searchGoodsList();
+
+        idSorter.classList.remove('caret-down');
+        classSorter.classList.remove('caret-down');
+    });
+
+    /** 排序 分類名稱 */
+    classSorter.addEventListener("click", function (e) {
+        e.currentTarget.classList.toggle("caret-down");
+        if (typeof goodsListModel == 'undefined')
+            return;
+       
+        page.value = 1;
+        goodsListModel.SortingGoodsByClass(e.currentTarget.classList.contains("caret-down"));
+
+        goodsListModel.searchGoodsList();
+        dateSorter.classList.remove('caret-down');
+        idSorter.classList.remove('caret-down');
+    });
 
 
     addTag.addEventListener("click", function () {
@@ -159,6 +227,7 @@ let searchGoodsView = function () {
         goodsListModel.setTagsFilter(taglist);
         goodsListModel.setDateFilter(dateFilter.value);
         goodsListModel.setKeywordFilter(keyword.value);
+        page.value = 1;
         goodsListModel.searchGoodsList();
     });
     clearfilterBtn.addEventListener('click', function () {
@@ -166,6 +235,16 @@ let searchGoodsView = function () {
         reloadTagList();
         dateFilter.value = "";
         keyword.value = "";
+    });
+
+    previousPageBtn.addEventListener('click', function () {
+        goodsListModel.changePage(Number(page.value) - 1);
+    });
+    nextPageBtn.addEventListener('click', function () {
+        goodsListModel.changePage(Number(page.value) + 1);
+    });
+    page.addEventListener('change', function () {
+        goodsListModel.changePage(Number(page.value));
     });
 
     return {
@@ -197,6 +276,10 @@ let searchGoodsView = function () {
                 let goodsElement = goodsRowFactory(goods);
                 tbody.appendChild(goodsElement);
             });
+        },
+        setPage: function (pageNum, sumPageNum) {
+            sumPage.innerText = sumPageNum;
+            page.value = pageNum;
         }
     };
 };

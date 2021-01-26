@@ -65,7 +65,7 @@ public class GetGoodsListData implements PreparedStatementCreator {
 					public int insertData(PreparedStatement stat, int parameterIndex)
 							throws SQLException {
 						stat.setString(parameterIndex, request.getClassName());
-						return parameterIndex + 1;
+						return ++parameterIndex;
 					}
 				});
 			}
@@ -84,7 +84,7 @@ public class GetGoodsListData implements PreparedStatementCreator {
 					public int insertData(PreparedStatement stat, int parameterIndex)
 							throws SQLException {
 						stat.setString(parameterIndex, "%" + request.getKeyword() + "%");
-						return parameterIndex + 1;
+						return ++parameterIndex;
 					}
 
 				});
@@ -132,42 +132,10 @@ public class GetGoodsListData implements PreparedStatementCreator {
 					public int insertData(PreparedStatement stat, int parameterIndex)
 							throws SQLException {
 						stat.setDate(parameterIndex, java.sql.Date.valueOf(request.getDate()));
-						return parameterIndex++;
+						return ++parameterIndex;
 					}
 				});
 			}
-		}
-		if ((request != null) && (request.getToken() != null)) {
-			conditions.add(new SQLCondition() {
-
-				@Override
-				public void appendCondition(StringBuilder builder) {
-					builder.append(SQLProp.getProperty("conditionCustomsToken"));
-				}
-
-				@Override
-				public int insertData(PreparedStatement stat, int parameterIndex)
-						throws SQLException {
-					stat.setInt(parameterIndex, Integer.valueOf(request.getToken()));
-					return parameterIndex++;
-				}
-
-			});
-		} else {
-			conditions.add(new SQLCondition() {
-
-				@Override
-				public void appendCondition(StringBuilder builder) {
-					builder.append(SQLProp.getProperty("conditionDefaultToken"));
-				}
-
-				@Override
-				public int insertData(PreparedStatement stat, int parameterIndex)
-						throws SQLException {
-					return parameterIndex;
-				}
-
-			});
 		}
 
 		Iterator<SQLCondition> iterator = conditions.iterator();
@@ -183,9 +151,62 @@ public class GetGoodsListData implements PreparedStatementCreator {
 				searchGoodsList.append(" AND ");
 			}
 		}
+		/**
+		 * 排序+分頁
+		 */
+		SQLCondition sortable_page = new SQLCondition() {
+			@Override
+			public void appendCondition(StringBuilder builder) {
+				String order = "id";
+				String sorting = " ASC ";
+				switch (request.getSortIn()) {
+				case 1:
+					sorting = " DESC ";
+					break;
+				default:
+					break;
+				}
+
+				if (request.getOrder() != null)
+					order = request.getOrder();
+
+				switch (order) {
+				case "class":
+					builder.append(SQLProp.getProperty("coditionSortbyClass"));
+					builder.append(sorting);
+					builder.append(" , GID ASC ");
+
+					break;
+				case "date":
+					builder.append(SQLProp.getProperty("coditionSortbyDate"));
+					builder.append(sorting);
+					builder.append(" , GID ASC ");
+					break;
+				default:
+					builder.append(SQLProp.getProperty("conditionCustomsToken"));
+					builder.append(sorting);
+					break;
+				}
+				searchGoodsList.append(SQLProp.getProperty("coditionCount"));
+
+			}
+
+			@Override
+			public int insertData(PreparedStatement stat, int parameterIndex) throws SQLException {
+//				System.out.println(request.getPage());
+//				System.out.println(request.getCount());
+//				System.out.println((request.getPage() - 1) * request.getCount());
+				stat.setInt(parameterIndex++, request.getCount());
+				stat.setInt(parameterIndex++, (request.getPage() - 1) * request.getCount());
+				return parameterIndex;
+			}
+
+		};
+		conditions.add(sortable_page);
+		sortable_page.appendCondition(searchGoodsList);
 
 		searchGoodsList.append(" ;");
-//		System.out.println("searchGoodsList String=>" + searchGoodsList.toString());
+		System.out.println("searchGoodsList String=>" + searchGoodsList.toString());
 		// SQL語句組合完成
 		// Step5. 開始插入資料
 		PreparedStatement stat = conn.prepareStatement(searchGoodsList.toString());

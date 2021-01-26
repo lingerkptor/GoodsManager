@@ -43,6 +43,23 @@
         .selected {
             background-color: brown;
         }
+
+        .caret {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+            transform: rotate(270deg);
+        }
+
+        .caret-down::before {
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 
@@ -75,18 +92,25 @@
         <label>關鍵字：</label><input id='keyword' />
         <input id='filterBtn' type="button" value="搜尋" /><input id='clearfilterBtn' type="button" value="清除" />
     </div>
+    <div> <input id="previous" type="button" value="上一頁" /> <input id="next" type="button" value="下一頁" /> <input
+            style="width: 10px;" id="page" value="1" />
+        /<label id="sumPage"></label><label>每頁</label><input id='rowCount' style='width: 15px;' value='10' />
+        <label>筆資料</label>
+    </div>
     <table id="GoodsTable">
         <thead>
             <tr>
-                <th>日期</th>
+                <th id='idSorter' class='caret'>ID</th>
+                <th id="dateSorter" class="caret">日期</th>
                 <th>商品名稱</th>
                 <th>價格</th>
-                <th>分類</th>
+                <th id="classSorter" class="caret">分類</th>
                 <th colspan="2">功能選單</th>
             </tr>
         </thead>
         <tbody>
             <tr class="prototype" key="">
+                <td><a name='id'></a></td>
                 <td><a name="datetime"></a></td>
                 <td><a name="GoodsName"></a></td>
                 <td><a name="price"></a></td>

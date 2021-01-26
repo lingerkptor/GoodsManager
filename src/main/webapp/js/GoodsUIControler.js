@@ -65,9 +65,12 @@ const controler = function () {
 window.onload = function () {
     function getParamsMap(href) {
         let paramMap = new Map();
-        let params = (href).slice((href).indexOf("?") + 1, (href).length - 1).split("&");
+        console.log(href);
+        let params = (href).slice((href).indexOf("?") + 1, (href).length).split("&");
+        console.log(params);
         params.forEach(paramStr => {
             let param = paramStr.split("=");
+            console.log(param);
             paramMap.set(param[0], param[1]);
         });
         return paramMap;

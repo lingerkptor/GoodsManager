@@ -6,7 +6,7 @@ let GoodsListcontroler = function () {
     classModel.registerObserver({
         update: function () {
             viewModel.setClassList();
-            console.log("class update");
+            // console.log("class update");
         }
     });
 
@@ -15,7 +15,7 @@ let GoodsListcontroler = function () {
     tagModel.registerObserver({
         update: function () {
             viewModel.setTagsList();
-            console.log("tag update");
+            // console.log("tag update");
         }
     });
 
@@ -23,13 +23,10 @@ let GoodsListcontroler = function () {
     viewModel.bindGoodsListModel(goodsListModel);
     goodsListModel.registerObserver({
         update: function () {
-            viewModel.setGoodsList(goodsListModel.SortingGoodsbyId());
+            viewModel.setGoodsList(goodsListModel.getGoodsListData());
+            viewModel.setPage(goodsListModel.getPage(), goodsListModel.getSumPage());
         }
     });
-
-
-
-
 };
 window.onload = function () {
     GoodsListcontroler();

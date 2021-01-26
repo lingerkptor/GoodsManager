@@ -1,24 +1,20 @@
 
 const GoodsListModel = function () {
     let GoodsList;
-    let sumPages;
-    let token = [];
+    let sumPage;
+    let page = 1;
+    // let token = [];
     let filterMap = new Map();
     let observer;
+    let goodsCount = 10;
 
     //getGoodsList();
 
 
-    function getGoodsList(page) {
+    function getGoodsList() {
         let filterObj;
-        if (typeof sumPages != 'undefined') {
-            if (sumPages < page)
-                return;
-
-            if (token.length >= page) {
-                filterObj = getFilterObj(page - 1);
-            } else
-                filterObj = getFilterObj(token.length - 1);
+        if (typeof sumPage != 'undefined') {
+            filterObj = getFilterObj(page);
         } else filterObj = getFilterObj();
 
         let getGoodsListRequest = new XMLHttpRequest();
@@ -27,18 +23,25 @@ const GoodsListModel = function () {
                 if (getGoodsListRequest.status === 200) {
                     let responseObj = JSON.parse(getGoodsListRequest.responseText);
                     if (responseObj.Code == "SUCCESS") {
-                        if (!token.includes(responseObj.token))
-                            token.push(responseObj.token);
-                        if (token.length < page) {
-                            console.log("token.length:" + token.length);
-                            console.log("page:" + page);
-                            getGoodsList(page);
-                        } else {
-                            sumPages = responseObj.sumPages;
-                            GoodsList = responseObj.goodsList;
-                            if (typeof observer != 'undefined')
-                                observer.update();
-                        }
+                        page = responseObj.page;
+                        sumPage = responseObj.pages;
+                        GoodsList = responseObj.goodsList;
+                        if (typeof observer != 'undefined')
+                            observer.update();
+
+                        // if (!token.includes(responseObj.token))
+                        //     token.push(responseObj.token);
+                        // if (token.length < page) {
+                        //     // console.log("token.length:" + token.length);
+                        //     // console.log("page:" + page);
+                        //     getGoodsList(page);
+                        // } else {
+                        //     page = token.indexOf(responseObj.token) + 1;
+                        //     sumPage = responseObj.pages;
+                        //     GoodsList = responseObj.goodsList;
+                        //     if (typeof observer != 'undefined')
+                        //         observer.update();
+                        // }
                     } else {
                         console.log("Code is" + responseObj.Code);
                     }
@@ -52,7 +55,7 @@ const GoodsListModel = function () {
     }
 
 
-    function getFilterObj(index) {
+    function getFilterObj(page) {
         let filterObj = {};
         console.log(filterMap);
         filterMap.forEach((v, k) => {
@@ -71,15 +74,26 @@ const GoodsListModel = function () {
                 case 'keyword':
                     filterObj.keyword = v;
                     break;
+                case 'order':
+                    filterObj.order = v;
+                    break;
+                case 'sortIn':
+                    filterObj.sortIn = v;
+                    break;
             }
         });
-        if (typeof index != 'undefined')
-            if (token.length > index)
-                filterObj.token = token[index];
-            else {
-                filterObj.token = token[token.length - 1];
-            }
-        console.log(filterObj);
+        filterObj.count = goodsCount;
+
+        if (typeof page != 'undefined' && page > 1) {
+            filterObj.page = page;
+            // let index = page - 2;
+            // if (token.length > index)
+            //     filterObj.token = token[index];
+            // else {
+            //     filterObj.token = token[token.length - 1];
+            // }
+        }
+        //console.log(filterObj);
         return filterObj;
     }
 
@@ -87,18 +101,41 @@ const GoodsListModel = function () {
     return {
         registerObserver: function (ob) {
             observer = ob;
-            token.length = 0;
+            // token.length = 0;
             getGoodsList();
         },
-        SortingGoodsByClass: function () {
+        getGoodsListData: function () {
+            return GoodsList;
+        },
+        SortingGoodsByClass: function (isASC) {
+            filterMap.set("order", "class");
+            if (isASC)
+                filterMap.set("sortIn", 1);
+            //  GoodsList.sort((x, y) => x.date - y.date);
+            else
+                filterMap.set("sortIn", 0);
+            //  return GoodsList.sort((x, y) => x.className - y.className);
+        },
+        SortingGoodsbyId: function (isASC) {
+            filterMap.set("order", "id");
+            if (isASC)
+                filterMap.set("sortIn", 1);
+            //  GoodsList.sort((x, y) => x.date - y.date);
+            else
+                filterMap.set("sortIn", 0);
+        },
+        /**
+         * 
+         * @param {boolean}  
+         */
+        SortingGoodsbyDate: function (isASC) {
+            filterMap.set("order", "date");
+            if (isASC)
+                filterMap.set("sortIn", 1);
+            //  GoodsList.sort((x, y) => x.date - y.date);
+            else
+                filterMap.set("sortIn", 0);
 
-            return GoodsList.sort((x, y) => x.className - y.className);
-        },
-        SortingGoodsbyId: function () {
-            return GoodsList.sort((x, y) => x.id - y.id);
-        },
-        SortingGoodsbyDate: function () {
-            return GoodsList.sort((x, y) => x.date - y.date);
         },
 
         setClassFilter: function (value) {
@@ -123,11 +160,38 @@ const GoodsListModel = function () {
                 filterMap.delete('keyword');
         },
         searchGoodsList: function () {
-            token.length = 0;
+            // token.length = 0;
+            page = 0;
+            sumPage = 0;
             getGoodsList();
         },
-        changePage: function (page) {
-            getGoodsList(page);
+        changePage: function (pageNum) {
+            if (pageNum <= 0)
+                pageNum = 1;
+
+            if (sumPage < pageNum)
+                pageNum = sumPage;
+            console.log(pageNum);
+            if (page == pageNum) {
+                observer.update();
+                return;
+            }
+            page = pageNum;
+            getGoodsList();
+        },
+        getSumPage: function () {
+            return sumPage;
+        },
+        getPage: function () {
+            return page;
+        },
+        setGoodCount: function (value) {
+            if (typeof value === 'undefined')
+                return (typeof goodsCount !== "undefined") ? goodsCount : "";
+            if ((!Number.isNaN(Number.parseInt(value))) || typeof goodsCount !== "undefined")
+                goodsCount = Number.parseInt(value);
+            else
+                throw new NaNException("The value is not Number.");
         }
 
     };

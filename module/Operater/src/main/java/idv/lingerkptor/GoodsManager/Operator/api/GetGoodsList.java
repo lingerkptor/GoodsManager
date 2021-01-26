@@ -46,7 +46,20 @@ public class GetGoodsList extends Service {
 			template.query(new GetGoodsListData(request), (ResultSet rs) -> {
 				response.appendGoods(new Goods(rs.getInt(1), rs.getString(2), rs.getInt(3),
 						rs.getInt(4), rs.getString(5), rs.getDate(6).getTime()));
-				response.setToken(rs.getInt(1));
+				response.setPage(request.getPage());
+//				if (request.getOrder() != null) {
+//					switch (request.getOrder()) {
+//					case "class":
+//						response.setToken(rs.getString(5));
+//						break;
+//					case "date":
+//						response.setToken(String.valueOf(rs.getDate(6).getTime()));
+//						break;
+//					default:
+//						response.setToken(String.valueOf(rs.getInt(1)));
+//					}
+//				} else
+//					response.setToken(String.valueOf(rs.getInt(1)));
 			});
 
 			return response;

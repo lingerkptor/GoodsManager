@@ -38,8 +38,12 @@ const GoodsModel = function (GID) {
                             goods = responseObj;
                             notifyUpdate();
                         }
-                    } else
+                    } else {
                         console.log("There was a problem with the request(getGoodsRequest).");
+                        console.log("status:" + getGoodsRequest.status);
+                        goods = {};
+                        notifyUpdate();
+                    }
                 }
             };
             getGoodsRequest.open('Get', "/GoodsManager/api/GetGoods?GID=" + GID);
@@ -187,9 +191,12 @@ const GoodsModel = function (GID) {
          * @returns {number} (getter) 商品名稱 
          */
         goodsName: function (value) {
-            if (typeof value === 'undefined')
+            if (typeof value === 'undefined') {
+                console.log(typeof goods);
                 return (typeof goods.goodsName !== 'undefined') ? goods.goodsName : "";
-            goods.goodsName = value;
+            }
+            else
+                goods.goodsName = value;
         },
         /** 商品長度(setter & getter)
          * @param {number} value (setter) 商品長度值 單位為mm 

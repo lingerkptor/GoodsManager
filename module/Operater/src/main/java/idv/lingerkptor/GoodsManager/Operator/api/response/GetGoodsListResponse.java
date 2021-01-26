@@ -26,7 +26,8 @@ public class GetGoodsListResponse implements Response {
 	@SuppressWarnings("unused")
 	private String Code = "";
 	@SuppressWarnings("unused")
-	private String token = "";
+	private int page = 1;
+//	private String token = "";
 	@SuppressWarnings("unused")
 	private int pages = 0;
 	private List<Goods> goodsList = new LinkedList<Goods>();
@@ -35,12 +36,19 @@ public class GetGoodsListResponse implements Response {
 		goodsList.add(goods);
 	}
 
-	public void setToken(int token) {
-		this.token = String.valueOf(token);
-	}
+//	public void setToken(String token) {
+//		this.token = token;
+//	}
 
 	public void setPages(int pageCount) {
 		this.pages = pageCount;
+	}
+
+	/**
+	 * @param page the page to set
+	 */
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 }
