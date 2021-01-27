@@ -3,7 +3,7 @@
  */
 const GoodsModel = function (GID) {
     /** goods 物件結構
-     * @type { {GID: string,
+     * @type { {id: string,
      * goodsName:string , 
      *  L:number,
      *  W:number,
@@ -34,8 +34,12 @@ const GoodsModel = function (GID) {
                 if (getGoodsRequest.readyState == XMLHttpRequest.DONE) {
                     if (getGoodsRequest.status == 200) {
                         let responseObj = JSON.parse(getGoodsRequest.responseText);
-                        if (typeof responseObj.code == "SUCCESS") {
-                            goods = responseObj;
+                        if (responseObj.code == "SUCCESS") {
+                            goods = responseObj.goods;
+                            let tagSet = new Set(goods.tags);
+                            goods.tags = tagSet;
+                            let picSet = new Set(goods.picturesKey);
+                            goods.picturesKey = picSet;
                             notifyUpdate();
                         }
                     } else {
@@ -184,7 +188,7 @@ const GoodsModel = function (GID) {
             modifyGoods(JSONString);
         },
         GID: function () {
-            return (typeof goods.GID !== "undefined") ? goods.GID : "";
+            return (typeof GID !== "undefined") ? GID : "";
         },
         /** 商品名稱(setter & getter)
          * @param {number} value (setter) 商品名稱
@@ -223,7 +227,6 @@ const GoodsModel = function (GID) {
                 goods.W = Number.parseFloat(value);
             else
                 throw new NaNException("The value is not Number.");
-
         },
         /** 商品高度或厚度(setter & getter)
         * @param {number} value (setter) 商品高度或厚度 單位為mm 
@@ -308,7 +311,6 @@ const GoodsModel = function (GID) {
         removePicture: function (picturesKey) {
             goods.picturesKey.splice(goods.picturesKey.indexOf(picturesKey), 1);
         }
-
     };
 
 };

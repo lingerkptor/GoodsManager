@@ -206,7 +206,7 @@ public class GetGoodsListData implements PreparedStatementCreator {
 		sortable_page.appendCondition(searchGoodsList);
 
 		searchGoodsList.append(" ;");
-		System.out.println("searchGoodsList String=>" + searchGoodsList.toString());
+//		System.out.println("searchGoodsList String=>" + searchGoodsList.toString());
 		// SQL語句組合完成
 		// Step5. 開始插入資料
 		PreparedStatement stat = conn.prepareStatement(searchGoodsList.toString());

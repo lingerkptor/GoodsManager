@@ -91,7 +91,7 @@ let searchGoodsView = function () {
         prototype.setAttribute('key', goodsObj.id);
         prototype.querySelector("a[name='id']").innerText = goodsObj.id;
         prototype.querySelector("a[name='datetime']").innerText = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        prototype.querySelector("a[name='GoodsName']").innerText = goodsObj.gName;
+        prototype.querySelector("a[name='GoodsName']").innerText = goodsObj.goodsName;
         prototype.querySelector("a[name='price']").innerText = goodsObj.price;
         prototype.querySelector("a[name='className']").innerText = goodsObj.className;
         prototype.querySelector("input.modify").addEventListener('click', function () {

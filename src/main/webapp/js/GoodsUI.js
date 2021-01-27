@@ -148,7 +148,7 @@ const GoodsView = function GoodsView() {
         bindGoodsModel: function (model) {
             GoodsModel = model;
             bindListener();
-            if (GoodsModel.GID.length > 0) {
+            if (GoodsModel.GID().length > 0) {
                 addGoodsBtn.classList.add("prototype");
                 modifyGoodsBtn.classList.remove("prototype");
             } else {

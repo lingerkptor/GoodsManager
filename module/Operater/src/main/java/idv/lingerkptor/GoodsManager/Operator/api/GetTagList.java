@@ -1,6 +1,7 @@
 package idv.lingerkptor.GoodsManager.Operator.api;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import idv.lingerkptor.GoodsManager.Operator.DataAccess.GetTagListDAO;
+import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Tag;
 import idv.lingerkptor.GoodsManager.Operator.api.request.GetTagListRequest;
 import idv.lingerkptor.GoodsManager.Operator.api.response.GetTagListResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
@@ -29,11 +31,14 @@ public class GetTagList extends Service {
 	@Override
 	@ContentType(reqType = ContentType.RequestType.Text_Plain, respType = ContentType.ResponseType.Json)
 	public Response process(Request requestObj) {
-
+		GetTagListRequest request = (GetTagListRequest) requestObj;
+		GetTagListResponse response = GetTagListResponse.STATECODE.SUCCESS.getResponse();
 		DataAccessTemplate template = DataAccessCore.getSQLTemplate();
-		GetTagListDAO dao = new GetTagListDAO();
+		GetTagListDAO dao = new GetTagListDAO(request.getGID());
 		try {
-			template.query(dao, dao);
+			template.query(dao, (ResultSet rs) -> {
+				response.addTag(new Tag(rs.getString(1), rs.getString(2), rs.getInt(3)));
+			});
 		} catch (DAORuntimeException e) {
 			MessageInit.getMsgManager()
 					.deliverMessage(new Message(Message.Category.warn, e.getMessage()));
@@ -43,7 +48,7 @@ public class GetTagList extends Service {
 					.deliverMessage(new Message(Message.Category.warn, e.getMessage()));
 			return GetTagListResponse.STATECODE.SQLFILEERROR.getResponse();
 		}
-		return dao.getResponse();
+		return response;
 	}
 
 	@Override
