@@ -146,7 +146,7 @@ const GoodsModel = function (GID) {
                     console.log("There was a problem with the request(modifyGoodsRequest).");
             }
         };
-        modifyGoodsRequest.open('Post', "/GoodsManager/api/modifyGoods");
+        modifyGoodsRequest.open('Post', "/GoodsManager/api/ModifyGoods");
         modifyGoodsRequest.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
         modifyGoodsRequest.send(JSONString);
     }
