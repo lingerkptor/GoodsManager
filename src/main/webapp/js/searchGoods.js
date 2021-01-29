@@ -96,6 +96,23 @@ const GoodsListModel = function () {
         //console.log(filterObj);
         return filterObj;
     }
+    function deleteGoods(id) {
+        let deleteGoodsRequest = new XMLHttpRequest();
+        deleteGoodsRequest.onreadystatechange = function () {
+            if (deleteGoodsRequest.readyState === XMLHttpRequest.DONE) {
+                if (deleteGoodsRequest.status === 200) {
+                    let responseObj = JSON.parse(deleteGoodsRequest.responseText);
+                    if (responseObj.code == "SUCCESS") {
+                        getGoodsList();
+                    } else {
+                        console.log("deleteGoodsRequest:code => " + responseObj.code);
+                    }
+                }
+            }
+        };
+        deleteGoodsRequest.open('Post', '/GoodsManager/api/DeleteGoods');
+        deleteGoodsRequest.send(JSON.stringify({ GID: id }));
+    }
 
 
     return {
@@ -115,6 +132,7 @@ const GoodsListModel = function () {
             else
                 filterMap.set("sortIn", 0);
             //  return GoodsList.sort((x, y) => x.className - y.className);
+            getGoodsList();
         },
         SortingGoodsbyId: function (isASC) {
             filterMap.set("order", "id");
@@ -123,6 +141,7 @@ const GoodsListModel = function () {
             //  GoodsList.sort((x, y) => x.date - y.date);
             else
                 filterMap.set("sortIn", 0);
+            getGoodsList();
         },
         /**
          * 
@@ -135,7 +154,7 @@ const GoodsListModel = function () {
             //  GoodsList.sort((x, y) => x.date - y.date);
             else
                 filterMap.set("sortIn", 0);
-
+            getGoodsList();
         },
 
         setClassFilter: function (value) {
@@ -192,6 +211,9 @@ const GoodsListModel = function () {
                 goodsCount = Number.parseInt(value);
             else
                 throw new NaNException("The value is not Number.");
+        },
+        deleteGoods: function (id) {
+            deleteGoods(id);
         }
 
     };

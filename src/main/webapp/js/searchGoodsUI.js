@@ -101,6 +101,7 @@ let searchGoodsView = function () {
         });
         prototype.querySelector("input.delete").addEventListener('click', function () {
             //console.log('delete');
+            goodsListModel.deleteGoods(goodsObj.id);
         });
         prototype.classList.remove("prototype");
         return prototype;
@@ -149,7 +150,7 @@ let searchGoodsView = function () {
         page.value = 1;
         goodsListModel.SortingGoodsbyId(e.currentTarget.classList.contains("caret-down"));
 
-        goodsListModel.searchGoodsList();
+        // goodsListModel.searchGoodsList();
         dateSorter.classList.remove('caret-down');
         classSorter.classList.remove('caret-down');
     });
@@ -158,11 +159,11 @@ let searchGoodsView = function () {
         e.currentTarget.classList.toggle("caret-down");
         if (typeof goodsListModel == 'undefined')
             return;
-        
+
         page.value = 1;
         goodsListModel.SortingGoodsbyDate(e.currentTarget.classList.contains("caret-down"));
 
-        goodsListModel.searchGoodsList();
+        // goodsListModel.searchGoodsList();
 
         idSorter.classList.remove('caret-down');
         classSorter.classList.remove('caret-down');
@@ -173,11 +174,11 @@ let searchGoodsView = function () {
         e.currentTarget.classList.toggle("caret-down");
         if (typeof goodsListModel == 'undefined')
             return;
-       
+
         page.value = 1;
         goodsListModel.SortingGoodsByClass(e.currentTarget.classList.contains("caret-down"));
 
-        goodsListModel.searchGoodsList();
+        // goodsListModel.searchGoodsList();
         dateSorter.classList.remove('caret-down');
         idSorter.classList.remove('caret-down');
     });
