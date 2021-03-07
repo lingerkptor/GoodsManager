@@ -10,21 +10,16 @@ public interface State {
      *
      * @return 狀態名
      */
-    public String getName();
+    public String getState();
 
     /**
-     * 初始化作業程序
-     */
-    public void initOperator();
-
-    /**
-     * 執行作業
+     * 取得Operator
      *
      * @param operatorName 作業名稱
-     * @param operatorArgs 作業所需要的參數
-     * @return 作業結果
+     * @param operatorArgs 作業所需要的參數 JSON字串
+     * @return Operator
      */
-    public boolean operator(String operatorName, String... operatorArgs);
+    public void addOperator(String operatorName, String operatorArgs);
 
     /**
      * 取得所有作業的清單
@@ -32,6 +27,5 @@ public interface State {
      * @return 作業的清單
      */
     public String[] getOperatorNames();
-
 
 }

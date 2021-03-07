@@ -20,27 +20,20 @@ public interface Parcel<T> extends State {
      */
     public Location<T> getLocation();
 
-    /**
-     * 取得目前包裹狀態
-     *
-     * @return 包裹狀態
-     */
-    public State getState();
 
     /**
-     * 更新資料
+     * 取得參數名稱清單
+     *
+     * @return 參數名稱清單
      */
-    public void update();
-//
-//
-//
-//    /**
-//     * 上架
-//     */
-//    public void hitShelves();
-//
-//    /**
-//     * 下架
-//     */
-//    public void discontinued();
+    public String[] getParameterNames();
+
+    /**
+     * 取得參數值
+     *
+     * @param parameterName 參數名稱
+     * @return 參數值
+     */
+    public String getParameterValue(String parameterName);
+
 }
