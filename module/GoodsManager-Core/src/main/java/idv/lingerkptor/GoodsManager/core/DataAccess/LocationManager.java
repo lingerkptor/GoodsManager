@@ -7,6 +7,7 @@ import idv.lingerkptor.GoodsManager.core.Distribute.DistributeException;
 import idv.lingerkptor.GoodsManager.core.Distribute.Location;
 import idv.lingerkptor.GoodsManager.core.Distribute.LocationConfig;
 
+import javax.sql.rowset.serial.SQLOutputImpl;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
@@ -62,6 +63,7 @@ public class LocationManager {
                 this.registerLocation(location.get());
             else
                 new DistributeException("Location　建立失敗.");
+            
         }
     }
 
@@ -125,6 +127,12 @@ public class LocationManager {
         return result;
     }
 
+    /**
+     * 依照設定建立一個Location實體物件 <br/>
+     * 用途: Location Manager初始化時，將Locaiton List內的Location建立實體物件
+     * @param config Location 設定
+     * @return　Location 實體物件
+     */
     private Optional<Location> getLocationInstance(LocationConfig config) {
         if (config != null)
             try {

@@ -1,5 +1,6 @@
 package idv.lingerkptor.GoodsManager.core.Distribute;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,22 +11,62 @@ import java.util.Map;
  */
 public interface Location<T> extends State {
 
+    /**
+     * 取得發布地名稱
+     * @return 發布地名稱
+     */
     public String getName();
 
-    public List<Operator> getJobList();
+    /**
+     * 取得工作清單
+     * @return 工作清單
+     */
+    public Operator[] getJobList();
 
-    public Iterable<Parcel> getParcelIterator();
+    /**
+     * 取得包裹清單
+     * @return 包裹清單
+     */
+    public Parcel<T>[] getParcelList();
 
-    public boolean addParcel(Packable packable, T contents);
+    /**
+     * 取得包裹清單
+     * @param sortFunction 排序方法
+     * @return 包裹清單
+     */
+    public Parcel<T>[] getParcelList(Comparator<Parcel> sortFunction);
 
+    /**
+     * 取得包裹清單
+     * @param filter 包裹過濾器
+     * @return 包裹清單
+     */
+    public Parcel<T>[] getParcelList(ParcelFilter filter);
+
+    /**
+     * 取得包裝方法清單
+     * @return 包裝方法名稱
+     */
     public String[] getPackableNames();
 
-    public Packable getPackable(String packableName);
+    /**
+     * 取得包裝方法
+     * @param templateName 包裝方法名稱
+     * @return 包裝類別
+     */
+    public Packable<T> getPackable(String templateName);
 
-    public Parcel getParcel(T contents);
+    /**
+     * 取得包裹
+     * @param contents 包裹內容
+     * @return 包裹
+     */
+    public Parcel<T> getParcel(T contents);
 
-    public Parcel getTemplate(String templateName);
 
+    /**
+     * 關閉Location
+     */
     public void close();
 
 }

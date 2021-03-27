@@ -20,7 +20,6 @@ public interface Parcel<T> extends State {
      */
     public Location<T> getLocation();
 
-
     /**
      * 取得參數名稱清單
      *

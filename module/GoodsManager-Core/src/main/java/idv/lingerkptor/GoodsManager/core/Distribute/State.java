@@ -13,13 +13,18 @@ public interface State {
     public String getState();
 
     /**
-     * 取得Operator
+     * 加入Operator
      *
      * @param operatorName 作業名稱
      * @param operatorArgs 作業所需要的參數 JSON字串
-     * @return Operator
      */
     public void addOperator(String operatorName, String operatorArgs);
+
+    /**
+     * 加入Operator
+     * @param operator 作業物件
+     */
+    public void addOperator(Operator operator);
 
     /**
      * 取得所有作業的清單

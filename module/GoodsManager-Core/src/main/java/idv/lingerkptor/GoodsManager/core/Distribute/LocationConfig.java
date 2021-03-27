@@ -69,10 +69,20 @@ public class LocationConfig {
         return this.locationClassName;
     }
 
+    /**
+     * 取得發布地設定參數
+     * @param name 參數名稱
+     * @return 參數值
+     */
     public String getParaValue(String name) {
         return this.locationPara.get(name);
     }
 
+    /**
+     * 設定參數值
+     * @param name 參數名稱
+     * @param value 參數值
+     */
     public void setParaValue(String name, String value) {
         this.locationPara.put(name, value);
     }
