@@ -1,10 +1,10 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
+import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.bean.Goods;
+
 import java.util.LinkedList;
 import java.util.List;
-
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Goods;
-import idv.lingerkptor.GoodsManager.core.api.response.Response;
 
 public class GetGoodsListResponse implements Response {
 	public enum Code {

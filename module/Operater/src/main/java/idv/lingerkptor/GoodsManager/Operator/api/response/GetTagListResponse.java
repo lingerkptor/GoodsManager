@@ -1,7 +1,7 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Tag;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.bean.Tag;
 
 import java.util.LinkedList;
 import java.util.List;

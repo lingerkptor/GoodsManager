@@ -1,20 +1,16 @@
 package idv.lingerkptor.GoodsManager.Operator.DataAccess;
 
+import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
+import idv.lingerkptor.GoodsManager.core.Message.Message;
+import idv.lingerkptor.GoodsManager.core.bean.Classification;
+import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
+import idv.lingerkptor.util.DBOperator.RowCallbackHandler;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Classification;
-import idv.lingerkptor.GoodsManager.core.Listener.MessageInit;
-import idv.lingerkptor.GoodsManager.core.Message.Message;
-import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
-import idv.lingerkptor.util.DBOperator.RowCallbackHandler;
+import java.util.*;
 
 public class GetClassificationListDAO implements PreparedStatementCreator, RowCallbackHandler {
 
@@ -29,7 +25,7 @@ public class GetClassificationListDAO implements PreparedStatementCreator, RowCa
 		this.prop = prop;
 	}
 
-	public List<idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Classification> getClassList() {
+	public List<Classification> getClassList() {
 		List<Classification> classes = new LinkedList<Classification>();
 		temp.values().forEach((element) -> {
 			if (element.getPID() != null) {

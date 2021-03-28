@@ -1,7 +1,7 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Goods;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.bean.Goods;
 
 public class GetGoodsResponse implements Response {
 	public enum Code {

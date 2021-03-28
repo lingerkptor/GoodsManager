@@ -31,12 +31,11 @@ public class LocationManager {
      * Location 清單檔
      */
     private File LocationListFile;
-    private String locationLibPath;
-
     /**
      * Location Lib 路徑
      */
-//    private File locationLibPath;
+    private String locationLibPath;
+
     public static LocationManager getLocationManager() {
         if (manager == null) {
             manager = new LocationManager();

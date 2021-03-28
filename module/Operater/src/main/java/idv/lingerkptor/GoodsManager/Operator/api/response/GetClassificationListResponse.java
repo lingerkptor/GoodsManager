@@ -1,9 +1,9 @@
 package idv.lingerkptor.GoodsManager.Operator.api.response;
 
-import java.util.List;
-
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Classification;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.bean.Classification;
+
+import java.util.List;
 
 public class GetClassificationListResponse implements Response {
 	public enum STATECODE {

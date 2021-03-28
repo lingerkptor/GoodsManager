@@ -1,17 +1,7 @@
 package idv.lingerkptor.GoodsManager.Operator.api;
 
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import idv.lingerkptor.GoodsManager.Operator.DataAccess.GetGoodsListData;
 import idv.lingerkptor.GoodsManager.Operator.DataAccess.GetGoodsListPage;
-import idv.lingerkptor.GoodsManager.Operator.DataAccess.DataObject.Goods;
 import idv.lingerkptor.GoodsManager.Operator.api.request.GetGoodsListRequest;
 import idv.lingerkptor.GoodsManager.Operator.api.response.GetGoodsListResponse;
 import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
@@ -22,7 +12,16 @@ import idv.lingerkptor.GoodsManager.core.annotation.ContentType;
 import idv.lingerkptor.GoodsManager.core.api.Service;
 import idv.lingerkptor.GoodsManager.core.api.request.Request;
 import idv.lingerkptor.GoodsManager.core.api.response.Response;
+import idv.lingerkptor.GoodsManager.core.bean.Goods;
 import idv.lingerkptor.util.DBOperator.DataAccessTemplate;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet("/api/getGoodsList")
 public class GetGoodsList extends Service {

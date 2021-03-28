@@ -63,6 +63,12 @@ public interface Location<T> extends State {
      */
     public Parcel<T> getParcel(T contents);
 
+    /**
+     * 取得設定
+     * @return 設定
+     */
+    public LocationConfig getConfig();
+
 
     /**
      * 關閉Location
