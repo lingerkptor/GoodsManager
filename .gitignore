@@ -1,5 +1,6 @@
 # intellij idea 專案相關檔案
 .idea
+.iml
 GoodsManager.iml
 /module/GoodsManager-Core/GoodsManager-Core.iml
 /module/Installation/Installation.iml

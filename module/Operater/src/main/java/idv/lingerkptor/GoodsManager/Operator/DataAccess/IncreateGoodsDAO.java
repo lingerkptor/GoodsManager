@@ -19,154 +19,177 @@ import idv.lingerkptor.GoodsManager.core.DataAccess.DAORuntimeException;
 import idv.lingerkptor.util.DBOperator.PreparedStatementCreator;
 
 public class IncreateGoodsDAO implements PreparedStatementCreator {
-	private Properties sqlProp;
-	private IncreateGoodsRequest request = null;
+    private Properties sqlProp;
+    private IncreateGoodsRequest request = null;
 
-	@SuppressWarnings("unused")
-	private IncreateGoodsDAO() {
-	}
+    @SuppressWarnings("unused")
+    private IncreateGoodsDAO() {
+    }
 
-	public IncreateGoodsDAO(IncreateGoodsRequest request) {
-		this.request = request;
-	}
+    public IncreateGoodsDAO(IncreateGoodsRequest request) {
+        this.request = request;
+    }
 
-	@Override
-	public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-		/** Step1. 載入存放SQL的檔案 */
-		this.loadProperties();
-		/** Step2. 確認圖片是否已經綁定商品 */
-		this.pictureisBindedGoodsCheck(conn);
+    @Override
+    public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+        /** Step1. 載入存放SQL的檔案 */
+        this.loadProperties();
+        /** Step2. 確認圖片是否已經綁定商品 */
+        this.pictureisBindedGoodsCheck(conn);
 
-		/** Step3. 查詢分類ID */
-		int CID = this.searchCID(conn);
-		/** Step4. 新增商品 */
-		int GID = this.increateGoods(conn, CID);
-		/** Step5. 對圖片進行綁定 */
-		this.bindingPicture(conn, GID);
-		/** Step6. 標籤綁定 */
-		this.bindingTags(conn, GID);
+        /** Step3. 查詢分類ID */
+        int CID = this.searchCID(conn);
+        /** Step4. 新增商品 */
+        int GID = this.increateGoods(conn, CID);
+        /** Step5. 對圖片進行綁定 */
+        this.bindingPicture(conn, GID);
+        /** Step6. 標籤綁定 */
+        this.bindingTags(conn, GID);
 
-		return null;
-	}
+        return null;
+    }
 
-	private void loadProperties() {
-		sqlProp = new Properties();
-		try {
-			sqlProp.load(new FileReader( //
-					new File(ConfigReader.getConfigReader().getDBConfig().getSqlURL()
-							+ "/IncreateGoods.properties")));
-		} catch (NullPointerException | IOException e) {
-			throw new DAORuntimeException(e.getMessage(), IncreateGoodsResponse.Code.SQLFILEERROR);
-		}
-	}
+    private void loadProperties() {
+        sqlProp = new Properties();
+        try {
+            sqlProp.load(new FileReader( //
+                    new File(ConfigReader.getConfigReader().getDBConfig().getSqlURL()
+                            + "/IncreateGoods.properties")));
+        } catch (NullPointerException | IOException e) {
+            throw new DAORuntimeException(e.getMessage(), IncreateGoodsResponse.Code.SQLFILEERROR);
+        }
+    }
 
-	private void pictureisBindedGoodsCheck(Connection conn) throws SQLException {
-		if (request.getPictureKey() == null)
-			return;
-		StringBuilder strbuilder = new StringBuilder(
-				sqlProp.getProperty("searchPictureIsBindedGoods"));
-		for (int i = 0; i < request.getPictureKey().length; i++) {
-			if (i == request.getPictureKey().length - 1)
-				strbuilder.append(" ? ) ;");
-			else
-				strbuilder.append("? , ");
-		}
-		PreparedStatement stat = conn.prepareStatement(strbuilder.toString());
+    private void pictureisBindedGoodsCheck(Connection conn) throws SQLException {
+        if (request.getPictureKey() == null || request.getPictureKey().length == 0)
+            return;
+        StringBuilder strbuilder = new StringBuilder(
+                sqlProp.getProperty("searchPictureIsBindedGoods"));
+        try {
+            for (int i = 0; i < request.getPictureKey().length; i++) {
+                if (i == request.getPictureKey().length - 1)
+                    strbuilder.append(" ? ) ;");
+                else
+                    strbuilder.append("? , ");
+            }
+            PreparedStatement stat = conn.prepareStatement(strbuilder.toString());
 
-		for (int i = 0; i < request.getPictureKey().length; i++) {
-			stat.setString(i + 1, request.getPictureKey()[i]);
-		}
-		ResultSet rs = stat.executeQuery();
-		while (rs.next()) {
-			if (rs.getInt(2) > 0)
-				throw new DAORuntimeException("Picture has been binded Goods.",
-						IncreateGoodsResponse.Code.PICTUREISBINDED);
-		}
-	}
+            for (int i = 0; i < request.getPictureKey().length; i++) {
+                stat.setString(i + 1, request.getPictureKey()[i]);
+            }
+            ResultSet rs = stat.executeQuery();
+            while (rs.next()) {
+                if (rs.getInt(2) > 0)
+                    throw new DAORuntimeException("Picture has been binded Goods.",
+                            IncreateGoodsResponse.Code.PICTUREISBINDED);
+            }
+        } catch (SQLException e) {
+            System.out.println(" searchPictureIsBindedGoods SQL: " + strbuilder.toString());
+            throw e;
+        }
+    }
 
-	private int searchCID(Connection conn) throws SQLException {
-		String sql = sqlProp.getProperty("searchClassificationId");
-		PreparedStatement stat = conn.prepareStatement(sql);
-		stat.setString(1, request.getClassName());
-		ResultSet rs = stat.executeQuery();
-		if (rs.next())
-			return rs.getInt(1);
-		else
-			throw new DAORuntimeException("新增商品錯誤，分類名稱不存在．",
-					IncreateGoodsResponse.Code.CLASSNONEXIST);
+    private int searchCID(Connection conn) throws SQLException {
+        String sql = sqlProp.getProperty("searchClassificationId");
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, request.getClassName());
+            ResultSet rs = stat.executeQuery();
+            if (rs.next())
+                return rs.getInt(1);
+            else
+                throw new DAORuntimeException("新增商品錯誤，分類名稱不存在．",
+                        IncreateGoodsResponse.Code.CLASSNONEXIST);
+        } catch (SQLException e) {
+            System.out.println(" searchClassificationId SQL: " + sql.toString());
+            throw e;
+        }
+    }
 
-	}
+    private int increateGoods(Connection conn, int CID) throws SQLException {
+        String sql = sqlProp.getProperty("insertGoods");
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat = conn.prepareStatement(sql);
+            stat.setString(1, request.getgName());
+            stat.setDouble(2, request.getL());
+            stat.setDouble(3, request.getW());
+            stat.setDouble(4, request.getH());
+            stat.setInt(5, request.getPrice());
+            stat.setInt(6, request.getCount());
+            stat.setInt(7, CID);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            stat.setDate(8, java.sql.Date.valueOf(format.format(new java.util.Date())));
 
-	private int increateGoods(Connection conn, int CID) throws SQLException {
-		String sql = sqlProp.getProperty("insertGoods");
-		PreparedStatement stat = conn.prepareStatement(sql);
-		stat = conn.prepareStatement(sql);
-		stat.setString(1, request.getgName());
-		stat.setDouble(2, request.getL());
-		stat.setDouble(3, request.getW());
-		stat.setDouble(4, request.getH());
-		stat.setInt(5, request.getPrice());
-		stat.setInt(6, request.getCount());
-		stat.setInt(7, CID);
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		stat.setDate(8, java.sql.Date.valueOf(format.format(new java.util.Date())));
-		
-		stat.executeUpdate();
+            stat.executeUpdate();
 
-		sql = sqlProp.getProperty("searchGoodsId");
-		stat = conn.prepareStatement(sql);
-		ResultSet rs = stat.executeQuery();
-		if (rs.next())
-			return rs.getInt(1);
-		else {
-			throw new DAORuntimeException("建立商品錯誤，Message: 遺失已建立的商品．",
-					IncreateGoodsResponse.Code.LOSTGOODS);
-		}
+            sql = sqlProp.getProperty("searchGoodsId");
+            stat = conn.prepareStatement(sql);
+            ResultSet rs = stat.executeQuery();
+            if (rs.next())
+                return rs.getInt(1);
+            else {
+                throw new DAORuntimeException("建立商品錯誤，Message: 遺失已建立的商品．",
+                        IncreateGoodsResponse.Code.LOSTGOODS);
+            }
+        } catch (SQLException e) {
+            System.out.println(" insertGoods SQL: " + sql.toString());
+            throw e;
+        }
 
-	}
+    }
 
-	private void bindingPicture(Connection conn, int GID) throws SQLException {
-		String sql = sqlProp.getProperty("bindPicture");
-		PreparedStatement stat = conn.prepareStatement(sql);
-		for (String key : request.getPictureKey()) {
-			stat.setInt(1, GID);
-			stat.setString(2, key);
-			stat.addBatch();
-		}
-		stat.executeBatch();
-	}
+    private void bindingPicture(Connection conn, int GID) throws SQLException {
+        String sql = sqlProp.getProperty("bindPicture");
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            for (String key : request.getPictureKey()) {
+                stat.setInt(1, GID);
+                stat.setString(2, key);
+                stat.addBatch();
+            }
+            stat.executeBatch();
+        } catch (SQLException e) {
+            System.out.println(" bindPicture SQL: " + sql);
+            throw e;
+        }
+    }
 
-	private void bindingTags(Connection conn, int GID) throws SQLException {
-		if (request.getTags() == null)
-			return;
-		/** 查詢TID start */
-		StringBuilder sql = new StringBuilder(sqlProp.getProperty("searchTagID"));
+    private void bindingTags(Connection conn, int GID) throws SQLException {
+        if (request.getTags() == null || request.getTags().length == 0)
+            return;
+        /** 查詢TID start */
+        StringBuilder sql = new StringBuilder(sqlProp.getProperty("searchTagID"));
 
-		for (int i = 0; i < request.getTags().length; i++) {
-			if (i == request.getTags().length - 1)
-				sql.append(" ? ) ;");
-			else
-				sql.append(" ? , ");
-		}
+        for (int i = 0; i < request.getTags().length; i++) {
+            if (i == request.getTags().length - 1)
+                sql.append(" ? ) ;");
+            else
+                sql.append(" ? , ");
+        }
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql.toString());
+            for (int i = 0; i < request.getTags().length; i++) {
+                stat.setString(i + 1, request.getTags()[i]);
+            }
+            ResultSet rs = stat.executeQuery();
+            Set<Integer> TIDs = new HashSet<Integer>();
+            while (rs.next()) {
+                TIDs.add(rs.getInt(1));
+            }
+            /** 查詢TID end */
 
-		PreparedStatement stat = conn.prepareStatement(sql.toString());
-		for (int i = 0; i < request.getTags().length; i++) {
-			stat.setString(i + 1, request.getTags()[i]);
-		}
-		ResultSet rs = stat.executeQuery();
-		Set<Integer> TIDs = new HashSet<Integer>();
-		while (rs.next()) {
-			TIDs.add(rs.getInt(1));
-		}
-		/** 查詢TID end */
-
-		String SQL = sqlProp.getProperty("mapGoodsTag");
-		stat = conn.prepareStatement(SQL);
-		for (Integer TID : TIDs) {
-			stat.setInt(1, GID);
-			stat.setInt(2, TID);
-			stat.addBatch();
-		}
-		stat.executeBatch();
-	}
+            String SQL = sqlProp.getProperty("mapGoodsTag");
+            stat = conn.prepareStatement(SQL);
+            for (Integer TID : TIDs) {
+                stat.setInt(1, GID);
+                stat.setInt(2, TID);
+                stat.addBatch();
+            }
+            stat.executeBatch();
+        } catch (SQLException e) {
+            System.out.println(" bindingTags SQL: " + sql.toString());
+            throw e;
+        }
+    }
 }

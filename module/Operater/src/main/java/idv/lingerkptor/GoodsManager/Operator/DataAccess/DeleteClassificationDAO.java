@@ -35,7 +35,7 @@ public class DeleteClassificationDAO implements PreparedStatementCreator {
 		int[] result = this.step2(conn);
 		// STEP3. 將下層分類安排在上層分類之下
 		this.step3(conn, result[0], result[1]);
-		// STEP3.1 檢查是否將下層分類安排在上層分類之下
+		// STEP3.1 檢查是否已將下層分類安排在上層分類之下
 		try {
 			String SQL = prop.getProperty("checkUpdateSubClassifiction");
 			stat = conn.prepareStatement(SQL);
@@ -43,12 +43,12 @@ public class DeleteClassificationDAO implements PreparedStatementCreator {
 			ResultSet rs = stat.executeQuery();
 			if (rs.next()) {
 				MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.warn,
-						request.getClassificationName() + "子分類交付管理失敗"));
-				throw new DAORuntimeException(request.getClassificationName() + "子分類交付管理失敗",
+						request.getClassificationName() + "子分類交付給上層分類失敗"));
+				throw new DAORuntimeException(request.getClassificationName() + "子分類交付給上層分類失敗",
 						DeleteClassificationResponse.STATECODE.DELETEFAILURE);
 			}
 		} catch (SQLException e) {
-			System.err.println("STEP6.  " + request.getClassificationName() + "子分類交付管理失敗");
+			System.err.println("STEP3.  " + request.getClassificationName() + "子分類交付給上層分類失敗");
 			e.printStackTrace();
 			throw e;
 		}
@@ -63,8 +63,8 @@ public class DeleteClassificationDAO implements PreparedStatementCreator {
 			ResultSet rs = stat.executeQuery();
 			if (rs.next()) {
 				MessageInit.getMsgManager().deliverMessage(new Message(Message.Category.warn,
-						"分類" + request.getClassificationName() + "商品交付管理失敗"));
-				throw new DAORuntimeException("分類" + request.getClassificationName() + "商品交付管理失敗",
+						"分類" + request.getClassificationName() + "底下還有商品無法刪除．（已無上層分類）"));
+				throw new DAORuntimeException("分類" + request.getClassificationName() + "底下還有商品無法刪除．（已無上層分類）",
 						DeleteClassificationResponse.STATECODE.DELETEFAILURE);
 			}
 		} catch (SQLException e) {

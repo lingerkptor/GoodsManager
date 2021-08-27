@@ -128,6 +128,8 @@ class FileSystemPWM implements PictureWareHouse {
 				File newFile = new File(saveDir.toURI().getRawPath(), file.getName());
 				if (this.checkFileIsEquals(file, newFile)) {// 如果暫存檔跟存檔一致就不存直接回key
 					if (file.delete())
+						System.out.println("刪除暫存檔案成功.");
+					else
 						System.out.println("刪除暫存檔案失敗.");
 					return key;
 				}
@@ -154,6 +156,10 @@ class FileSystemPWM implements PictureWareHouse {
 				e.printStackTrace();
 				throw new RuntimeException(e.getCause());
 			}
+			if (file.delete())
+				System.out.println("刪除暫存檔案成功.");
+			else
+				System.out.println("刪除暫存檔案失敗.");
 			return key;
 		}
 	}
