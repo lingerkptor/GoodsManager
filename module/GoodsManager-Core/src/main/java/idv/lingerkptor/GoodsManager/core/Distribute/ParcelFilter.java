@@ -11,6 +11,8 @@ package idv.lingerkptor.GoodsManager.core.Distribute;
  * lingerkptor  2021/3/26 下午 10:01 0 create
  */
 
+import idv.lingerkptor.GoodsManager.core.Distribute.bean.Parcel;
+
 /**
  * 包裹過濾器(篩選器)
  */
@@ -19,7 +21,7 @@ public interface ParcelFilter {
     /**
      * 篩選
      * @param parcel 被篩選的包裹
-     * @return 回傳是否為對象
+     * @return 回傳是否符合條件
      */
     public boolean filter(Parcel parcel);
 

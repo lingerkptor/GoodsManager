@@ -14,9 +14,6 @@ GoodsManager.iml
 /target/
 /module/*/target/
 
-#測試用檔案
-#module/GoodsManager-Core/src/main/java/idv/lingerkptor/GoodsManager/core/test
-#src/main/webapp/TestGson.html
 
 #其他自動新增的檔案
 /module/*/.gitignore

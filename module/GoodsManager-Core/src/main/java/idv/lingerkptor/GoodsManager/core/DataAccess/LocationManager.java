@@ -22,11 +22,11 @@ public class LocationManager {
     /**
      * 發佈地清單
      */
-    private Map<String, Location> locationMap = new HashMap<String, Location>();
+    private Map<String, Location> locationMap = new HashMap();
     /**
      * 發佈地設定清單
      */
-    private List<LocationConfig> locationConfigList;
+    private Map<String, LocationConfig> locationConfigMap = new HashMap();
     /**
      * Location 清單檔
      */
@@ -54,15 +54,15 @@ public class LocationManager {
         }
         this.roadLocationConfigFile();
 
-        for (LocationConfig config : this.locationConfigList) {
+        for (LocationConfig config : this.locationConfigMap.values()) {
             if (!config.isStart())
                 continue;
             Optional<Location> location = this.getLocationInstance(config);
             if (!location.isEmpty())
                 this.registerLocation(location.get());
             else
-                new DistributeException("Location　建立失敗.");
-            
+                new DistributeException("Location　建立失敗. Location config: " + new Gson().toJson(config));
+
         }
     }
 
@@ -108,7 +108,10 @@ public class LocationManager {
             reader = new FileReader(this.LocationListFile);
             Type type = new TypeToken<ArrayList<LocationConfig>>() {
             }.getType();
-            locationConfigList = gson.fromJson(reader, type);
+            List<LocationConfig> configList = gson.fromJson(reader, type);
+            for (LocationConfig config : configList) {
+                locationConfigMap.put(config.getLocationName(), config);
+            }
             reader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -129,6 +132,7 @@ public class LocationManager {
     /**
      * 依照設定建立一個Location實體物件 <br/>
      * 用途: Location Manager初始化時，將Locaiton List內的Location建立實體物件
+     *
      * @param config Location 設定
      * @return　Location 實體物件
      */
@@ -155,7 +159,7 @@ public class LocationManager {
                     e.printStackTrace();
                 }
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                e.printStackTrace();//設定檔URL格式錯誤
             }
         return Optional.<Location>empty();
     }
@@ -172,42 +176,35 @@ public class LocationManager {
     /**
      * Location 啟動或關閉
      *
-     * @param locationName
-     * @return
+     * @param locationName 發布地名稱
+     * @param isStart      啟動(true) or 關閉(false)
+     * @return 啟動(true) 關閉(false)
      */
-    public boolean switchLocation(String locationName) {
-        try {
-            Optional<Location> location = this.getLocation(locationName);
-            LocationConfig locationConfig = null;
-            // 啟動或關閉Location，儲存設定
-            for (LocationConfig config : this.locationConfigList) {
-                if (config.getLocationName().equals(locationName)) {
-                    locationConfig = config;
-                    config.locationSwitch();
-                    this.saveLocationConfig();
-                }
-            }
-
+    public boolean switchLocation(String locationName, boolean isStart) {
+        Optional<Location> location = this.getLocation(locationName);
+        LocationConfig config = this.locationConfigMap.get(locationName);
+        if (isStart) {
+            config.configSwitch(true);
             if (location.isEmpty()) {
-                if (locationConfig == null)
-                    throw new DistributeException("locationConfig不存在無法建立");
-
-                Optional<Location> newLocation = this.getLocationInstance(locationConfig);
-                if (newLocation.isEmpty())
-                    throw new DistributeException("location建立失敗");
-                this.registerLocation(newLocation.get());
-
-            } else {
+                Optional<Location> optionalLocation = this.getLocationInstance(config);
+                if (optionalLocation.isEmpty())
+                    new DistributeException("Location　建立失敗. Location config: " + new Gson().toJson(config));
                 synchronized (locationMap) {
-                    location.get().close();
-                    this.locationMap.remove(locationName);
+                    this.locationMap.put(locationName, location.get());
                 }
+                return true;
             }
-        } catch (DistributeException e) {
-            e.printStackTrace();
-            return false;
+        } else {
+            config.configSwitch(false);
+            if (location.isEmpty())
+                return false;
+            synchronized (locationMap) {
+                location.get().close();
+                this.locationMap.remove(locationName);
+            }
         }
-        return true;
+        return isStart;
+
     }
 
     /**
@@ -216,7 +213,7 @@ public class LocationManager {
      * @param name 發佈地名稱
      * @return 發佈地
      */
-    public Optional<Location> getLocation(String name) throws DistributeException {
+    public Optional<Location> getLocation(String name) {
         synchronized (locationMap) {
             try {
                 Location location = locationMap.get(name);
@@ -233,8 +230,18 @@ public class LocationManager {
      * @return 發佈地名稱清單
      */
     public Set<String> getLocationNames() {
-        return this.locationMap.keySet();
+        return this.locationConfigMap.keySet();
     }
+
+    /**
+     * 發布地的啟動狀態
+     * @param locationName 發布地名稱
+     * @return 啟動(true) 關閉(false)
+     */
+    public boolean getLocationState(String locationName){
+        return locationConfigMap.get(locationName).isStart();
+    }
+
 
     /**
      * 加入發佈地設定
@@ -253,7 +260,7 @@ public class LocationManager {
         try {
             Gson gson = new Gson();
             LocationConfig config = gson.fromJson(jsonString, LocationConfig.class);
-            this.locationConfigList.add(config);
+            this.locationConfigMap.put(config.getLocationName(), config);
             result = true;
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
@@ -273,7 +280,7 @@ public class LocationManager {
         FileWriter writer = null;
         try {
             writer = new FileWriter(this.LocationListFile);
-            gson.toJson(this.locationConfigList, writer);
+            gson.toJson(this.locationConfigMap.values(), writer);
             writer.flush();
             result = true;
         } catch (IOException e) {

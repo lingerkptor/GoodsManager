@@ -1,0 +1,12 @@
+/idv/liingerkptor/GoodsManager/core/Distribute/
+ - 建立發布地(蝦皮、露天...網站)簡易說明
+   - LocationConfig - 發布地設定
+   - Location - 發部地介面
+     - 必須實作public LocationName(LocationConfig config)Constructor 
+   - DistributeException 發布地產生的例外，可是情況繼承。
+   - ParcelFilter 包裹的過濾器
+ - /bean 
+   - Parcel 包裹，定義發布地的商品結構(需依照不同的發布地去實作介面)
+   - Packable 包裝器，將商品(Goods)包裝成包裹(Parcel)的介面
+   - Operator 定義行為介面，例如:上架商品的作業(可能是使用Selenium、或是發布地提供的API)，依照實際使用去實作
+   - 

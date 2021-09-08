@@ -21,13 +21,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-class FileSystemPWM implements PictureWareHouse {
+class FileSystemPWH implements PictureWareHouse {
 
 	private FileSystemPWMConfig config;
 	private Map<String, String> fileMap;
 	private File mapFile;
 
-	public FileSystemPWM(String configFilePath) {
+	public FileSystemPWH(String configFilePath) {
 		try {
 			Gson gson = new Gson();
 			FileReader reader = new FileReader(new File(configFilePath));

@@ -1,4 +1,4 @@
-package idv.lingerkptor.GoodsManager.core.Distribute;
+package idv.lingerkptor.GoodsManager.core.Distribute.bean;
 
 /**
  * 包裹的操作方法
@@ -10,7 +10,8 @@ public interface Operator {
     public enum Schedule {
         ready,//準備執行
         doing,//正在執行
-        done//做完了
+        done,//做完了
+        exception //發勝例外
     }
 
     /**
@@ -41,4 +42,9 @@ public interface Operator {
      */
     public boolean operator();
 
+
+    /**
+     * 取得訊息
+     */
+    public String getMessage();
 }

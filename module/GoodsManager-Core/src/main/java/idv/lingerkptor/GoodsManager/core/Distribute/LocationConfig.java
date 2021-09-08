@@ -24,13 +24,11 @@ public class LocationConfig {
     private Map<String, String> locationPara;
 
     /**
-     * 啟動開關
+     * 啟動設定
      *
-     * @return 啟動狀態
      */
-    public boolean locationSwitch() {
-        this.start = !this.start;
-        return this.start;
+    public void configSwitch(boolean _switch) {
+        this.start = _switch;
     }
 
     /**
@@ -71,16 +69,18 @@ public class LocationConfig {
 
     /**
      * 取得發布地設定參數
-     * @param name 參數名稱
+     *
+     * @param paraName 參數名稱
      * @return 參數值
      */
-    public String getParaValue(String name) {
-        return this.locationPara.get(name);
+    public String getParaValue(String paraName) {
+        return this.locationPara.get(paraName);
     }
 
     /**
      * 設定參數值
-     * @param name 參數名稱
+     *
+     * @param name  參數名稱
      * @param value 參數值
      */
     public void setParaValue(String name, String value) {
