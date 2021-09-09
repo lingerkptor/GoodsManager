@@ -57,12 +57,12 @@ public class LocationManager {
         for (LocationConfig config : this.locationConfigMap.values()) {
             if (!config.isStart())
                 continue;
-            Optional<Location> location = this.getLocationInstance(config);
-            if (!location.isEmpty())
-                this.registerLocation(location.get());
-            else
-                new DistributeException("Location　建立失敗. Location config: " + new Gson().toJson(config));
-
+            try {
+                Location location = this.getLocationInstance(config);
+            } catch (DistributeException e) {
+                e.printStackTrace();
+                System.out.println("Location 建立失敗。原因為:" + e.getMessage());
+            }
         }
     }
 
@@ -136,7 +136,7 @@ public class LocationManager {
      * @param config Location 設定
      * @return　Location 實體物件
      */
-    private Optional<Location> getLocationInstance(LocationConfig config) {
+    private Location getLocationInstance(LocationConfig config) throws DistributeException {
         if (config != null)
             try {
                 URL[] urls = new URL[]{new URL("jar:file:" + this.locationLibPath + "//" + config.getLocationLib() + " !/ ")};
@@ -146,22 +146,28 @@ public class LocationManager {
                     Location location = (Location) Class.forName(config.getLocationClassName(), true, classLoader)
                             .getConstructor(LocationConfig.class)
                             .newInstance(config);
-                    return Optional.<Location>of(location);
+                    return location;
                 } catch (InstantiationException e) {
                     e.printStackTrace();
+                    throw new DistributeException("建立Location失敗(類別為抽象類別)，理論上應該不會發生。");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
+                    throw new DistributeException("存取權限錯誤");
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
+                    throw new DistributeException(config.getLocationClassName() + " : 建構式拋出異常");
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
+                    throw new DistributeException("找不到建構式");
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                    throw new DistributeException("類別沒有找到，請確認函示庫位址");
                 }
             } catch (MalformedURLException e) {
-                e.printStackTrace();//設定檔URL格式錯誤
+                e.printStackTrace();
+                throw new DistributeException("設定檔URL格式錯誤");
             }
-        return Optional.<Location>empty();
+        throw new DistributeException("config 不能為Null");
     }
 
     /**
@@ -180,28 +186,32 @@ public class LocationManager {
      * @param isStart      啟動(true) or 關閉(false)
      * @return 啟動(true) 關閉(false)
      */
-    public boolean switchLocation(String locationName, boolean isStart) {
-        Optional<Location> location = this.getLocation(locationName);
-        LocationConfig config = this.locationConfigMap.get(locationName);
-        if (isStart) {
-            config.configSwitch(true);
-            if (location.isEmpty()) {
-                Optional<Location> optionalLocation = this.getLocationInstance(config);
-                if (optionalLocation.isEmpty())
-                    new DistributeException("Location　建立失敗. Location config: " + new Gson().toJson(config));
-                synchronized (locationMap) {
-                    this.locationMap.put(locationName, location.get());
+    public boolean switchLocation(String locationName, boolean isStart) throws DistributeException {
+//        Optional<Location> location = this.getLocation(locationName);
+        try {
+            LocationConfig config = this.locationConfigMap.get(locationName);
+            if (isStart) {
+                config.configSwitch(true);
+                if (this.getLocation(locationName).isEmpty()) {
+                    Location location = this.getLocationInstance(config);
+                    synchronized (locationMap) {
+                        this.locationMap.put(locationName, location);
+                    }
+                    return true;
                 }
-                return true;
+            } else {
+                config.configSwitch(false);
+
+                if (this.getLocation(locationName).isEmpty())
+                    return false;
+                synchronized (locationMap) {
+                    this.getLocation(locationName).get().close();
+                    this.locationMap.remove(locationName);
+                }
             }
-        } else {
-            config.configSwitch(false);
-            if (location.isEmpty())
-                return false;
-            synchronized (locationMap) {
-                location.get().close();
-                this.locationMap.remove(locationName);
-            }
+        }catch (NullPointerException e){
+            //  LocationConfig config 可能不存在
+            throw new DistributeException(e.getMessage());
         }
         return isStart;
 
@@ -235,10 +245,12 @@ public class LocationManager {
 
     /**
      * 發布地的啟動狀態
+     *
      * @param locationName 發布地名稱
+     * @throws NullPointerException 如果沒有該發布地的話會拋出
      * @return 啟動(true) 關閉(false)
      */
-    public boolean getLocationState(String locationName){
+    public boolean getLocationState(String locationName) throws NullPointerException{
         return locationConfigMap.get(locationName).isStart();
     }
 
